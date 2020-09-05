@@ -27,7 +27,9 @@ public class ControlpageBackendApplication {
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
-            View v = viewService.findById(0);
+            //viewService.save(new View(0, "Testview 1"));
+            //viewService.save(new View(0, "Testview 2"));
+            View v2 = viewService.findById(0);
             System.out.println();
         };
     }

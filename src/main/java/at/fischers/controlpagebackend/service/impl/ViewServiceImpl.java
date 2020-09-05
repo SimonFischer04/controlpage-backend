@@ -6,6 +6,8 @@ import at.fischers.controlpagebackend.service.ViewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ViewServiceImpl implements ViewService {
@@ -14,6 +16,11 @@ public class ViewServiceImpl implements ViewService {
     @Override
     public View findById(int id) {
         return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<View> findAll() {
+        return repository.findAll();
     }
 
     @Override
