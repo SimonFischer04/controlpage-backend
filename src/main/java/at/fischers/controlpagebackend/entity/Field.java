@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @AllArgsConstructor
@@ -19,10 +16,12 @@ public class Field {
     private int id;
 
     //TODO: View
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private View view;
 
     //TODO: Action
 
-    private String content;
+    private String background;
 
     private int rowspan;
     private int colspan;

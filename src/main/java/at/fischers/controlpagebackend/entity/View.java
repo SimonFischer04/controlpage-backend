@@ -3,11 +3,10 @@ package at.fischers.controlpagebackend.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -20,7 +19,10 @@ public class View {
 
     private String name;
 
-    //TODO: Group
+    @OneToOne(fetch = FetchType.EAGER)
+    private Group group;
 
-    //TODO: Field[]
+    @ToString.Exclude
+    @OneToMany(mappedBy = "view", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Field> fields;
 }

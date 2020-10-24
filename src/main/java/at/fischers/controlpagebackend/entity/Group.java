@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "view_group")
@@ -16,7 +17,11 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    //TODO: parent_group
+    /*@OneToOne(mappedBy = "group_id")
+    private Group parentGroup;
+
+    @OneToMany(mappedBy = "parent_group")
+    private List<Group> childGroups;*/
 
     private String name;
 }
