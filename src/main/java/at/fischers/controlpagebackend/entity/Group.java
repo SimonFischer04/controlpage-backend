@@ -1,8 +1,11 @@
 package at.fischers.controlpagebackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,11 +20,14 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    /*@OneToOne(mappedBy = "group_id")
-    private Group parentGroup;
+    @OneToMany(mappedBy = "parentGroup")
+    @JsonManagedReference
+    private List<Group> childGroups;
 
-    @OneToMany(mappedBy = "parent_group")
-    private List<Group> childGroups;*/
+    @ManyToOne
+    @JsonBackReference
+    @ToString.Exclude
+    private Group parentGroup;
 
     private String name;
 }

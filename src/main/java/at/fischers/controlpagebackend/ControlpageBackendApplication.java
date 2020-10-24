@@ -6,6 +6,7 @@ import at.fischers.controlpagebackend.service.FieldService;
 import at.fischers.controlpagebackend.service.GroupService;
 import at.fischers.controlpagebackend.service.ViewService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,7 +30,8 @@ public class ControlpageBackendApplication {
         return args -> {
             //viewService.save(new View(0, "Testview 1"));
             //viewService.save(new View(0, "Testview 2"));
-            View v2 = viewService.findById(1);
+            View v = viewService.findById(1);
+            View v2 = viewService.findById(2);
             System.out.println();
         };
     }

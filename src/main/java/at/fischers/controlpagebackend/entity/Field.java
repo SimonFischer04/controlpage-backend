@@ -1,8 +1,12 @@
 package at.fischers.controlpagebackend.entity;
 
+import at.fischers.controlpagebackend.entity.action.Action;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -15,11 +19,14 @@ public class Field {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    //TODO: View
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
+    @JsonBackReference
+    @ToString.Exclude
     private View view;
 
-    //TODO: Action
+    @OneToOne
+    @JsonManagedReference
+    private Action action;
 
     private String background;
 

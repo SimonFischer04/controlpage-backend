@@ -1,5 +1,6 @@
 package at.fischers.controlpagebackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,10 +20,11 @@ public class View {
 
     private String name;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     private Group group;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "view", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "view", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Field> fields;
 }
