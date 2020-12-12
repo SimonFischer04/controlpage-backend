@@ -1,5 +1,6 @@
 package at.fischers.controlpagebackend.entity;
 
+import at.fischers.controlpagebackend.entity.action.ActionEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
@@ -8,26 +9,25 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
-@Table(name = "view_group")
+@Table(name = "field")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Group {
+public class FieldEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToMany(mappedBy = "parentGroup")
-    @JsonManagedReference
-    private List<Group> childGroups;
+    @ManyToOne(optional = false)
+    private ViewEntity view;
 
-    @ManyToOne
-    @JsonBackReference
-    @ToString.Exclude
-    private Group parentGroup;
+    @OneToOne
+    private ActionEntity action;
 
-    private String name;
+    private String background;
+
+    private int rowspan;
+    private int colspan;
 }

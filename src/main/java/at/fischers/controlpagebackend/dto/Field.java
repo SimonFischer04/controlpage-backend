@@ -1,35 +1,36 @@
-package at.fischers.controlpagebackend.entity;
+package at.fischers.controlpagebackend.dto;
 
-import at.fischers.controlpagebackend.entity.action.Action;
+import at.fischers.controlpagebackend.entity.FieldEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-import javax.persistence.*;
+import java.io.File;
 
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Field {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(optional = false)
     @JsonBackReference
-    @ToString.Exclude
-    private View view;
+    private FullView view;
 
-    @OneToOne
     @JsonManagedReference
     private Action action;
 
     private String background;
-
     private int rowspan;
     private int colspan;
+
+    public Field(FieldEntity fieldEntity) {
+        id = fieldEntity.getId();
+        action = new Action(fieldEntity.getAction());
+        action.setField(this);
+        background = fieldEntity.getBackground();
+        rowspan = fieldEntity.getRowspan();
+        colspan = fieldEntity.getColspan();
+    }
 }

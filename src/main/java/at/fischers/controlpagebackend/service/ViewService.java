@@ -1,13 +1,15 @@
 package at.fischers.controlpagebackend.service;
 
-import at.fischers.controlpagebackend.entity.View;
+import at.fischers.controlpagebackend.dto.BasicView;
+import at.fischers.controlpagebackend.dto.FullView;
+import at.fischers.controlpagebackend.entity.ViewEntity;
 
 import java.util.List;
 
 public interface ViewService {
-    View findById(int id);
+    FullView findById(int id);
 
-    List<View> findAll();
+    List<BasicView> findAllBasic();
 
-    void save(View view);
+    void save(ViewEntity view);
 }
