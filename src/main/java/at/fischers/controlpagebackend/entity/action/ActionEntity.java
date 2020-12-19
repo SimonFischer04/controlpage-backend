@@ -11,6 +11,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "action")
+@Inheritance(strategy = InheritanceType.JOINED)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

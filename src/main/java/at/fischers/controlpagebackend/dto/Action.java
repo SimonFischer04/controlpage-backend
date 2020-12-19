@@ -3,6 +3,7 @@ package at.fischers.controlpagebackend.dto;
 import at.fischers.controlpagebackend.entity.action.ActionEntity;
 import at.fischers.controlpagebackend.entity.action.ActionType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
