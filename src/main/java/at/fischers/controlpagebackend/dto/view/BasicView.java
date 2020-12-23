@@ -1,5 +1,6 @@
-package at.fischers.controlpagebackend.dto;
+package at.fischers.controlpagebackend.dto.view;
 
+import at.fischers.controlpagebackend.dto.Group;
 import at.fischers.controlpagebackend.entity.ViewEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;

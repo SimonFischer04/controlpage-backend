@@ -1,6 +1,7 @@
 package at.fischers.controlpagebackend.entity.action;
 
 import at.fischers.controlpagebackend.entity.FieldEntity;
+import at.fischers.controlpagebackend.enums.RunPolicy;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,9 +24,5 @@ public class ActionEntity {
     @OneToOne
     private FieldEntity field;
 
-    @Column(nullable = false)
-    private ActionType actionType;
-
-    @Column(nullable = false)
-    private String actionValue;
+    private RunPolicy runPolicy;
 }

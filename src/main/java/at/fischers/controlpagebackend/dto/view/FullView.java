@@ -1,5 +1,6 @@
-package at.fischers.controlpagebackend.dto;
+package at.fischers.controlpagebackend.dto.view;
 
+import at.fischers.controlpagebackend.dto.Field;
 import at.fischers.controlpagebackend.entity.ViewEntity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;

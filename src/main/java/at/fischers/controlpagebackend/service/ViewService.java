@@ -1,7 +1,7 @@
 package at.fischers.controlpagebackend.service;
 
-import at.fischers.controlpagebackend.dto.BasicView;
-import at.fischers.controlpagebackend.dto.FullView;
+import at.fischers.controlpagebackend.dto.view.BasicView;
+import at.fischers.controlpagebackend.dto.view.FullView;
 import at.fischers.controlpagebackend.entity.ViewEntity;
 
 import java.util.List;

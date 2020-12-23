@@ -1,13 +1,14 @@
 package at.fischers.controlpagebackend.dto;
 
+import at.fischers.controlpagebackend.dto.action.Action;
+import at.fischers.controlpagebackend.dto.view.FullView;
 import at.fischers.controlpagebackend.entity.FieldEntity;
+import at.fischers.controlpagebackend.util.ActionMapper;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.File;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,7 +28,7 @@ public class Field {
 
     public Field(FieldEntity fieldEntity) {
         id = fieldEntity.getId();
-        action = new Action(fieldEntity.getAction());
+        action = ActionMapper.mapEntityToDTO(fieldEntity.getAction());
         action.setField(this);
         background = fieldEntity.getBackground();
         rowspan = fieldEntity.getRowspan();

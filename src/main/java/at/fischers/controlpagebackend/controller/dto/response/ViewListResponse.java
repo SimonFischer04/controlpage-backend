@@ -1,6 +1,6 @@
 package at.fischers.controlpagebackend.controller.dto.response;
 
-import at.fischers.controlpagebackend.dto.BasicView;
+import at.fischers.controlpagebackend.dto.view.BasicView;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

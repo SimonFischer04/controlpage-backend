@@ -1,9 +1,9 @@
-package at.fischers.controlpagebackend.dto;
+package at.fischers.controlpagebackend.dto.action;
 
+import at.fischers.controlpagebackend.dto.Field;
 import at.fischers.controlpagebackend.entity.action.ActionEntity;
-import at.fischers.controlpagebackend.entity.action.ActionType;
+import at.fischers.controlpagebackend.enums.ActionType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,11 +18,8 @@ public class Action {
     private Field field;
 
     private ActionType actionType;
-    private String actionValue;
 
-    public Action(ActionEntity actionEntity) {
-        id = actionEntity.getId();
-        actionType = actionEntity.getActionType();
-        actionValue = actionEntity.getActionValue();
+    public Action(ActionEntity entity) {
+        id = entity.getId();
     }
 }

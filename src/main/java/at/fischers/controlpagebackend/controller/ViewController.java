@@ -1,7 +1,7 @@
 package at.fischers.controlpagebackend.controller;
 
 import at.fischers.controlpagebackend.controller.dto.response.ViewListResponse;
-import at.fischers.controlpagebackend.dto.FullView;
+import at.fischers.controlpagebackend.dto.view.FullView;
 import at.fischers.controlpagebackend.service.ViewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

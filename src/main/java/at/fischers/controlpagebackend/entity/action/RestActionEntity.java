@@ -1,5 +1,6 @@
 package at.fischers.controlpagebackend.entity.action;
 
+import at.fischers.controlpagebackend.enums.RestType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,5 +18,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Data
 public class RestActionEntity extends ActionEntity{
+    private RestType type;
     private String url;
+    private String body;
 }
