@@ -17,7 +17,7 @@ public class ViewController {
     private final ViewService viewService;
 
     @GetMapping("all")
-    public ResponseEntity<ViewListResponse> getViews() {
+    public ResponseEntity<ViewListResponse> getViewList() {
         return ResponseEntity.ok(new ViewListResponse(viewService.findAllBasic()));
     }
 
