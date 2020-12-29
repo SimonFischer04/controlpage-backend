@@ -30,4 +30,7 @@ public class FieldEntity {
 
     private int rowspan;
     private int colspan;
+
+    private int xPos;
+    private int yPos;
 }
