@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,9 @@ public class Group {
     private List<Group> childGroups = new ArrayList<>();
 
     @JsonBackReference
+    @ToString.Exclude
     private Group parentGroup;
+
     private String name;
 
     private void addChildGroup(Group group) {

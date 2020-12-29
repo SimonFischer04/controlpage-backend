@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +18,7 @@ public class Field {
     private int id;
 
     @JsonBackReference
+    @ToString.Exclude
     private FullView view;
 
     @JsonManagedReference

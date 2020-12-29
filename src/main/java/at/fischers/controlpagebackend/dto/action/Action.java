@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +16,7 @@ public class Action {
     private int id;
 
     @JsonBackReference
+    @ToString.Exclude
     private Field field;
 
     private ActionType actionType;
