@@ -24,6 +24,7 @@ public class Field {
     @JsonManagedReference
     private Action action;
 
+    private String title;
     private String background;
     private int rowspan;
     private int colspan;
@@ -32,6 +33,7 @@ public class Field {
         id = fieldEntity.getId();
         action = ActionMapper.mapEntityToDTO(fieldEntity.getAction());
         action.setField(this);
+        title = fieldEntity.getTitle();
         background = fieldEntity.getBackground();
         rowspan = fieldEntity.getRowspan();
         colspan = fieldEntity.getColspan();

@@ -26,6 +26,7 @@ public class FieldEntity {
     @OneToOne
     private ActionEntity action;
 
+    private String title;
     private String background;
 
     private int rowspan;
