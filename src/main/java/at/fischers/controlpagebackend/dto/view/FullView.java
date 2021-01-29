@@ -3,7 +3,10 @@ package at.fischers.controlpagebackend.dto.view;
 import at.fischers.controlpagebackend.dto.Field;
 import at.fischers.controlpagebackend.entity.FieldEntity;
 import at.fischers.controlpagebackend.entity.ViewEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,8 +22,7 @@ import java.util.TreeMap;
 @AllArgsConstructor
 @Data
 public class FullView extends BasicView {
-    @JsonManagedReference
-    private Collection<Collection<Field>> fields = new ArrayList<>();
+    private Collection<Collection<Field>> fields;
 
     private void addFields(Collection<Field> list) {
         fields.add(list);
@@ -29,6 +31,7 @@ public class FullView extends BasicView {
 
     public FullView(ViewEntity view) {
         super(view);
+        fields = new ArrayList<>();
 
         TreeMap<Integer, TreeMap<Integer, Field>> map = new TreeMap<>();
         view.getFields().forEach(fieldEntity -> {

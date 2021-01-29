@@ -12,4 +12,8 @@ public interface ViewService {
     List<BasicView> findAllBasic();
 
     void save(ViewEntity view);
+
+    void save(BasicView view);
+
+    void save(FullView view);
 }

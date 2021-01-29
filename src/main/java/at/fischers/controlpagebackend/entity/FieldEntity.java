@@ -1,5 +1,6 @@
 package at.fischers.controlpagebackend.entity;
 
+import at.fischers.controlpagebackend.dto.Field;
 import at.fischers.controlpagebackend.entity.action.ActionEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -21,6 +22,7 @@ public class FieldEntity {
     private int id;
 
     @ManyToOne(optional = false)
+    @ToString.Exclude
     private ViewEntity view;
 
     @OneToOne
@@ -34,4 +36,16 @@ public class FieldEntity {
 
     private int xPos;
     private int yPos;
+
+    public FieldEntity(Field field) {
+        id = field.getId();
+        if (field.getAction() != null) {
+            action = new ActionEntity(field.getAction());
+            action.setField(this);
+        }
+        title = field.getTitle();
+        background = field.getBackground();
+        rowspan = field.getRowspan();
+        colspan = field.getColspan();
+    }
 }

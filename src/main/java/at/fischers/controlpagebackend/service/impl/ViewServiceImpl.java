@@ -36,6 +36,17 @@ public class ViewServiceImpl implements ViewService {
 
     @Override
     public void save(ViewEntity view) {
+        view.getFields().forEach(fieldEntity -> fieldEntity.setView(view));
         repository.save(view);
+    }
+
+    @Override
+    public void save(BasicView view) {
+        save(new ViewEntity(view));
+    }
+
+    @Override
+    public void save(FullView view) {
+        save(new ViewEntity(view));
     }
 }

@@ -1,5 +1,8 @@
 package at.fischers.controlpagebackend.entity;
 
+import at.fischers.controlpagebackend.dto.Field;
+import at.fischers.controlpagebackend.dto.view.BasicView;
+import at.fischers.controlpagebackend.dto.view.FullView;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -24,6 +29,29 @@ public class ViewEntity {
     @OneToOne
     private GroupEntity group;
 
-    @OneToMany(mappedBy = "view", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "view", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FieldEntity> fields;
+
+    public ViewEntity(BasicView view) {
+        id = view.getId();
+        name = view.getName();
+        group = new GroupEntity(view.getGroup());
+    }
+
+    public ViewEntity(FullView view) {
+        this((BasicView) view);
+        fields = new ArrayList<>();
+        int y = 0;
+        for (Collection<Field> row : view.getFields()) {
+            int x = 0;
+            for (Field field : row) {
+                FieldEntity fieldEntity = new FieldEntity(field);
+                fieldEntity.setYPos(y);
+                fieldEntity.setXPos(x);
+                fields.add(fieldEntity);
+                x++;
+            }
+            y++;
+        }
+    }
 }

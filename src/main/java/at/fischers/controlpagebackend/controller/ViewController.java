@@ -1,14 +1,12 @@
 package at.fischers.controlpagebackend.controller;
 
 import at.fischers.controlpagebackend.controller.dto.response.ViewListResponse;
+import at.fischers.controlpagebackend.dto.view.BasicView;
 import at.fischers.controlpagebackend.dto.view.FullView;
 import at.fischers.controlpagebackend.service.ViewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/view")
@@ -25,4 +23,12 @@ public class ViewController {
     public ResponseEntity<FullView> getView(@PathVariable int id) {
         return ResponseEntity.ok(viewService.findById(id));
     }
+
+    @PostMapping("")
+    public ResponseEntity<?> saveView(@RequestBody FullView fullView) {
+        viewService.save(fullView);
+        return ResponseEntity.ok().build();
+    }
+
+
 }

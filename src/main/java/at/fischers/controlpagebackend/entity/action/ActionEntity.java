@@ -1,5 +1,6 @@
 package at.fischers.controlpagebackend.entity.action;
 
+import at.fischers.controlpagebackend.dto.action.Action;
 import at.fischers.controlpagebackend.entity.FieldEntity;
 import at.fischers.controlpagebackend.enums.RunPolicy;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -22,7 +23,13 @@ public class ActionEntity {
     private int id;
 
     @OneToOne
+    @ToString.Exclude
     private FieldEntity field;
 
     private RunPolicy runPolicy;
+
+    public ActionEntity(Action action) {
+        id = action.getId();
+        runPolicy = action.getRunPolicy();
+    }
 }
