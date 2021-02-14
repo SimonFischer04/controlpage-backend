@@ -29,6 +29,4 @@ public class ViewController {
         viewService.save(fullView);
         return ResponseEntity.ok().build();
     }
-
-
 }

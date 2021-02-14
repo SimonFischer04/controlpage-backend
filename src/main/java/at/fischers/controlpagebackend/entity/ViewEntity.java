@@ -46,6 +46,7 @@ public class ViewEntity {
             int x = 0;
             for (Field field : row) {
                 FieldEntity fieldEntity = new FieldEntity(field);
+                fieldEntity.setView(this);
                 fieldEntity.setYPos(y);
                 fieldEntity.setXPos(x);
                 fields.add(fieldEntity);

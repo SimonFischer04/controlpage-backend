@@ -1,6 +1,7 @@
 package at.fischers.controlpagebackend.entity;
 
 import at.fischers.controlpagebackend.dto.Field;
+import at.fischers.controlpagebackend.dto.Image;
 import at.fischers.controlpagebackend.entity.action.ActionEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -29,7 +30,9 @@ public class FieldEntity {
     private ActionEntity action;
 
     private String title;
-    private String background;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    private ImageEntity background;
 
     private int rowspan;
     private int colspan;
@@ -44,7 +47,9 @@ public class FieldEntity {
             action.setField(this);
         }
         title = field.getTitle();
-        background = field.getBackground();
+        if (field.getBackground() != null) {
+            background = new ImageEntity(field.getBackground());
+        }
         rowspan = field.getRowspan();
         colspan = field.getColspan();
     }

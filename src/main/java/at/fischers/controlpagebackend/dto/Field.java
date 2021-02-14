@@ -5,14 +5,12 @@ import at.fischers.controlpagebackend.dto.view.FullView;
 import at.fischers.controlpagebackend.entity.FieldEntity;
 import at.fischers.controlpagebackend.util.ActionMapper;
 import com.fasterxml.jackson.annotation.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class Field {
     private int id;
 
@@ -23,7 +21,7 @@ public class Field {
     private Action action;
 
     private String title;
-    private String background;
+    private Image background;
     private int rowspan;
     private int colspan;
 
@@ -34,7 +32,10 @@ public class Field {
             action.setField(this);
         }
         title = fieldEntity.getTitle();
-        background = fieldEntity.getBackground();
+        if (fieldEntity.getBackground() != null) {
+            background = new Image(fieldEntity.getBackground());
+        }
+
         rowspan = fieldEntity.getRowspan();
         colspan = fieldEntity.getColspan();
     }
