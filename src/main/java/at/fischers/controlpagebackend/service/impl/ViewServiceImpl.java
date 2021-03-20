@@ -3,6 +3,7 @@ package at.fischers.controlpagebackend.service.impl;
 import at.fischers.controlpagebackend.dto.view.BasicView;
 import at.fischers.controlpagebackend.dto.view.FullView;
 import at.fischers.controlpagebackend.entity.ViewEntity;
+import at.fischers.controlpagebackend.repository.GroupRepository;
 import at.fischers.controlpagebackend.repository.ViewRepository;
 import at.fischers.controlpagebackend.service.ViewService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ViewServiceImpl implements ViewService {
     private final ViewRepository repository;
+    private final GroupRepository groupRepository;
 
     @Override
     @Transactional
@@ -37,6 +39,8 @@ public class ViewServiceImpl implements ViewService {
     @Override
     public void save(ViewEntity view) {
         view.getFields().forEach(fieldEntity -> fieldEntity.setView(view));
+        //view.getGroup().setParentGroup(groupRepository.findById(1).orElse(null));
+        System.err.println(("!".repeat(20) + "\n").repeat(20));
         repository.save(view);
     }
 

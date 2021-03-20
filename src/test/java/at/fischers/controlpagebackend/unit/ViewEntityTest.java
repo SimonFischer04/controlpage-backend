@@ -24,5 +24,10 @@ public class ViewEntityTest {
         assertNotNull(view);
         assertNotNull(view.getGroup());
         assertEquals(view.getGroup().getName(), "TestGroup1");
+        assertEquals(view.getGroup().getView(), view);
+    }
+
+    void testMappingFullView() {
+
     }
 }

@@ -24,15 +24,16 @@ public class GroupEntity {
     private int id;
 
     @OneToMany(mappedBy = "parentGroup", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<GroupEntity> childGroups;
 
     @ManyToOne
-    @ToString.Exclude
     private GroupEntity parentGroup;
 
     private String name;
 
-    @OneToOne
+    @OneToOne(mappedBy = "group")
+    @ToString.Exclude
     private ViewEntity view;
 
     public GroupEntity(Group group) {
