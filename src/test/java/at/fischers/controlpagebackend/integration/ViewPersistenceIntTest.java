@@ -25,6 +25,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ViewPersistenceIntTest {
+    /*
+        INTO:
+        Assumption: you can only save whole View's in this project because then managing orphan/unused Entities is way easier.
+            - This small data overhead is negligible here(also this is only during editing...)
+     */
+
     private static EntityManager entityManager;
 
     @BeforeEach
@@ -80,6 +86,7 @@ public class ViewPersistenceIntTest {
 
     /**
      * Test: removing all children if parent deleted
+     * TODO: delete/change this because only VIEW persisting!
      */
     @Test
     void testRemoveGroup() {
@@ -87,6 +94,8 @@ public class ViewPersistenceIntTest {
         remove(group);
         assertEquals(findAllGroups().size(), 0);
     }
+
+    // TODO: test cascading(f.e I forgot to add cascade to group, changed the group name and wondered why the name didn't change)
 
     /*
         Private Util-Methods
@@ -106,10 +115,7 @@ public class ViewPersistenceIntTest {
         return view;
     }
 
-    /*
-        Assumption: you can only save whole View's in this project because then managing orphan/unused Entities is way easier.
-            - This small data overhead is negligible here(also this is only during editing...)
-     */
+    // only persist method (see reason at the very top)
     private void persist(ViewEntity view) {
         entityManager.getTransaction().begin();
         entityManager.persist(view);
@@ -125,12 +131,7 @@ public class ViewPersistenceIntTest {
         entityManager.getTransaction().commit();
     }
 
-    private void persist(GroupEntity groupEntity) {
-        entityManager.getTransaction().begin();
-        entityManager.persist(groupEntity);
-        entityManager.getTransaction().commit();
-    }
-
+    // TODO: (see remove Test)
     private void remove(GroupEntity groupEntity) {
         // manually setting group of each view to null -> tested elsewhere (testing class of service)
         findAllViews().forEach(viewEntity -> {
