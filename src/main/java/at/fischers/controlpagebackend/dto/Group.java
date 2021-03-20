@@ -1,5 +1,6 @@
 package at.fischers.controlpagebackend.dto;
 
+import at.fischers.controlpagebackend.dto.view.BasicView;
 import at.fischers.controlpagebackend.entity.GroupEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -25,6 +26,10 @@ public class Group {
     private Group parentGroup;
 
     private String name;
+
+    @JsonBackReference
+    @ToString.Exclude
+    private BasicView view;
 
     private void addChildGroup(Group group) {
         group.setParentGroup(this);

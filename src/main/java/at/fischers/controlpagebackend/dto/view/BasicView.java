@@ -18,5 +18,6 @@ public class BasicView {
         id = view.getId();
         name = view.getName();
         group = new Group(view.getGroup());
+        group.setView(this);
     }
 }

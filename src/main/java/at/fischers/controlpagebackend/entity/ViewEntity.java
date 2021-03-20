@@ -1,6 +1,7 @@
 package at.fischers.controlpagebackend.entity;
 
 import at.fischers.controlpagebackend.dto.Field;
+import at.fischers.controlpagebackend.dto.Group;
 import at.fischers.controlpagebackend.dto.view.BasicView;
 import at.fischers.controlpagebackend.dto.view.FullView;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -36,6 +37,7 @@ public class ViewEntity {
         id = view.getId();
         name = view.getName();
         group = new GroupEntity(view.getGroup());
+        group.setView(this);
     }
 
     public ViewEntity(FullView view) {

@@ -23,7 +23,7 @@ public class GroupEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToMany(mappedBy = "parentGroup")
+    @OneToMany(mappedBy = "parentGroup", cascade = CascadeType.ALL)
     private List<GroupEntity> childGroups;
 
     @ManyToOne
@@ -32,15 +32,20 @@ public class GroupEntity {
 
     private String name;
 
+    @OneToOne
+    private ViewEntity view;
+
     public GroupEntity(Group group) {
         if (group != null) {
             id = group.getId();
-            childGroups = new ArrayList<>();
-            group.getChildGroups().forEach(grp -> {
-                GroupEntity groupEntity = new GroupEntity(grp);
-                groupEntity.setParentGroup(this);
-                childGroups.add(groupEntity);
-            });
+            if (group.getChildGroups() != null) {
+                childGroups = new ArrayList<>();
+                group.getChildGroups().forEach(grp -> {
+                    GroupEntity groupEntity = new GroupEntity(grp);
+                    groupEntity.setParentGroup(this);
+                    childGroups.add(groupEntity);
+                });
+            }
             name = group.getName();
         }
     }
