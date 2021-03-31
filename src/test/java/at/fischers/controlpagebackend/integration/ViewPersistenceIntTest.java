@@ -1,13 +1,12 @@
 package at.fischers.controlpagebackend.integration;
 
-import at.fischers.controlpagebackend.dto.Field;
-import at.fischers.controlpagebackend.dto.Group;
-import at.fischers.controlpagebackend.dto.view.FullView;
 import at.fischers.controlpagebackend.entity.FieldEntity;
 import at.fischers.controlpagebackend.entity.GroupEntity;
 import at.fischers.controlpagebackend.entity.ImageEntity;
 import at.fischers.controlpagebackend.entity.ViewEntity;
-import org.junit.jupiter.api.BeforeAll;
+import at.fischers.controlpagebackend.entity.action.ActionEntity;
+import at.fischers.controlpagebackend.entity.action.ViewActionEntity;
+import at.fischers.controlpagebackend.enums.ViewActionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +17,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.swing.text.View;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,12 +49,17 @@ public class ViewPersistenceIntTest {
         ViewEntity view = views.get(0);
         List<FieldEntity> fields = view.getFields();
         FieldEntity field = fields.get(0);
+        ActionEntity actionEntity = field.getAction();
 
         assertEquals(views.size(), 1);
         assertNotNull(view);
+
         assertEquals(fields.size(), 1);
         assertNotNull(field);
         assertNotNull(field.getBackground());
+
+        assertNotNull(actionEntity);
+        assertTrue(actionEntity instanceof ViewActionEntity);
 
         assertNotNull(view.getGroup());
         assertNull(view.getGroup().getChildGroups());
@@ -66,6 +69,12 @@ public class ViewPersistenceIntTest {
         view.getGroup().getParentGroup().getChildGroups().forEach(System.out::println);
         assertEquals(view.getGroup().getParentGroup().getChildGroups().size(), 2);
     }
+
+    /*
+        -----------------------------------------------------------------------------------------------------------------------------------
+        Testing removing of unused entities (orphan removal)
+        -----------------------------------------------------------------------------------------------------------------------------------
+     */
 
     /**
      * Test: when Saving View (with changed background-image in Field) old image deleted
@@ -85,20 +94,155 @@ public class ViewPersistenceIntTest {
     }
 
     /**
-     * Test: removing all children if parent deleted
-     * TODO: delete/change this because only VIEW persisting!
+     * Test: removing unused groups
      */
     @Test
-    void testRemoveGroup() {
-        GroupEntity group = findGroupByName("HeadGroup");
-        remove(group);
+    void testRemoveUnusedGroups() {
+        ViewEntity viewEntity = findView();
+        viewEntity.setGroup(null);
+        persist(viewEntity);
+
         assertEquals(findAllGroups().size(), 0);
     }
 
-    // TODO: test cascading(f.e I forgot to add cascade to group, changed the group name and wondered why the name didn't change)
+    /**
+     * Test: remove unused groups
+     */
+    @Test
+    void testRemoveUnusedFields() {
+        ViewEntity viewEntity = findView();
+        viewEntity.getFields().clear();
+        persist(viewEntity);
+
+        assertEquals(findAllFields().size(), 0);
+    }
+
+    /**
+     * Test: remove unused actions
+     */
+    @Test
+    void testRemoveUnusedAction() {
+        ViewEntity viewEntity = findView();
+        viewEntity.getFields().get(0).setAction(null);
+        persist(viewEntity);
+
+        assertEquals(findAllActions().size(), 0);
+    }
 
     /*
+        -----------------------------------------------------------------------------------------------------------------------------------
+        Test cascading(f.e I forgot to add cascade to group[in viewEntity], changed the group name and wondered why the name didn't change)
+        -----------------------------------------------------------------------------------------------------------------------------------
+     */
+
+    /**
+     * Test: cascading from ViewEntity to GroupEntity
+     */
+    @Test
+    void testGroupCascading() {
+        ViewEntity viewEntity = findView();
+        GroupEntity groupEntity = viewEntity.getGroup();
+        groupEntity.setName("AnotherName");
+        persist(viewEntity);
+
+        /*
+            CRUD...
+         */
+
+        // CREATE: tested in testPersist()
+
+        // READ: tested like everywhere
+
+        // UPDATE
+        GroupEntity reFetchedGroup = entityManager.find(GroupEntity.class, groupEntity.getId());
+        assertEquals(reFetchedGroup.getName(), "AnotherName");
+
+        // DELETE
+        remove(viewEntity);
+        assertEquals(findAllGroups().size(), 0);
+    }
+
+    /**
+     * Test: cascading from ViewEntity to FieldEntity
+     */
+    @Test
+    void testFieldCascading() {
+        ViewEntity viewEntity = findView();
+        FieldEntity fieldEntity = viewEntity.getFields().get(0);
+        fieldEntity.setTitle("A Title");
+        persist(viewEntity);
+
+        /*
+            CRUD...
+         */
+
+        // CREATE: tested in testPersist()
+
+        // READ: tested like everywhere
+
+        // UPDATE
+        FieldEntity reFetchedEntity = entityManager.find(FieldEntity.class, fieldEntity.getId());
+        assertEquals(reFetchedEntity.getTitle(), "A Title");
+
+        // DELETE
+        remove(viewEntity);
+        assertEquals(findAllFields().size(), 0);
+    }
+
+    /**
+     * Test: cascading from ViewEntity over Field to Action
+     */
+    @Test
+    void testActionCascading() {
+        ViewEntity viewEntity = findView();
+        ViewActionEntity actionEntity = (ViewActionEntity) viewEntity.getFields().get(0).getAction();
+        actionEntity.setType(ViewActionType.SWITCH);
+        persist(viewEntity);
+
+        /*
+            CRUD...
+         */
+
+        // CREATE: tested in testPersist()
+
+        // READ: tested like everywhere
+
+        // UPDATE
+        ViewActionEntity reFetchedAction = (ViewActionEntity) findAllActions().get(0);
+        assertEquals(reFetchedAction.getType(), ViewActionType.SWITCH);
+
+        // DELETE
+        remove(viewEntity);
+        assertEquals(findAllActions().size(), 0);
+    }
+
+    /**
+     * Test: cascading from ViewEntity over FieldEntity to ImageEntity
+     */
+
+    @Test
+    void testImageCascading() {
+        ViewEntity viewEntity = findView();
+
+        /*
+            CRUD...
+         */
+
+        // CREATE: tested in testPersist()
+
+        // READ: tested like everywhere
+
+        // UPDATE: updating an image doesnt really make sense -> a new one is created each time
+
+        // DELETE
+        remove(viewEntity);
+        assertEquals(findAllImages().size(), 0);
+    }
+
+    /*
+        -----------------------------------------------------------------------------------------------------------------------------------
         Private Util-Methods
+        -----------------------------------------------------------------------------------------------------------------------------------
      */
 
     private ViewEntity createViewEntity() {
@@ -108,14 +252,16 @@ public class ViewPersistenceIntTest {
         headGroup.setChildGroups(List.of(childGroup1, childGroup2));
 
         ImageEntity image = new ImageEntity(0, "TestImage1", "png", new byte[]{42});
-        FieldEntity field = new FieldEntity(0, null, null, "TestField", image, 1, 1, 0, 0);
+        ViewActionEntity action = new ViewActionEntity(ViewActionType.CLOSE, -1);
+        FieldEntity field = new FieldEntity(0, null, action, "TestField", image, 1, 1, 0, 0);
 
-        ViewEntity view = new ViewEntity(0, "TestView", childGroup1, List.of(field));
+        ViewEntity view = new ViewEntity(0, "TestView", childGroup1, new ArrayList<>(List.of(field)));
         field.setView(view);
         return view;
     }
 
     // only persist method (see reason at the very top)
+    // [NOTE: the saving of the "sub-entities" here done manually is done automatically by spring when using a real DB]
     private void persist(ViewEntity view) {
         entityManager.getTransaction().begin();
         entityManager.persist(view);
@@ -126,21 +272,20 @@ public class ViewPersistenceIntTest {
             }
         }
         if (view.getFields() != null) {
-            view.getFields().forEach(v -> entityManager.persist(v));
+            view.getFields().forEach(v -> {
+                if (v.getAction() != null) {
+                    entityManager.persist(v.getAction());
+                }
+                entityManager.persist(v);
+            });
         }
         entityManager.getTransaction().commit();
     }
 
-    // TODO: (see remove Test)
-    private void remove(GroupEntity groupEntity) {
-        // manually setting group of each view to null -> tested elsewhere (testing class of service)
-        findAllViews().forEach(viewEntity -> {
-            viewEntity.setGroup(null);
-            persist(viewEntity);
-        });
-
+    // only persist method (see reason at the very top)
+    private void remove(ViewEntity viewEntity) {
         entityManager.getTransaction().begin();
-        entityManager.remove(groupEntity);
+        entityManager.remove(viewEntity);
         entityManager.getTransaction().commit();
     }
 
@@ -168,6 +313,14 @@ public class ViewPersistenceIntTest {
 
     private List<ImageEntity> findAllImages() {
         return findAll(ImageEntity.class);
+    }
+
+    private List<FieldEntity> findAllFields() {
+        return findAll(FieldEntity.class);
+    }
+
+    private List<ActionEntity> findAllActions() {
+        return findAll(ActionEntity.class);
     }
 
     private <T> List<T> findAll(Class<T> clazz) {

@@ -23,11 +23,11 @@ public class GroupEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToMany(mappedBy = "parentGroup", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parentGroup", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<GroupEntity> childGroups;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private GroupEntity parentGroup;
 
     private String name;

@@ -1,14 +1,11 @@
 package at.fischers.controlpagebackend.entity;
 
 import at.fischers.controlpagebackend.dto.Field;
-import at.fischers.controlpagebackend.dto.Group;
 import at.fischers.controlpagebackend.dto.view.BasicView;
 import at.fischers.controlpagebackend.dto.view.FullView;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,7 +24,7 @@ public class ViewEntity {
 
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "group_id", referencedColumnName = "id")
     private GroupEntity group;
 
