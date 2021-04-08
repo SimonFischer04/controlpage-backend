@@ -37,6 +37,7 @@ public class GroupEntity {
     private ViewEntity view;
 
     public GroupEntity(Group group) {
+        // TODO: use mapper class
         if (group != null) {
             id = group.getId();
             if (group.getChildGroups() != null) {

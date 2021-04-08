@@ -2,7 +2,8 @@ package at.fischers.controlpagebackend.dto;
 
 import at.fischers.controlpagebackend.dto.view.BasicView;
 import at.fischers.controlpagebackend.entity.GroupEntity;
-import at.fischers.controlpagebackend.util.GroupMapper;
+import at.fischers.controlpagebackend.util.mapper.groupmapper.GroupMapper;
+import at.fischers.controlpagebackend.util.mapper.groupmapper.GroupMapperEntityToDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;

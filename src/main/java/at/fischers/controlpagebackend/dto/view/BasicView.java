@@ -18,6 +18,7 @@ public class BasicView {
     private Group group;
 
     public BasicView(ViewEntity view) {
+        // TODO: use mapper class
         id = view.getId();
         name = view.getName();
         group = new Group(view.getGroup());

@@ -1,4 +1,4 @@
-package at.fischers.controlpagebackend.unit;
+package at.fischers.controlpagebackend.unit.enity;
 
 import at.fischers.controlpagebackend.dto.Group;
 import at.fischers.controlpagebackend.dto.view.BasicView;
@@ -10,6 +10,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// TODO: move this current content should be in "ViewMapperTest" class)
+// TODO: equals tests
 public class ViewEntityTest {
     @Test
     void testMappingBasicView() {

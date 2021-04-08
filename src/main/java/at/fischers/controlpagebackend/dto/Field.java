@@ -3,7 +3,7 @@ package at.fischers.controlpagebackend.dto;
 import at.fischers.controlpagebackend.dto.action.Action;
 import at.fischers.controlpagebackend.dto.view.FullView;
 import at.fischers.controlpagebackend.entity.FieldEntity;
-import at.fischers.controlpagebackend.util.ActionMapper;
+import at.fischers.controlpagebackend.util.mapper.ActionMapper;
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 

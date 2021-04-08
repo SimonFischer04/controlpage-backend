@@ -1,17 +1,17 @@
-package at.fischers.controlpagebackend.unit.util;
+package at.fischers.controlpagebackend.unit.util.mapper.groupmapper;
 
 import at.fischers.controlpagebackend.dto.Group;
 import at.fischers.controlpagebackend.entity.GroupEntity;
-import at.fischers.controlpagebackend.util.GroupMapper;
+import at.fischers.controlpagebackend.util.mapper.groupmapper.GroupMapperEntityToDTO;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class GroupMapperTest {
+public class GroupMapperEntityToDTOTest {
     private static GroupEntity childEntity11, childEntity1, childEntity2, headEntity;
 
     @BeforeAll
@@ -50,7 +50,7 @@ public class GroupMapperTest {
         /*
             Test 1: mapping head group Entity
          */
-        Group headGroup = GroupMapper.mapEntityToDTO(headEntity);
+        Group headGroup = GroupMapperEntityToDTO.mapEntityToDTO(headEntity);
         assertNotNull(headGroup);
         assertEquals(headGroup.getName(), "HeadGroup");
 
@@ -64,8 +64,8 @@ public class GroupMapperTest {
      */
     @Test
     void testMapToDTOLayer2() {
-        Group headGroup = GroupMapper.mapEntityToDTO(headEntity);
-        Group childGroup1 = GroupMapper.mapEntityToDTO(childEntity1);
+        Group headGroup = GroupMapperEntityToDTO.mapEntityToDTO(headEntity);
+        Group childGroup1 = GroupMapperEntityToDTO.mapEntityToDTO(childEntity1);
 
         /*
             Test 2a: mapping a child in layer 2 (childEntity1) with children
@@ -84,7 +84,7 @@ public class GroupMapperTest {
         /*
             Test 2b: mapping a child in layer 2 (childEntity2) empty children
          */
-        Group childGroup2 = GroupMapper.mapEntityToDTO(childEntity2);
+        Group childGroup2 = GroupMapperEntityToDTO.mapEntityToDTO(childEntity2);
         assertNotNull(childGroup2);
         assertEquals(childGroup2.getName(), "Child2");
 
@@ -104,12 +104,12 @@ public class GroupMapperTest {
      */
     @Test
     void testMapToDTOLayer3() {
-        Group childGroup1 = GroupMapper.mapEntityToDTO(childEntity1);
+        Group childGroup1 = GroupMapperEntityToDTO.mapEntityToDTO(childEntity1);
 
         /*
             Test 3: mapping a child in layer 3
          */
-        Group childGroup11 = GroupMapper.mapEntityToDTO(childEntity11);
+        Group childGroup11 = GroupMapperEntityToDTO.mapEntityToDTO(childEntity11);
         assertNotNull(childGroup11);
 
         // check children

@@ -1,4 +1,4 @@
-package at.fischers.controlpagebackend.util;
+package at.fischers.controlpagebackend.util.mapper.groupmapper;
 
 import at.fischers.controlpagebackend.dto.Group;
 import at.fischers.controlpagebackend.entity.GroupEntity;
@@ -6,7 +6,7 @@ import at.fischers.controlpagebackend.entity.GroupEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupMapper {
+public class GroupMapperEntityToDTO {
     /**
      * This functions maps the basic attributes of a GroupEntity to a Group (like name, id,..)
      * (NOTE: parentGroup and childGroups will still be null)

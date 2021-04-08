@@ -29,6 +29,7 @@ public class ActionEntity {
     private RunPolicy runPolicy;
 
     public ActionEntity(Action action) {
+        // TODO: should be unused if mapper class finished -> make this class abstract
         id = action.getId();
         runPolicy = action.getRunPolicy();
     }
