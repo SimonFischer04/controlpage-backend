@@ -1,23 +1,23 @@
 package at.fischers.controlpagebackend.entity;
 
 import at.fischers.controlpagebackend.dto.Group;
+import at.fischers.controlpagebackend.util.mapper.groupmapper.GroupMapperDTOToEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "view_group")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class GroupEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,19 +36,31 @@ public class GroupEntity {
     @ToString.Exclude
     private ViewEntity view;
 
+    public GroupEntity(GroupEntity groupEntity) {
+        id = groupEntity.getId();
+        childGroups = groupEntity.getChildGroups();
+        parentGroup = groupEntity.getParentGroup();
+        name = groupEntity.getName();
+        view = groupEntity.getView();
+    }
+
     public GroupEntity(Group group) {
-        // TODO: use mapper class
-        if (group != null) {
-            id = group.getId();
-            if (group.getChildGroups() != null) {
-                childGroups = new ArrayList<>();
-                group.getChildGroups().forEach(grp -> {
-                    GroupEntity groupEntity = new GroupEntity(grp);
-                    groupEntity.setParentGroup(this);
-                    childGroups.add(groupEntity);
-                });
-            }
-            name = group.getName();
-        }
+        this(GroupMapperDTOToEntity.mapDTOToEntity(group));
+    }
+
+    /*
+        Because they are stored in a database two Groups with the same id are considered equals
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GroupEntity group = (GroupEntity) o;
+        return id == group.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

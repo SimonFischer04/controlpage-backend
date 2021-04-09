@@ -12,6 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GroupMapperEntityToDTOTest {
+    /*
+        Note: i know this is kind of code duplication to the GroupMapperDTOToEntityTest, but building a "framework" (superclass,...)
+        would create more overhead / is over-engineered
+     */
+
     private static GroupEntity childEntity11, childEntity1, childEntity2, headEntity;
 
     @BeforeAll

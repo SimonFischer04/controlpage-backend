@@ -16,8 +16,8 @@ public class ViewEntityTest {
     @Test
     void testMappingBasicView() {
         Group childGroup1 = new Group(0, null, null, "TestGroup1", null);
-        Group childGroup2 = new Group(0, null, null, "TestGroup2", null);
-        Group headGroup = new Group(0, List.of(childGroup1, childGroup2), null, "HeadGroup", null);
+        Group childGroup2 = new Group(1, null, null, "TestGroup2", null);
+        Group headGroup = new Group(2, List.of(childGroup1, childGroup2), null, "HeadGroup", null);
         childGroup1.setParentGroup(headGroup);
         childGroup2.setParentGroup(headGroup);
 

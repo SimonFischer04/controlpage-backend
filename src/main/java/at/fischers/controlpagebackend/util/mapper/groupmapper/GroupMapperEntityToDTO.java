@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GroupMapperEntityToDTO {
+    /*
+        Note: i know this is kind of code duplication to the GroupMapperDTOToEntity, but building a "framework" (superclass,...)
+        would create more overhead / is over-engineered
+     */
+
     /**
      * This functions maps the basic attributes of a GroupEntity to a Group (like name, id,..)
      * (NOTE: parentGroup and childGroups will still be null)
