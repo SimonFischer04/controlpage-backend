@@ -6,6 +6,7 @@ import at.fischers.controlpagebackend.dto.action.ViewAction;
 import at.fischers.controlpagebackend.entity.action.ActionEntity;
 import at.fischers.controlpagebackend.entity.action.RestActionEntity;
 import at.fischers.controlpagebackend.entity.action.ViewActionEntity;
+import at.fischers.controlpagebackend.enums.ActionType;
 
 public class ActionMapper {
     /**
@@ -15,8 +16,16 @@ public class ActionMapper {
      * @return the mapped RestAction
      */
     private static RestAction mapRestActionEntityToDTO(RestActionEntity restActionEntity) {
-        // TODO: implement
-        return null;
+        return RestAction.builder()
+                .id(restActionEntity.getId())
+                .actionType(ActionType.REST)
+                .restType(restActionEntity.getType())
+                .body(restActionEntity.getBody())
+                // NOTE: this must be set by the Field mapper (otherwise would create an infinity recursion)
+                .field(null)
+                .runPolicy(restActionEntity.getRunPolicy())
+                .url(restActionEntity.getUrl())
+                .build();
     }
 
     /**
@@ -26,8 +35,15 @@ public class ActionMapper {
      * @return the mapped ViewAction
      */
     private static ViewAction mapViewActionEntityToDTO(ViewActionEntity viewActionEntity) {
-        // TODO: implement
-        return null;
+        return ViewAction.builder()
+                .id(viewActionEntity.getId())
+                .actionType(ActionType.VIEW)
+                .viewActionType(viewActionEntity.getType())
+                .viewId(viewActionEntity.getViewId())
+                .runPolicy(viewActionEntity.getRunPolicy())
+                // NOTE: this must be set by the Field mapper (otherwise would create an infinity recursion)
+                .field(null)
+                .build();
     }
 
     /**
@@ -37,12 +53,11 @@ public class ActionMapper {
      * @return the mapped Action of type x
      */
     public static Action mapEntityToDTO(ActionEntity actionEntity) {
-        // TODO: use mapper methods
         if (actionEntity instanceof RestActionEntity) {
-            return new RestAction((RestActionEntity) actionEntity);
+            return mapRestActionEntityToDTO((RestActionEntity) actionEntity);
         }
         if (actionEntity instanceof ViewActionEntity) {
-            return new ViewAction((ViewActionEntity) actionEntity);
+            return mapViewActionEntityToDTO((ViewActionEntity) actionEntity);
         }
         return null;
     }
@@ -59,8 +74,15 @@ public class ActionMapper {
      * @return the mapped RestActionEntity
      */
     private static RestActionEntity mapRestActionDTOToEntity(RestAction restAction) {
-        // TODO: implement
-        return null;
+        return RestActionEntity.builder()
+                .id(restAction.getId())
+                .body(restAction.getBody())
+                .type(restAction.getRestType())
+                .url(restAction.getUrl())
+                .runPolicy(restAction.getRunPolicy())
+                // NOTE: this must be set by the Field mapper (otherwise would create an infinity recursion)
+                .field(null)
+                .build();
     }
 
     /**
@@ -69,9 +91,15 @@ public class ActionMapper {
      * @param viewAction: the ViewAction to map
      * @return the mapped ViewActionEntity
      */
-    private static ViewActionEntity mapViewActionDTOEntity(ViewAction viewAction) {
-        // TODO: implement
-        return null;
+    private static ViewActionEntity mapViewActionDTOToEntity(ViewAction viewAction) {
+        return ViewActionEntity.builder()
+                .id(viewAction.getId())
+                .viewId(viewAction.getViewId())
+                .type(viewAction.getViewActionType())
+                .runPolicy(viewAction.getRunPolicy())
+                // NOTE: this must be set by the Field mapper (otherwise would create an infinity recursion)
+                .field(null)
+                .build();
     }
 
     /**
@@ -81,7 +109,12 @@ public class ActionMapper {
      * @return the mapped ActionEntity of type x
      */
     public static ActionEntity mapDTOToEntity(Action action) {
-        // TODO: implement
+        if (action instanceof RestAction) {
+            return mapRestActionDTOToEntity((RestAction) action);
+        }
+        if (action instanceof ViewAction) {
+            return mapViewActionDTOToEntity((ViewAction) action);
+        }
         return null;
     }
 }

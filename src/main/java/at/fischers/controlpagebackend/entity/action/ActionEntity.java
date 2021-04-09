@@ -1,15 +1,14 @@
 package at.fischers.controlpagebackend.entity.action;
 
-import at.fischers.controlpagebackend.dto.action.Action;
 import at.fischers.controlpagebackend.entity.FieldEntity;
 import at.fischers.controlpagebackend.enums.RunPolicy;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "action")
@@ -17,7 +16,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ActionEntity {
+public abstract class ActionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -28,9 +27,19 @@ public class ActionEntity {
 
     private RunPolicy runPolicy;
 
-    public ActionEntity(Action action) {
-        // TODO: should be unused if mapper class finished -> make this class abstract
-        id = action.getId();
-        runPolicy = action.getRunPolicy();
+    /*
+        Because they are stored in a database two Actions with the same id are considered equals
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ActionEntity action = (ActionEntity) o;
+        return id == action.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

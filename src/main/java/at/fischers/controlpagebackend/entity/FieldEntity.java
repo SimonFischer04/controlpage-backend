@@ -3,6 +3,7 @@ package at.fischers.controlpagebackend.entity;
 import at.fischers.controlpagebackend.dto.Field;
 import at.fischers.controlpagebackend.dto.Image;
 import at.fischers.controlpagebackend.entity.action.ActionEntity;
+import at.fischers.controlpagebackend.util.mapper.ActionMapper;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
@@ -43,7 +44,7 @@ public class FieldEntity {
     public FieldEntity(Field field) {
         id = field.getId();
         if (field.getAction() != null) {
-            action = new ActionEntity(field.getAction());
+            action = ActionMapper.mapDTOToEntity(field.getAction());
             action.setField(this);
         }
         title = field.getTitle();

@@ -1,12 +1,10 @@
 package at.fischers.controlpagebackend.dto.action;
 
-import at.fischers.controlpagebackend.entity.action.ViewActionEntity;
+import at.fischers.controlpagebackend.dto.Field;
 import at.fischers.controlpagebackend.enums.ActionType;
+import at.fischers.controlpagebackend.enums.RunPolicy;
 import at.fischers.controlpagebackend.enums.ViewActionType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
@@ -16,10 +14,11 @@ public class ViewAction extends Action{
     private ViewActionType viewActionType;
     private int viewId;
 
-    public ViewAction(ViewActionEntity entity){
-        super(entity);
-        setActionType(ActionType.VIEW);
-        viewActionType = entity.getType();
-        viewId = entity.getViewId();
+    @SuppressWarnings("unused")
+    @Builder
+    public ViewAction(int id, Field field, ActionType actionType, RunPolicy runPolicy, ViewActionType viewActionType, int viewId) {
+        super(id, field, actionType, runPolicy);
+        this.viewActionType = viewActionType;
+        this.viewId = viewId;
     }
 }
