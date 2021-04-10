@@ -72,10 +72,10 @@ public class GroupMapperEntityToDTO {
     }
 
     /**
-     * Map a GroupEntity to a Group.
+     * Map a {@link GroupEntity} to a {@link Group}.
      *
-     * @param groupEntity: the GroupEntity to map
-     * @return the mapped Group
+     * @param groupEntity: the {@link GroupEntity} to map
+     * @return the mapped {@link Group} or null if input groupEntity is null
      */
     public static Group mapEntityToDTO(GroupEntity groupEntity) {
         if (groupEntity == null)

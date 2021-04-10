@@ -1,22 +1,22 @@
 package at.fischers.controlpagebackend.entity;
 
-import at.fischers.controlpagebackend.dto.Field;
 import at.fischers.controlpagebackend.dto.view.BasicView;
-import at.fischers.controlpagebackend.dto.view.FullView;
+import at.fischers.controlpagebackend.util.mapper.ViewMapper;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "view")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class ViewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,28 +31,30 @@ public class ViewEntity {
     @OneToMany(mappedBy = "view", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FieldEntity> fields;
 
-    public ViewEntity(BasicView view) {
-        id = view.getId();
-        name = view.getName();
-        group = new GroupEntity(view.getGroup());
-        group.setView(this);
+    public ViewEntity(ViewEntity viewEntity) {
+        id = viewEntity.getId();
+        name = viewEntity.getName();
+        group = viewEntity.getGroup();
+        fields = viewEntity.getFields();
     }
 
-    public ViewEntity(FullView view) {
-        this((BasicView) view);
-        fields = new ArrayList<>();
-        int y = 0;
-        for (Collection<Field> row : view.getFields()) {
-            int x = 0;
-            for (Field field : row) {
-                FieldEntity fieldEntity = new FieldEntity(field);
-                fieldEntity.setView(this);
-                fieldEntity.setYPos(y);
-                fieldEntity.setXPos(x);
-                fields.add(fieldEntity);
-                x++;
-            }
-            y++;
-        }
+    public ViewEntity(BasicView view) {
+        this(ViewMapper.mapDTOToEntity(view));
+    }
+
+    /*
+        Because they are stored in a database two Views with the same id are considered equals
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ViewEntity view = (ViewEntity) o;
+        return id == view.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

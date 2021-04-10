@@ -1,15 +1,10 @@
 package at.fischers.controlpagebackend.entity;
 
 import at.fischers.controlpagebackend.dto.Field;
-import at.fischers.controlpagebackend.dto.Image;
 import at.fischers.controlpagebackend.entity.action.ActionEntity;
 import at.fischers.controlpagebackend.util.mapper.ActionMapper;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import at.fischers.controlpagebackend.util.mapper.FieldMapper;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -18,6 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class FieldEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,17 +37,19 @@ public class FieldEntity {
     private int xPos;
     private int yPos;
 
+    public FieldEntity(FieldEntity fieldEntity) {
+        id = fieldEntity.getId();
+        view = fieldEntity.getView();
+        action = fieldEntity.getAction();
+        title = fieldEntity.getTitle();
+        background = fieldEntity.getBackground();
+        rowspan = fieldEntity.getRowspan();
+        colspan = fieldEntity.getColspan();
+        xPos = fieldEntity.getXPos();
+        yPos = fieldEntity.getYPos();
+    }
+
     public FieldEntity(Field field) {
-        id = field.getId();
-        if (field.getAction() != null) {
-            action = ActionMapper.mapDTOToEntity(field.getAction());
-            action.setField(this);
-        }
-        title = field.getTitle();
-        if (field.getBackground() != null) {
-            background = new ImageEntity(field.getBackground());
-        }
-        rowspan = field.getRowspan();
-        colspan = field.getColspan();
+        this(FieldMapper.mapDTOToEntity(field));
     }
 }

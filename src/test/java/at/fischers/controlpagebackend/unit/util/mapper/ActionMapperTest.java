@@ -18,6 +18,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ActionMapperTest {
     @Test
     void testMapEntityToDTO() {
+        /*
+            Test 1: test mapping RestActionEntity
+         */
         RestActionEntity restActionEntity = new RestActionEntity(42, null, RunPolicy.ASYNC, RestType.GET, "127.0.0.1:4242", "{}");
         Action action = ActionMapper.mapEntityToDTO(restActionEntity);
 
@@ -26,13 +29,15 @@ public class ActionMapperTest {
         RestAction restAction = (RestAction) action;
 
         assertEquals(restAction.getId(), 42);
+        assertEquals(restAction.getActionType(), ActionType.REST);
         assertEquals(restAction.getRunPolicy(), RunPolicy.ASYNC);
         assertEquals(restAction.getRestType(), RestType.GET);
         assertEquals(restAction.getUrl(), "127.0.0.1:4242");
         assertEquals(restAction.getBody(), "{}");
 
-        //---
-
+        /*
+            Test 2: test mapping ViewActionEntity
+         */
         ViewActionEntity viewActionEntity = new ViewActionEntity(42, null, RunPolicy.ASYNC, ViewActionType.CLOSE, 1337);
         Action action2 = ActionMapper.mapEntityToDTO(viewActionEntity);
 
@@ -41,6 +46,7 @@ public class ActionMapperTest {
         ViewAction viewAction = (ViewAction) action2;
 
         assertEquals(viewAction.getId(), 42);
+        assertEquals(viewAction.getActionType(), ActionType.VIEW);
         assertEquals(viewAction.getRunPolicy(), RunPolicy.ASYNC);
         assertEquals(viewAction.getViewActionType(), ViewActionType.CLOSE);
         assertEquals(viewAction.getViewId(), 1337);
@@ -48,7 +54,10 @@ public class ActionMapperTest {
 
     @Test
     void testMapDTOToEntity() {
-        RestAction restAction = new RestAction(42, null, ActionType.REST, RunPolicy.ASYNC, RestType.GET, "127.0.0.1:42", "{}");
+         /*
+            Test 1: test mapping RestAction
+         */
+        RestAction restAction = new RestAction(42, null, RunPolicy.ASYNC, RestType.GET, "127.0.0.1:42", "{}");
         ActionEntity actionEntity = ActionMapper.mapDTOToEntity(restAction);
 
         assertNotNull(actionEntity);
@@ -61,12 +70,14 @@ public class ActionMapperTest {
         assertEquals(restActionEntity.getUrl(), "127.0.0.1:42");
         assertEquals(restActionEntity.getBody(), "{}");
 
-        //---
-
-        ViewAction viewAction = new ViewAction(42, null, ActionType.REST, RunPolicy.ASYNC, ViewActionType.CLOSE, 1337);
+       /*
+            Test 2: test mapping ViewAction
+         */
+        ViewAction viewAction = new ViewAction(42, null, RunPolicy.ASYNC, ViewActionType.CLOSE, 1337);
         ActionEntity actionEntity2 = ActionMapper.mapDTOToEntity(viewAction);
 
         assertNotNull(actionEntity2);
+        assertTrue(actionEntity2 instanceof ViewActionEntity);
         ViewActionEntity viewActionEntity = (ViewActionEntity) actionEntity2;
 
         assertEquals(viewActionEntity.getId(), 42);

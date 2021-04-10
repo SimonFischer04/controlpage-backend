@@ -1,7 +1,9 @@
 package at.fischers.controlpagebackend.entity;
 
 import at.fischers.controlpagebackend.dto.Image;
+import at.fischers.controlpagebackend.util.mapper.ImageMapper;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class ImageEntity {
     @Id
     @Column(name = "id")
@@ -23,10 +26,14 @@ public class ImageEntity {
     @Lob
     private byte[] imageData;
 
+    public ImageEntity(ImageEntity imageEntity) {
+        id = imageEntity.getId();
+        name = imageEntity.getName();
+        type = imageEntity.getType();
+        imageData = imageEntity.getImageData();
+    }
+
     public ImageEntity(Image image) {
-        id = image.getId();
-        name = image.getName();
-        type = image.getType();
-        imageData = image.getImageData();
+        this(ImageMapper.mapDTOToEntity(image));
     }
 }

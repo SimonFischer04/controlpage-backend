@@ -18,7 +18,6 @@ public class ActionMapper {
     private static RestAction mapRestActionEntityToDTO(RestActionEntity restActionEntity) {
         return RestAction.builder()
                 .id(restActionEntity.getId())
-                .actionType(ActionType.REST)
                 .restType(restActionEntity.getType())
                 .body(restActionEntity.getBody())
                 // NOTE: this must be set by the Field mapper (otherwise would create an infinity recursion)
@@ -37,7 +36,6 @@ public class ActionMapper {
     private static ViewAction mapViewActionEntityToDTO(ViewActionEntity viewActionEntity) {
         return ViewAction.builder()
                 .id(viewActionEntity.getId())
-                .actionType(ActionType.VIEW)
                 .viewActionType(viewActionEntity.getType())
                 .viewId(viewActionEntity.getViewId())
                 .runPolicy(viewActionEntity.getRunPolicy())
@@ -53,6 +51,9 @@ public class ActionMapper {
      * @return the mapped Action of type x
      */
     public static Action mapEntityToDTO(ActionEntity actionEntity) {
+        if (actionEntity == null)
+            return null;
+
         if (actionEntity instanceof RestActionEntity) {
             return mapRestActionEntityToDTO((RestActionEntity) actionEntity);
         }
@@ -109,6 +110,9 @@ public class ActionMapper {
      * @return the mapped ActionEntity of type x
      */
     public static ActionEntity mapDTOToEntity(Action action) {
+        if (action == null)
+            return null;
+
         if (action instanceof RestAction) {
             return mapRestActionDTOToEntity((RestAction) action);
         }

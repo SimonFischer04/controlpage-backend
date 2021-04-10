@@ -21,6 +21,11 @@ public abstract class Action {
     @JsonIgnore
     private Field field;
 
+    /*
+        extra ActionType set in Mapper for better distinguishing in FrontEnd
+        RestAction -> ActionType.REST,
+        ViewAction -> ActionType.VIEW
+     */
     private ActionType actionType;
 
     private RunPolicy runPolicy;
