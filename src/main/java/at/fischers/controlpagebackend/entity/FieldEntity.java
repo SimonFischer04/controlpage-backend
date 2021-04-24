@@ -2,11 +2,11 @@ package at.fischers.controlpagebackend.entity;
 
 import at.fischers.controlpagebackend.dto.Field;
 import at.fischers.controlpagebackend.entity.action.ActionEntity;
-import at.fischers.controlpagebackend.util.mapper.ActionMapper;
 import at.fischers.controlpagebackend.util.mapper.FieldMapper;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "field")
@@ -51,5 +51,21 @@ public class FieldEntity {
 
     public FieldEntity(Field field) {
         this(FieldMapper.mapDTOToEntity(field));
+    }
+
+    /*
+        Because they are stored in a database two Fields with the same id are considered equals
+    */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FieldEntity field = (FieldEntity) o;
+        return id == field.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

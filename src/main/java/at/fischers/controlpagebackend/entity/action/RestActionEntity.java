@@ -8,7 +8,6 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import java.util.Objects;
 
 @Entity
 @Table(name = "rest_action")

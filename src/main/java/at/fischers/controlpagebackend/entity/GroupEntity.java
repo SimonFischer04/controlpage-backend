@@ -2,13 +2,9 @@ package at.fischers.controlpagebackend.entity;
 
 import at.fischers.controlpagebackend.dto.Group;
 import at.fischers.controlpagebackend.util.mapper.groupmapper.GroupMapperDTOToEntity;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 

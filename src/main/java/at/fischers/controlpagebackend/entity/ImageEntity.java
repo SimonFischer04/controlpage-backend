@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "image")
@@ -35,5 +36,21 @@ public class ImageEntity {
 
     public ImageEntity(Image image) {
         this(ImageMapper.mapDTOToEntity(image));
+    }
+
+    /*
+        Because they are stored in a database two Images with the same id are considered equals
+    */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ImageEntity image = (ImageEntity) o;
+        return id == image.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

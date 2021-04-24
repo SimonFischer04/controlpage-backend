@@ -6,7 +6,6 @@ import at.fischers.controlpagebackend.entity.ViewEntity;
 import at.fischers.controlpagebackend.util.mapper.ViewMapper;
 import lombok.*;
 
-import java.util.Collection;
 import java.util.List;
 
 @NoArgsConstructor
