@@ -24,7 +24,7 @@ public class ViewEntity {
 
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "group_id", referencedColumnName = "id")
     private GroupEntity group;
 

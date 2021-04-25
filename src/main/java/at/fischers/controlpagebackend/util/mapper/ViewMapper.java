@@ -29,7 +29,7 @@ public class ViewMapper {
                 .group(group)
                 .name(viewEntity.getName())
                 .build();
-        group.setView(basicView);
+        group.getViews().add(basicView);
 
         return basicView;
     }
@@ -49,7 +49,7 @@ public class ViewMapper {
                 .fields(null)
                 .build();
         if (group != null)
-            group.setView(fullView);
+            group.getViews().add(fullView);
 
         if (viewEntity.getFields() != null) {
         /*
@@ -64,8 +64,7 @@ public class ViewMapper {
                 if (!map.containsKey(fieldEntity.getYPos())) {
                     map.put(fieldEntity.getYPos(), new TreeMap<>());
                 }
-                // TODO: use mapper class
-                map.get(fieldEntity.getYPos()).put(fieldEntity.getXPos(), new Field(fieldEntity));
+                map.get(fieldEntity.getYPos()).put(fieldEntity.getXPos(), FieldMapper.mapEntityToDTO(fieldEntity));
             });
             map.forEach((key, list) -> {
                 fields.add(new ArrayList<>(list.values()));
@@ -92,7 +91,7 @@ public class ViewMapper {
                 .build();
 
         if (groupEntity != null)
-            groupEntity.setView(viewEntity);
+            groupEntity.getViews().add(viewEntity);
 
         if (view instanceof FullView && ((FullView) view).getFields() != null) {
             List<FieldEntity> fields = new ArrayList<>();
@@ -100,8 +99,7 @@ public class ViewMapper {
             for (Collection<Field> row : ((FullView) view).getFields()) {
                 int x = 0;
                 for (Field field : row) {
-                    // TODO: use mapper class
-                    FieldEntity fieldEntity = new FieldEntity(field);
+                    FieldEntity fieldEntity = FieldMapper.mapDTOToEntity(field);
 
                     fieldEntity.setView(viewEntity);
                     fieldEntity.setYPos(y);

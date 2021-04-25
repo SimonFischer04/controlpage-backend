@@ -25,7 +25,7 @@ public class GroupMapperDTOToEntity {
                 .parentGroup(null)
                 .childGroups(null)
                 // NOTE: this must be set by the view mapper (otherwise would create an infinity recursion)
-                .view(null)
+                .views(new ArrayList<>())
                 .name(group.getName())
                 .build();
     }

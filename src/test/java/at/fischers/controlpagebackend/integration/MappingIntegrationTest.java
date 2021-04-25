@@ -37,7 +37,7 @@ public class MappingIntegrationTest {
         FullView view = new FullView(42, "V1", group, fields);
 
         f1.setView(view);
-        group.setView(view);
+        group.setViews(List.of(view));
         //
         ViewEntity viewEntity = ViewMapper.mapDTOToEntity(view);
         FieldEntity fieldEntity = viewEntity.getFields().get(0);
@@ -47,7 +47,9 @@ public class MappingIntegrationTest {
          */
         assertNotNull(fieldEntity.getView());
         assertNotNull(fieldEntity.getAction().getField());
-        assertNotNull(viewEntity.getGroup().getView());
+        assertNotNull(viewEntity.getGroup().getViews());
+        assertEquals(viewEntity.getGroup().getViews().size(), 1);
+        assertNotNull(viewEntity.getGroup().getViews().get(0));
     }
 
     /**
@@ -67,7 +69,7 @@ public class MappingIntegrationTest {
         ViewEntity viewEntity = new ViewEntity(42, "V1", group, fields);
 
         f1.setView(viewEntity);
-        group.setView(viewEntity);
+        group.setViews(List.of(viewEntity));
         //
         FullView view = ViewMapper.mapEntityToFullDTO(viewEntity);
         Field field = view.getFields().get(0).get(0);
@@ -77,6 +79,8 @@ public class MappingIntegrationTest {
          */
         assertNotNull(field.getView());
         assertNotNull(field.getAction().getField());
-        assertNotNull(view.getGroup().getView());
+        assertNotNull(view.getGroup().getViews());
+        assertEquals(view.getGroup().getViews().size(), 1);
+        assertNotNull(view.getGroup().getViews().get(0));
     }
 }

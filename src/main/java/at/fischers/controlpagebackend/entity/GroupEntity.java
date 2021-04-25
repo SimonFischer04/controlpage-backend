@@ -28,16 +28,16 @@ public class GroupEntity {
 
     private String name;
 
-    @OneToOne(mappedBy = "group")
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private ViewEntity view;
+    private List<ViewEntity> views;
 
     public GroupEntity(GroupEntity groupEntity) {
         id = groupEntity.getId();
         childGroups = groupEntity.getChildGroups();
         parentGroup = groupEntity.getParentGroup();
         name = groupEntity.getName();
-        view = groupEntity.getView();
+        views = groupEntity.getViews();
     }
 
     public GroupEntity(Group group) {

@@ -92,7 +92,7 @@ public class ViewMapperTest {
         assertNotNull(viewEntity);
         assertNotNull(viewEntity.getGroup());
         assertEquals(viewEntity.getGroup().getName(), "TestGroup1");
-        assertEquals(viewEntity.getGroup().getView(), viewEntity);
+        assertEquals(viewEntity.getGroup().getViews().get(0), viewEntity);
 
         List<FieldEntity> fieldEntities = viewEntity.getFields();
         assertNotNull(fieldEntities);

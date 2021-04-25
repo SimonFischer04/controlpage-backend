@@ -30,7 +30,7 @@ public class Group {
 
     @JsonBackReference(value = "viewGroup")
     @ToString.Exclude
-    private BasicView view;
+    private List<BasicView> views;
 
     public Group(Group group) {
         this.id = group.id;
