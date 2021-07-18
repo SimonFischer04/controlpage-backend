@@ -134,12 +134,14 @@ public class ViewMapper {
 
     /**
      * Map a {@link BasicView} or {@link FullView} to {@link ViewEntity}
+     * (Doesn't check for any other views in the group of the view)
+     * Also ads it to the view-list of the groupEntity
      *
-     * @param view: the {@link BasicView} or {@link FullView} to map
+     * @param view:        the {@link BasicView} or {@link FullView} to map
+     * @param groupEntity: the already mapped {@link GroupEntity} where the {@link ViewEntity} should belong to
      * @return the mapped {@link ViewEntity}
      */
-    public static ViewEntity mapDTOToEntity(BasicView view) {
-        GroupEntity groupEntity = GroupMapper.mapDTOToEntity(view.getGroup());
+    private static ViewEntity mapDTOToEntitySingle(BasicView view, GroupEntity groupEntity) {
         ViewEntity viewEntity = ViewEntity.builder()
                 .id(view.getId())
                 .group(groupEntity)
@@ -169,5 +171,25 @@ public class ViewMapper {
         }
 
         return viewEntity;
+    }
+
+    /**
+     * Map a {@link BasicView} or {@link FullView} to {@link ViewEntity}
+     * Also maps all View's of the view's group!!!
+     *
+     * @param view: the {@link BasicView} or {@link FullView} to map
+     * @return the mapped {@link ViewEntity}
+     */
+    public static ViewEntity mapDTOToEntity(BasicView view) {
+        GroupEntity groupEntity = GroupMapper.mapDTOToEntity(view.getGroup());
+        // check if any other views are in group of view that need to be mapped
+        if (view.getGroup() != null && view.getGroup().getViews() != null)
+            view.getGroup().getViews().forEach(viewEntity1 -> {
+                // dont map the view supplied as parameter
+                if (!viewEntity1.equals(view))
+                    mapDTOToEntitySingle(viewEntity1, groupEntity);
+            });
+
+        return mapDTOToEntitySingle(view, groupEntity);
     }
 }
