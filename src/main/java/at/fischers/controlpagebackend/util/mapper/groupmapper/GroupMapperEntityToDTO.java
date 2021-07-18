@@ -2,6 +2,7 @@ package at.fischers.controlpagebackend.util.mapper.groupmapper;
 
 import at.fischers.controlpagebackend.dto.Group;
 import at.fischers.controlpagebackend.entity.GroupEntity;
+import at.fischers.controlpagebackend.util.mapper.ViewMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +21,22 @@ public class GroupMapperEntityToDTO {
      * @return the mapped Group
      */
     private static Group basicMapping(GroupEntity groupEntity) {
-        return Group.builder()
+        if (groupEntity == null)
+            return null;
+
+        Group group = Group.builder()
                 .id(groupEntity.getId())
                 .parentGroup(null)
                 .childGroups(null)
-                // NOTE: this must be set by the view mapper (otherwise would create an infinity recursion)
+                // filled in by ViewMapper
                 .views(new ArrayList<>())
                 .name(groupEntity.getName())
                 .build();
+
+        if (groupEntity.getViews() != null)
+            groupEntity.getViews().forEach(viewEntity -> ViewMapper.mapEntityToFullDTO(viewEntity, group));
+
+        return group;
     }
 
     /**

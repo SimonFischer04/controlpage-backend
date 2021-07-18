@@ -13,9 +13,31 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 public class ViewMapper {
+    /**
+     * Map a {@link ViewEntity} to a {@link BasicView}.
+     *
+     * @param viewEntity: the {@link ViewEntity} to map
+     * @param group:      optional already mapped {@link Group}. if not supplied(==null) -> calls GroupMapper
+     * @return the mapped {@link BasicView}
+     */
+    public static BasicView mapEntityToBasicDTO(ViewEntity viewEntity, Group group) {
+        if (group == null)
+            group = GroupMapper.mapEntityToDTO(viewEntity.getGroup());
+
+        BasicView basicView = BasicView.basicBuilder()
+                .id(viewEntity.getId())
+                .group(group)
+                .name(viewEntity.getName())
+                .build();
+
+        if (group != null && !group.getViews().contains(basicView))
+            group.getViews().add(basicView);
+
+        return basicView;
+    }
+
     /**
      * Map a {@link ViewEntity} to a {@link BasicView}.
      *
@@ -23,38 +45,35 @@ public class ViewMapper {
      * @return the mapped {@link BasicView}
      */
     public static BasicView mapEntityToBasicDTO(ViewEntity viewEntity) {
-        Group group = GroupMapper.mapEntityToDTO(viewEntity.getGroup());
-        BasicView basicView = BasicView.basicBuilder()
-                .id(viewEntity.getId())
-                .group(group)
-                .name(viewEntity.getName())
-                .build();
-        group.getViews().add(basicView);
-
-        return basicView;
+        return mapEntityToBasicDTO(viewEntity, null);
     }
+
 
     /**
      * Map a {@link ViewEntity} to a {@link FullView}
      *
      * @param viewEntity: the {@link ViewEntity} to map
+     * @param group:      optional already mapped {@link Group}. if not supplied(==null) -> calls GroupMapper
      * @return the mapped {@link FullView}
      */
-    public static FullView mapEntityToFullDTO(ViewEntity viewEntity) {
-        Group group = GroupMapper.mapEntityToDTO(viewEntity.getGroup());
+    public static FullView mapEntityToFullDTO(ViewEntity viewEntity, Group group) {
+        if (group == null)
+            group = GroupMapper.mapEntityToDTO(viewEntity.getGroup());
+
         FullView fullView = FullView.fullBuilder()
                 .id(viewEntity.getId())
                 .group(group)
                 .name(viewEntity.getName())
                 .fields(null)
                 .build();
-        if (group != null)
+
+        if (group != null && !group.getViews().contains(fullView))
             group.getViews().add(fullView);
 
         if (viewEntity.getFields() != null) {
         /*
             Mapping Fields:
-            FieldEntities are stored using x- and y- postion -> map to 2D array
+            FieldEntities are stored using x- and y- position -> map to 2D array
          */
             // 2D array of field
             List<List<Field>> fields = new ArrayList<>();
@@ -77,20 +96,33 @@ public class ViewMapper {
     }
 
     /**
+     * Map a {@link ViewEntity} to a {@link FullView}
+     *
+     * @param viewEntity: the {@link ViewEntity} to map
+     * @return the mapped {@link FullView}
+     */
+    public static FullView mapEntityToFullDTO(ViewEntity viewEntity) {
+        return mapEntityToFullDTO(viewEntity, null);
+    }
+
+    /**
      * Map a {@link BasicView} or {@link FullView} to {@link ViewEntity}
      *
-     * @param view: the {@link BasicView} or {@link FullView} to map
+     * @param view:        the {@link BasicView} or {@link FullView} to map
+     * @param groupEntity: optional already mapped {@link GroupEntity}. if not supplied(==null) -> calls GroupMapper
      * @return the mapped {@link ViewEntity}
      */
-    public static ViewEntity mapDTOToEntity(BasicView view) {
-        GroupEntity groupEntity = GroupMapper.mapDTOToEntity(view.getGroup());
+    public static ViewEntity mapDTOToEntity(BasicView view, GroupEntity groupEntity) {
+        if (groupEntity == null)
+            groupEntity = GroupMapper.mapDTOToEntity(view.getGroup());
+
         ViewEntity viewEntity = ViewEntity.builder()
                 .id(view.getId())
                 .group(groupEntity)
                 .name(view.getName())
                 .build();
 
-        if (groupEntity != null)
+        if (groupEntity != null && !groupEntity.getViews().contains(viewEntity))
             groupEntity.getViews().add(viewEntity);
 
         if (view instanceof FullView && ((FullView) view).getFields() != null) {
@@ -113,5 +145,15 @@ public class ViewMapper {
         }
 
         return viewEntity;
+    }
+
+    /**
+     * Map a {@link BasicView} or {@link FullView} to {@link ViewEntity}
+     *
+     * @param view: the {@link BasicView} or {@link FullView} to map
+     * @return the mapped {@link ViewEntity}
+     */
+    public static ViewEntity mapDTOToEntity(BasicView view) {
+        return mapDTOToEntity(view, null);
     }
 }

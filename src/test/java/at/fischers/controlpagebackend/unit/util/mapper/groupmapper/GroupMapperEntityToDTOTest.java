@@ -2,10 +2,14 @@ package at.fischers.controlpagebackend.unit.util.mapper.groupmapper;
 
 import at.fischers.controlpagebackend.dto.Group;
 import at.fischers.controlpagebackend.entity.GroupEntity;
+import at.fischers.controlpagebackend.entity.ViewEntity;
+import at.fischers.controlpagebackend.util.mapper.groupmapper.GroupMapper;
 import at.fischers.controlpagebackend.util.mapper.groupmapper.GroupMapperEntityToDTO;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,6 +37,28 @@ public class GroupMapperEntityToDTOTest {
         headEntity = new GroupEntity(0, List.of(childEntity1, childEntity2), null, "HeadGroup", null);
         childEntity1.setParentGroup(headEntity);
         childEntity2.setParentGroup(headEntity);
+    }
+
+    /**
+     * Other tests
+     */
+    @Test
+    void testMapEntityToDTO() {
+        /*
+            Test 1: test mapping of 3 Views in Group
+         */
+        {
+            GroupEntity groupEntity = new GroupEntity(1, Collections.emptyList(), null, "GroupName", new ArrayList<>());
+            ViewEntity v1 = new ViewEntity(1, "View1", groupEntity, Collections.emptyList());
+            ViewEntity v2 = new ViewEntity(2, "View2", groupEntity, Collections.emptyList());
+            ViewEntity v3 = new ViewEntity(3, "View3", groupEntity, Collections.emptyList());
+            groupEntity.getViews().addAll(List.of(v1, v2, v3));
+
+            Group group = GroupMapper.mapEntityToDTO(groupEntity);
+            assertNotNull(group);
+            assertNotNull(group.getViews());
+            assertEquals(group.getViews().size(), 3);
+        }
     }
 
     /**
