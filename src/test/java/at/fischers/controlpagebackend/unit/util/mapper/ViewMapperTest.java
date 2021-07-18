@@ -22,37 +22,14 @@ public class ViewMapperTest {
      */
     @Test
     void testMappingEntityToBasicDTO() {
-        /*
-            Test 1: mapping with 1 view per group
-         */
-        {
-            GroupEntity groupEntity = new GroupEntity(0, new ArrayList<>(), null, "TestGroup", null);
-            ViewEntity viewEntity = new ViewEntity(42, "TestView", groupEntity, null);
+        GroupEntity groupEntity = new GroupEntity(0, new ArrayList<>(), null, "TestGroup", null);
+        ViewEntity viewEntity = new ViewEntity(42, "TestView", groupEntity, null);
 
-            BasicView basicView = ViewMapper.mapEntityToBasicDTO(viewEntity);
-            assertNotNull(basicView);
-            assertEquals(basicView.getId(), 42);
-            assertEquals(basicView.getName(), "TestView");
-            assertNotNull(basicView.getGroup());
-            assertEquals(basicView.getGroup().getName(), "TestGroup");
-        }
-
-        /*
-            Test 2: mapping with 3 Views per group (the mapper must also handle other views present in the views group)
-         */
-        {
-            GroupEntity groupEntity1 = new GroupEntity(0, new ArrayList<>(), null, "TestGroup2", new ArrayList<>());
-            ViewEntity viewEntity1 = new ViewEntity(43, "TV43", groupEntity1, null);
-            ViewEntity viewEntity2 = new ViewEntity(44, "TV44", groupEntity1, null);
-            ViewEntity viewEntity3 = new ViewEntity(45, "TV45", groupEntity1, null);
-            groupEntity1.getViews().addAll(List.of(viewEntity1, viewEntity2, viewEntity3));
-
-            BasicView basicView1 = ViewMapper.mapEntityToBasicDTO(viewEntity1);
-            assertNotNull(basicView1);
-            assertNotNull(basicView1.getGroup());
-            assertNotNull(basicView1.getGroup().getViews());
-            assertEquals(basicView1.getGroup().getViews().size(), 3);
-        }
+        BasicView basicView = ViewMapper.mapEntityToBasicDTO(viewEntity);
+        assertNotNull(basicView);
+        assertEquals(basicView.getId(), 42);
+        assertEquals(basicView.getName(), "TestView");
+        assertNotNull(basicView.getGroup());
     }
 
     /**
@@ -61,39 +38,34 @@ public class ViewMapperTest {
     @Test
     void testMappingEntityToFullDTO() {
         /*
-            Test 1: mapping ViewEntity with Fields set (with 1 view per group)
+            Test 1: mapping ViewEntity with Fields set
          */
-        {
-            GroupEntity groupEntity = new GroupEntity(0, new ArrayList<>(), null, "TestGroup", null);
-            List<FieldEntity> fieldEntities = List.of(
-                    new FieldEntity(0, null, null, "Field1", null, 1, 1, 1, 1),
-                    new FieldEntity(1, null, null, "Field2", null, 1, 1, 0, 0),
-                    new FieldEntity(2, null, null, "Field3", null, 1, 1, 1, 0),
-                    new FieldEntity(3, null, null, "Field4", null, 1, 1, 0, 1));
-            ViewEntity viewEntity = new ViewEntity(42, "TestView", groupEntity, fieldEntities);
+        GroupEntity groupEntity = new GroupEntity(0, new ArrayList<>(), null, "TestGroup", null);
+        List<FieldEntity> fieldEntities = List.of(
+                new FieldEntity(0, null, null, "Field1", null, 1, 1, 1, 1),
+                new FieldEntity(1, null, null, "Field2", null, 1, 1, 0, 0),
+                new FieldEntity(2, null, null, "Field3", null, 1, 1, 1, 0),
+                new FieldEntity(3, null, null, "Field4", null, 1, 1, 0, 1));
+        ViewEntity viewEntity = new ViewEntity(42, "TestView", groupEntity, fieldEntities);
 
-            FullView fullView = ViewMapper.mapEntityToFullDTO(viewEntity);
-            assertNotNull(fullView);
-            assertEquals(fullView.getId(), 42);
-            assertEquals(fullView.getName(), "TestView");
-            assertNotNull(fullView.getGroup());
-            // get (y) . get (x)
-            assertEquals(fullView.getFields().get(0).get(0).getTitle(), "Field2");
-            assertEquals(fullView.getFields().get(1).get(1).getTitle(), "Field1");
-            assertEquals(fullView.getFields().get(0).get(1).getTitle(), "Field3");
-            assertEquals(fullView.getFields().get(1).get(0).getTitle(), "Field4");
-        }
+        FullView fullView = ViewMapper.mapEntityToFullDTO(viewEntity);
+        assertNotNull(fullView);
+        assertEquals(fullView.getId(), 42);
+        assertEquals(fullView.getName(), "TestView");
+        assertNotNull(fullView.getGroup());
+        // get (y) . get (x)
+        assertEquals(fullView.getFields().get(0).get(0).getTitle(), "Field2");
+        assertEquals(fullView.getFields().get(1).get(1).getTitle(), "Field1");
+        assertEquals(fullView.getFields().get(0).get(1).getTitle(), "Field3");
+        assertEquals(fullView.getFields().get(1).get(0).getTitle(), "Field4");
 
         /*
             Test 2: mapping ViewEntity with fields null (in fact should not be null when fetched from database - should be empty list, but just in case...) creates NullPointerException?
          */
-        {
-            assertDoesNotThrow(() -> {
-                ViewMapper.mapEntityToFullDTO(new ViewEntity(42, "V2", null, null));
-            });
-        }
 
-        // NOTE: testing if more than 1 view per group works is not needed here because it is already tested in "testMappingEntityToBasicDTO()" if the "forEachGroupView" works
+        assertDoesNotThrow(() -> {
+            ViewMapper.mapEntityToFullDTO(new ViewEntity(42, "V2", null, null));
+        });
     }
 
     /**
