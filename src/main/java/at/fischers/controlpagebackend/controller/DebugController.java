@@ -17,7 +17,7 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/api/test")
 @RequiredArgsConstructor
-public class TestController {
+public class DebugController {
 
     @PostMapping(value = "/1", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseEntity<?> test(@RequestBody TestDTO test) {

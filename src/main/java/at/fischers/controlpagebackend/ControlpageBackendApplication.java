@@ -13,9 +13,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.Collections;
 
 @SpringBootApplication
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class ControlpageBackendApplication {
-    private final ViewService viewService;
+//    private final ViewService viewService;
 
     public static void main(String[] args) {
         int port = 42000;

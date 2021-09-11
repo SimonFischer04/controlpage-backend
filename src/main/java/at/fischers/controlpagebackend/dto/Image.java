@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -15,7 +16,10 @@ import java.util.Objects;
 @Builder
 public class Image {
     private int id;
-    private String name, type;
+    @NotBlank(message = "Name is mandatory")
+    private String name;
+    @NotBlank(message = "Type is mandatory")
+    private String type;
     private byte[] imageData;
 
     public Image(Image image) {
