@@ -2,6 +2,7 @@ package at.fischers.controlpagebackend.util.mapper.groupmapper;
 
 import at.fischers.controlpagebackend.dto.Group;
 import at.fischers.controlpagebackend.entity.GroupEntity;
+import at.fischers.controlpagebackend.service.ImageService;
 
 public class GroupMapper {
 
@@ -11,8 +12,8 @@ public class GroupMapper {
      * @param group: the Group to map
      * @return the mapped GroupEntity
      */
-    public static GroupEntity mapDTOToEntity(Group group) {
-        return GroupMapperDTOToEntity.mapDTOToEntity(group);
+    public static GroupEntity mapDTOToEntity(ImageService imageService, Group group) {
+        return GroupMapperDTOToEntity.mapDTOToEntity(imageService, group);
     }
 
     /**

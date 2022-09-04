@@ -2,10 +2,7 @@ package at.fischers.controlpagebackend.entity.action;
 
 import at.fischers.controlpagebackend.entity.FieldEntity;
 import at.fischers.controlpagebackend.enums.RunPolicy;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -15,7 +12,9 @@ import java.util.Objects;
 @Inheritance(strategy = InheritanceType.JOINED)
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 public abstract class ActionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

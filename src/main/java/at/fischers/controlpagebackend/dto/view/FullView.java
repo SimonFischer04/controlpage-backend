@@ -3,6 +3,7 @@ package at.fischers.controlpagebackend.dto.view;
 import at.fischers.controlpagebackend.dto.Field;
 import at.fischers.controlpagebackend.dto.Group;
 import at.fischers.controlpagebackend.entity.ViewEntity;
+import at.fischers.controlpagebackend.service.GroupService;
 import at.fischers.controlpagebackend.util.mapper.ViewMapper;
 import lombok.*;
 
@@ -10,9 +11,8 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class FullView extends BasicView {
     private List<List<Field>> fields;
 
@@ -31,5 +31,10 @@ public class FullView extends BasicView {
 
     public FullView(ViewEntity view) {
         this(ViewMapper.mapEntityToFullDTO(view));
+    }
+
+    public FullView(GroupService groupService, FullViewDTO fullViewDTO) {
+        super(fullViewDTO.getId(), fullViewDTO.getName(), groupService.findById(fullViewDTO.getGroupId()));
+        this.fields = fullViewDTO.getFields();
     }
 }

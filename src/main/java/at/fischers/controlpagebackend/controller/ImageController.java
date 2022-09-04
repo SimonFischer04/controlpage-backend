@@ -3,20 +3,12 @@ package at.fischers.controlpagebackend.controller;
 import at.fischers.controlpagebackend.dto.Image;
 import at.fischers.controlpagebackend.service.ImageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.constraints.NotBlank;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -35,6 +27,18 @@ public class ImageController {
         Image img = new Image(0, file.getOriginalFilename(), file.getContentType(), file.getBytes());
         Image saved = imageService.save(img);
         return ResponseEntity.ok(saved);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<?> getImage(@PathVariable int id) {
+        final var image = imageService.findById(id);
+
+        if (image == null)
+            return ResponseEntity.badRequest().body(String.format("Image with id %d not found.", id));
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(image.getType()))
+                .body(image.getImageData());
     }
 
 //    @ResponseStatus(HttpStatus.BAD_REQUEST)

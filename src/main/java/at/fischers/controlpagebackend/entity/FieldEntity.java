@@ -2,6 +2,7 @@ package at.fischers.controlpagebackend.entity;
 
 import at.fischers.controlpagebackend.dto.Field;
 import at.fischers.controlpagebackend.entity.action.ActionEntity;
+import at.fischers.controlpagebackend.service.ImageService;
 import at.fischers.controlpagebackend.util.mapper.FieldMapper;
 import lombok.*;
 
@@ -12,7 +13,9 @@ import java.util.Objects;
 @Table(name = "field")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 public class FieldEntity {
     @Id
@@ -49,8 +52,8 @@ public class FieldEntity {
         yPos = fieldEntity.getYPos();
     }
 
-    public FieldEntity(Field field) {
-        this(FieldMapper.mapDTOToEntity(field));
+    public FieldEntity(ImageService imageService, Field field) {
+        this(FieldMapper.mapDTOToEntity(imageService, field));
     }
 
     /*

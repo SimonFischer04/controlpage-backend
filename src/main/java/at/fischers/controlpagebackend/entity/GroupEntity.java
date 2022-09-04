@@ -1,6 +1,7 @@
 package at.fischers.controlpagebackend.entity;
 
 import at.fischers.controlpagebackend.dto.Group;
+import at.fischers.controlpagebackend.service.ImageService;
 import at.fischers.controlpagebackend.util.mapper.groupmapper.GroupMapperDTOToEntity;
 import lombok.*;
 
@@ -12,7 +13,9 @@ import java.util.Objects;
 @Table(name = "view_group")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 public class GroupEntity {
     @Id
@@ -40,8 +43,8 @@ public class GroupEntity {
         views = groupEntity.getViews();
     }
 
-    public GroupEntity(Group group) {
-        this(GroupMapperDTOToEntity.mapDTOToEntity(group));
+    public GroupEntity(ImageService imageService, Group group) {
+        this(GroupMapperDTOToEntity.mapDTOToEntity(imageService, group));
     }
 
     /*

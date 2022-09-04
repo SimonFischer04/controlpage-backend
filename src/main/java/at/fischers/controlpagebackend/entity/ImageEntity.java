@@ -2,10 +2,7 @@ package at.fischers.controlpagebackend.entity;
 
 import at.fischers.controlpagebackend.dto.Image;
 import at.fischers.controlpagebackend.util.mapper.ImageMapper;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -14,7 +11,9 @@ import java.util.Objects;
 @Table(name = "image")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 public class ImageEntity {
     @Id

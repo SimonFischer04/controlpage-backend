@@ -1,7 +1,9 @@
 package at.fischers.controlpagebackend.util.mapper.groupmapper;
 
 import at.fischers.controlpagebackend.dto.Group;
+import at.fischers.controlpagebackend.dto.Image;
 import at.fischers.controlpagebackend.entity.GroupEntity;
+import at.fischers.controlpagebackend.service.ImageService;
 import at.fischers.controlpagebackend.util.mapper.ViewMapper;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public class GroupMapperDTOToEntity {
      * @param group: the Group to map
      * @return the mapped GroupEntity
      */
-    private static GroupEntity basicMapping(Group group) {
+    private static GroupEntity basicMapping(ImageService imageService, Group group) {
         if (group == null)
             return null;
 
@@ -34,7 +36,7 @@ public class GroupMapperDTOToEntity {
                 .build();
 
         if (group.getViews() != null)
-            group.getViews().forEach(view -> ViewMapper.mapDTOToEntity(view, groupEntity));
+            group.getViews().forEach(view -> ViewMapper.mapDTOToEntity(imageService, view, groupEntity));
 
         return groupEntity;
     }
@@ -46,11 +48,14 @@ public class GroupMapperDTOToEntity {
      * @param parentEntity: used by the recursive algorithm to set the "parentEntity" at the child (initially null)
      * @return the ROOT! GroupEntity
      */
-    private static GroupEntity mapChildren(Group group, GroupEntity parentEntity) {
-        GroupEntity g = basicMapping(group);
+    private static GroupEntity mapChildren(ImageService imageService, Group group, GroupEntity parentEntity) {
+        if (group == null)
+            return null;
+
+        GroupEntity g = basicMapping(imageService, group);
         List<GroupEntity> children = new ArrayList<>();
         if (group.getChildGroups() != null) {
-            group.getChildGroups().forEach(child -> children.add(mapChildren(child, g)));
+            group.getChildGroups().forEach(child -> children.add(mapChildren(imageService, child, g)));
         }
         g.setChildGroups(children);
         g.setParentGroup(parentEntity);
@@ -86,7 +91,7 @@ public class GroupMapperDTOToEntity {
      * @param group: the {@link Group} to map
      * @return the mapped {@link GroupEntity} or null if the input group is null
      */
-    public static GroupEntity mapDTOToEntity(Group group) {
+    public static GroupEntity mapDTOToEntity(ImageService imageService, Group group) {
         if (group == null)
             return null;
 
@@ -97,7 +102,7 @@ public class GroupMapperDTOToEntity {
         }
 
         // mapping all the children starting from the root group
-        GroupEntity rootGroup = mapChildren(head, null);
+        GroupEntity rootGroup = mapChildren(imageService, head, null);
 
         // finding right group again
         return searchGroup(rootGroup, group.getId());

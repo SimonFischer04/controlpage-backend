@@ -25,7 +25,7 @@ public class Field {
     private Action action;
 
     private String title;
-    private Image background;
+    private int backgroundId;
     private int rowspan;
     private int colspan;
 
@@ -34,7 +34,7 @@ public class Field {
         view = field.getView();
         action = field.getAction();
         title = field.getTitle();
-        background = field.getBackground();
+        backgroundId = field.getBackgroundId();
         rowspan = field.getRowspan();
         colspan = field.getColspan();
     }

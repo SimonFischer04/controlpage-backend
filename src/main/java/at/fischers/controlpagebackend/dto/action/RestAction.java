@@ -18,7 +18,7 @@ public class RestAction extends Action {
     @SuppressWarnings("unused")
     @Builder
     public RestAction(int id, Field field, RunPolicy runPolicy, RestType restType, String url, String body) {
-        super(id, field, ActionType.REST, runPolicy);
+        super(id, field, runPolicy);
         this.restType = restType;
         this.url = url;
         this.body = body;

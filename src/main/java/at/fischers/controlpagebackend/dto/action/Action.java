@@ -4,6 +4,8 @@ import at.fischers.controlpagebackend.dto.Field;
 import at.fischers.controlpagebackend.enums.ActionType;
 import at.fischers.controlpagebackend.enums.RunPolicy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,19 +16,17 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = RestAction.class, name = "REST"),
+        @JsonSubTypes.Type(value = ViewAction.class, name = "VIEW")
+})
 public abstract class Action {
     private int id;
 
     @ToString.Exclude
     @JsonIgnore
     private Field field;
-
-    /*
-        extra ActionType set in Mapper for better distinguishing in FrontEnd
-        RestAction -> ActionType.REST,
-        ViewAction -> ActionType.VIEW
-     */
-    private ActionType actionType;
 
     private RunPolicy runPolicy;
 

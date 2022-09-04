@@ -17,7 +17,7 @@ public class ViewAction extends Action {
     @SuppressWarnings("unused")
     @Builder
     public ViewAction(int id, Field field, RunPolicy runPolicy, ViewActionType viewActionType, int viewId) {
-        super(id, field, ActionType.VIEW, runPolicy);
+        super(id, field, runPolicy);
         this.viewActionType = viewActionType;
         this.viewId = viewId;
     }

@@ -5,6 +5,7 @@ import at.fischers.controlpagebackend.entity.GroupEntity;
 import at.fischers.controlpagebackend.util.mapper.groupmapper.GroupMapper;
 import at.fischers.controlpagebackend.util.mapper.groupmapper.GroupMapperEntityToDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -19,16 +20,17 @@ import java.util.Objects;
 public class Group {
     private int id;
 
-    @JsonBackReference(value = "parent-group")
+    @JsonManagedReference(value = "parent-group")
     @ToString.Exclude
+    @Builder.Default
     private List<Group> childGroups = new ArrayList<>();
 
-    @JsonManagedReference(value = "parent-group")
+    @JsonBackReference(value = "parent-group")
     private Group parentGroup;
 
     private String name;
 
-    @JsonBackReference(value = "viewGroup")
+    @JsonManagedReference(value = "viewGroup")
     @ToString.Exclude
     private List<BasicView> views;
 

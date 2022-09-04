@@ -2,11 +2,13 @@ package at.fischers.controlpagebackend.util.mapper;
 
 import at.fischers.controlpagebackend.dto.Field;
 import at.fischers.controlpagebackend.dto.Group;
+import at.fischers.controlpagebackend.dto.Image;
 import at.fischers.controlpagebackend.dto.view.BasicView;
 import at.fischers.controlpagebackend.dto.view.FullView;
 import at.fischers.controlpagebackend.entity.FieldEntity;
 import at.fischers.controlpagebackend.entity.GroupEntity;
 import at.fischers.controlpagebackend.entity.ViewEntity;
+import at.fischers.controlpagebackend.service.ImageService;
 import at.fischers.controlpagebackend.util.mapper.groupmapper.GroupMapper;
 
 import java.util.ArrayList;
@@ -112,9 +114,9 @@ public class ViewMapper {
      * @param groupEntity: optional already mapped {@link GroupEntity}. if not supplied(==null) -> calls GroupMapper
      * @return the mapped {@link ViewEntity}
      */
-    public static ViewEntity mapDTOToEntity(BasicView view, GroupEntity groupEntity) {
+    public static ViewEntity mapDTOToEntity(ImageService imageService, BasicView view, GroupEntity groupEntity) {
         if (groupEntity == null)
-            groupEntity = GroupMapper.mapDTOToEntity(view.getGroup());
+            groupEntity = GroupMapper.mapDTOToEntity(imageService, view.getGroup());
 
         ViewEntity viewEntity = ViewEntity.builder()
                 .id(view.getId())
@@ -131,7 +133,7 @@ public class ViewMapper {
             for (Collection<Field> row : ((FullView) view).getFields()) {
                 int x = 0;
                 for (Field field : row) {
-                    FieldEntity fieldEntity = FieldMapper.mapDTOToEntity(field);
+                    FieldEntity fieldEntity = FieldMapper.mapDTOToEntity(imageService, field);
 
                     fieldEntity.setView(viewEntity);
                     fieldEntity.setYPos(y);
@@ -153,7 +155,7 @@ public class ViewMapper {
      * @param view: the {@link BasicView} or {@link FullView} to map
      * @return the mapped {@link ViewEntity}
      */
-    public static ViewEntity mapDTOToEntity(BasicView view) {
-        return mapDTOToEntity(view, null);
+    public static ViewEntity mapDTOToEntity(ImageService imageService, BasicView view) {
+        return mapDTOToEntity(imageService, view, null);
     }
 }

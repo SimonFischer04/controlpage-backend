@@ -3,7 +3,7 @@ package at.fischers.controlpagebackend.dto.view;
 import at.fischers.controlpagebackend.dto.Group;
 import at.fischers.controlpagebackend.entity.ViewEntity;
 import at.fischers.controlpagebackend.util.mapper.ViewMapper;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +19,7 @@ public class BasicView {
     private int id;
     private String name;
 
-    @JsonManagedReference(value = "viewGroup")
+    @JsonBackReference(value = "viewGroup")
     private Group group;
 
     public BasicView(BasicView basicView) {

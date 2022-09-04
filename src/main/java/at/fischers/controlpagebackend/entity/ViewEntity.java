@@ -1,11 +1,9 @@
 package at.fischers.controlpagebackend.entity;
 
 import at.fischers.controlpagebackend.dto.view.BasicView;
+import at.fischers.controlpagebackend.service.ImageService;
 import at.fischers.controlpagebackend.util.mapper.ViewMapper;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,7 +13,9 @@ import java.util.Objects;
 @Table(name = "view")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 public class ViewEntity {
     @Id
@@ -24,11 +24,13 @@ public class ViewEntity {
 
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", referencedColumnName = "id")
+    @ToString.Exclude
     private GroupEntity group;
 
     @OneToMany(mappedBy = "view", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<FieldEntity> fields;
 
     public ViewEntity(ViewEntity viewEntity) {
@@ -38,8 +40,8 @@ public class ViewEntity {
         fields = viewEntity.getFields();
     }
 
-    public ViewEntity(BasicView view) {
-        this(ViewMapper.mapDTOToEntity(view));
+    public ViewEntity(ImageService imageService, BasicView view) {
+        this(ViewMapper.mapDTOToEntity(imageService, view));
     }
 
     /*
