@@ -19,7 +19,7 @@ public class ControlpageBackendApplication {
 
     public static void main(String[] args) {
         int port = 42000;
-        if (args.length > 0) {
+        if (args.length > 0 && args[0].matches("\\d*]")) {
             port = Integer.parseInt(args[0]);
         }
 
