@@ -26,7 +26,7 @@ public class ImageController {
 
         Image img = new Image(0, file.getOriginalFilename(), file.getContentType(), file.getBytes());
         Image saved = imageService.save(img);
-        return ResponseEntity.ok(saved);
+        return ResponseEntity.ok(saved.getId());
     }
 
     @GetMapping("{id}")
