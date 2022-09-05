@@ -30,6 +30,7 @@ public class FieldEntity {
     private ActionEntity action;
 
     private String title;
+    private String description;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private ImageEntity background;
@@ -45,6 +46,7 @@ public class FieldEntity {
         view = fieldEntity.getView();
         action = fieldEntity.getAction();
         title = fieldEntity.getTitle();
+        description = fieldEntity.getDescription();
         background = fieldEntity.getBackground();
         rowspan = fieldEntity.getRowspan();
         colspan = fieldEntity.getColspan();
