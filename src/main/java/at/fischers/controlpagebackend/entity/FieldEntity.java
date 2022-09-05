@@ -26,7 +26,7 @@ public class FieldEntity {
     @ToString.Exclude
     private ViewEntity view;
 
-    @OneToOne(orphanRemoval = true)
+    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
     private ActionEntity action;
 
     private String title;

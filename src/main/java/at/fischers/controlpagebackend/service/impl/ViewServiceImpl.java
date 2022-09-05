@@ -53,13 +53,13 @@ public class ViewServiceImpl implements ViewService {
          */
         var actualGroup = viewEntity.getGroup();
         viewEntity.setGroup(null);
-        repository.save(viewEntity);
+        var saved = repository.save(viewEntity);
 
         if (actualGroup != null) {
             @SuppressWarnings("OptionalGetWithoutIsPresent")
-            var a = repository.findById(viewEntity.getId()).get();
-            a.setGroup(groupRepository.findById(actualGroup.getId()).orElse(null));
-            repository.save(a);
+            var temp = repository.findById(viewEntity.getId()).get();
+            temp.setGroup(groupRepository.findById(actualGroup.getId()).orElse(null));
+            repository.save(temp);
         }
     }
 
