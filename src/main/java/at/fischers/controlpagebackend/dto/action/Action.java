@@ -19,7 +19,8 @@ import java.util.Objects;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = RestAction.class, name = "REST"),
-        @JsonSubTypes.Type(value = ViewAction.class, name = "VIEW")
+        @JsonSubTypes.Type(value = ViewAction.class, name = "VIEW"),
+        @JsonSubTypes.Type(value = DesktopAutomationAction.class, name = "DESKTOP_AUTOMATION")
 })
 public abstract class Action {
     private int id;

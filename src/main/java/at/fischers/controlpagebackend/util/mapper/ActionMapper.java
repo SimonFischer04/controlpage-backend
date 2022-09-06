@@ -1,12 +1,13 @@
 package at.fischers.controlpagebackend.util.mapper;
 
 import at.fischers.controlpagebackend.dto.action.Action;
+import at.fischers.controlpagebackend.dto.action.DesktopAutomationAction;
 import at.fischers.controlpagebackend.dto.action.RestAction;
 import at.fischers.controlpagebackend.dto.action.ViewAction;
 import at.fischers.controlpagebackend.entity.action.ActionEntity;
+import at.fischers.controlpagebackend.entity.action.DesktopAutomationActionEntity;
 import at.fischers.controlpagebackend.entity.action.RestActionEntity;
 import at.fischers.controlpagebackend.entity.action.ViewActionEntity;
-import at.fischers.controlpagebackend.enums.ActionType;
 
 public class ActionMapper {
     /**
@@ -44,6 +45,16 @@ public class ActionMapper {
                 .build();
     }
 
+    private static DesktopAutomationAction mapDesktopAutomationActionEntityToDTO(DesktopAutomationActionEntity desktopAutomationActionEntity) {
+        return DesktopAutomationAction.builder()
+                .id(desktopAutomationActionEntity.getId())
+                .functionName(desktopAutomationActionEntity.getFunctionName())
+                .runPolicy(desktopAutomationActionEntity.getRunPolicy())
+                // NOTE: this must be set by the Field mapper (otherwise would create an infinity recursion)
+                .field(null)
+                .build();
+    }
+
     /**
      * Map a ActionEntity to an Action.
      *
@@ -59,6 +70,9 @@ public class ActionMapper {
         }
         if (actionEntity instanceof ViewActionEntity) {
             return mapViewActionEntityToDTO((ViewActionEntity) actionEntity);
+        }
+        if (actionEntity instanceof DesktopAutomationActionEntity) {
+            return mapDesktopAutomationActionEntityToDTO((DesktopAutomationActionEntity) actionEntity);
         }
         return null;
     }
@@ -103,6 +117,16 @@ public class ActionMapper {
                 .build();
     }
 
+    private static DesktopAutomationActionEntity mapViewActionDTOToEntity(DesktopAutomationAction desktopAutomationAction) {
+        return DesktopAutomationActionEntity.builder()
+                .id(desktopAutomationAction.getId())
+                .functionName(desktopAutomationAction.getFunctionName())
+                .runPolicy(desktopAutomationAction.getRunPolicy())
+                // NOTE: this must be set by the Field mapper (otherwise would create an infinity recursion)
+                .field(null)
+                .build();
+    }
+
     /**
      * Map a Action to an ActionEntity.
      *
@@ -118,6 +142,9 @@ public class ActionMapper {
         }
         if (action instanceof ViewAction) {
             return mapViewActionDTOToEntity((ViewAction) action);
+        }
+        if (action instanceof DesktopAutomationAction) {
+            return mapViewActionDTOToEntity((DesktopAutomationAction) action);
         }
         return null;
     }

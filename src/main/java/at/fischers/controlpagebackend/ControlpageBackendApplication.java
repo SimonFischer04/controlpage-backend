@@ -1,7 +1,10 @@
 package at.fischers.controlpagebackend;
 
+import at.fischers.controlpagebackend.entity.action.DesktopAutomationActionEntity;
+import at.fischers.controlpagebackend.repository.ActionRepository;
 import at.fischers.controlpagebackend.service.ViewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,7 +18,9 @@ import java.util.Collections;
 @SpringBootApplication
 //@RequiredArgsConstructor
 public class ControlpageBackendApplication {
-//    private final ViewService viewService;
+    //    private final ViewService viewService;
+    @Autowired
+    ActionRepository actionRepository;
 
     public static void main(String[] args) {
         int port = 42000;
@@ -33,6 +38,7 @@ public class ControlpageBackendApplication {
         return args -> {
             //viewService.save(new View(0, "Testview 1"));
             //viewService.save(new View(0, "Testview 2"));
+            actionRepository.save(new DesktopAutomationActionEntity("test2"));
             System.out.println();
         };
     }
