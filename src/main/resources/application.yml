@@ -1,6 +1,7 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/controlpage
+#    url: jdbc:mysql://localhost:3306/controlpage
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/controlpage
     username: ControlPageUser
     password: 6xovUH2QmUZooPTyYrpD9Js8fZRrMBrkqHzs4soRdP
   jpa:
