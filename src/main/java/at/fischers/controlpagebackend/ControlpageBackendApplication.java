@@ -19,8 +19,8 @@ import java.util.Collections;
 //@RequiredArgsConstructor
 public class ControlpageBackendApplication {
     //    private final ViewService viewService;
-    @Autowired
-    ActionRepository actionRepository;
+//    @Autowired
+//    ActionRepository actionRepository;
 
     public static void main(String[] args) {
         int port = 42000;
@@ -38,7 +38,7 @@ public class ControlpageBackendApplication {
         return args -> {
             //viewService.save(new View(0, "Testview 1"));
             //viewService.save(new View(0, "Testview 2"));
-            actionRepository.save(new DesktopAutomationActionEntity("test2"));
+//            actionRepository.save(new DesktopAutomationActionEntity("test2"));
             System.out.println();
         };
     }

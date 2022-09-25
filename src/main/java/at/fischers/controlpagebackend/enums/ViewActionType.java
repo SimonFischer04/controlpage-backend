@@ -1,5 +1,5 @@
 package at.fischers.controlpagebackend.enums;
 
 public enum ViewActionType {
-    SWITCH, CLOSE
+    UNDEFINED, CLOSE, SWITCH_TO, BACK
 }
