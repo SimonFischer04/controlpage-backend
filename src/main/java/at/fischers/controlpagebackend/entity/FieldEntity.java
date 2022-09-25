@@ -29,7 +29,10 @@ public class FieldEntity {
     @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
     private ActionEntity action;
 
-    private String title;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "title_id")
+    private StyledTextEntity title;
+
     private String description;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

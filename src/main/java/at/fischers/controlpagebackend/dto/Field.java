@@ -3,8 +3,6 @@ package at.fischers.controlpagebackend.dto;
 import at.fischers.controlpagebackend.dto.action.Action;
 import at.fischers.controlpagebackend.dto.view.FullView;
 import at.fischers.controlpagebackend.entity.FieldEntity;
-import at.fischers.controlpagebackend.entity.GroupEntity;
-import at.fischers.controlpagebackend.util.mapper.ActionMapper;
 import at.fischers.controlpagebackend.util.mapper.FieldMapper;
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
@@ -24,9 +22,12 @@ public class Field {
 
     private Action action;
 
-    private String title;
+    private StyledText title;
+
     private String description;
+
     private int backgroundId;
+
     private int rowspan;
     private int colspan;
 

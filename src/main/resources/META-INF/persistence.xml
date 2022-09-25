@@ -13,6 +13,7 @@
         <class>at.fischers.controlpagebackend.entity.action.ActionEntity</class>
         <class>at.fischers.controlpagebackend.entity.action.RestActionEntity</class>
         <class>at.fischers.controlpagebackend.entity.action.ViewActionEntity</class>
+        <class>at.fischers.controlpagebackend.entity.StyledTextEntity</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>

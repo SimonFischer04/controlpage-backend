@@ -3,6 +3,7 @@ package at.fischers.controlpagebackend.entity;
 import at.fischers.controlpagebackend.dto.Image;
 import at.fischers.controlpagebackend.util.mapper.ImageMapper;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.util.Objects;
