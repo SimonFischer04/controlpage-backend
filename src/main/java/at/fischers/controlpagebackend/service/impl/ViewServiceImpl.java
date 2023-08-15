@@ -46,7 +46,13 @@ public class ViewServiceImpl implements ViewService {
     @Override
     @Transactional
     public void save(ViewEntity viewEntity) {
-        viewEntity.getFields().forEach(fieldEntity -> fieldEntity.setView(viewEntity));
+        viewEntity.getFields().forEach(fieldEntity -> {
+            fieldEntity.setView(viewEntity);
+            // client may send f.e. -1 to indicate new field, but database persist requires value of 0 to create new entry
+            if(fieldEntity.getId() < 0){
+                fieldEntity.setId(0);
+            }
+        });
 
         /*
          fix weird detached merge issue
@@ -64,16 +70,19 @@ public class ViewServiceImpl implements ViewService {
     }
 
     @Override
+    @Transactional
     public void save(BasicView view) {
         save(new ViewEntity(imageService, view));
     }
 
     @Override
+    @Transactional
     public void save(FullView view) {
         save(new ViewEntity(imageService, view));
     }
 
     @Override
+    @Transactional
     public void save(FullViewDTO fullViewDTO) {
         save(new FullView(groupService, fullViewDTO));
     }
