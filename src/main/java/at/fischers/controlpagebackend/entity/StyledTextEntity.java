@@ -36,6 +36,10 @@ public class StyledTextEntity {
     @Column(name = "color", length = 7)
     private String color;
 
+    public StyledTextEntity(String text){
+        this(0, text, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, "#FFFFFF");
+    }
+
     public StyledTextEntity(StyledTextEntity styledTextEntity) {
         id = styledTextEntity.id;
         text = styledTextEntity.text;

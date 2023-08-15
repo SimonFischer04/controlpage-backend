@@ -26,6 +26,7 @@ public class Field {
 
     private String description;
 
+    // TODO: why is this not properly mapped???
     private int backgroundId;
 
     private int rowspan;

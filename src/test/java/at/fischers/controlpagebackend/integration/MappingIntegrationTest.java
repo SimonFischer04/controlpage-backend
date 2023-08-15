@@ -2,14 +2,18 @@ package at.fischers.controlpagebackend.integration;
 
 import at.fischers.controlpagebackend.dto.Field;
 import at.fischers.controlpagebackend.dto.Group;
+import at.fischers.controlpagebackend.dto.Image;
+import at.fischers.controlpagebackend.dto.StyledText;
 import at.fischers.controlpagebackend.dto.action.RestAction;
 import at.fischers.controlpagebackend.dto.view.FullView;
 import at.fischers.controlpagebackend.entity.FieldEntity;
 import at.fischers.controlpagebackend.entity.GroupEntity;
+import at.fischers.controlpagebackend.entity.StyledTextEntity;
 import at.fischers.controlpagebackend.entity.ViewEntity;
 import at.fischers.controlpagebackend.entity.action.RestActionEntity;
 import at.fischers.controlpagebackend.enums.RestType;
 import at.fischers.controlpagebackend.enums.RunPolicy;
+import at.fischers.controlpagebackend.service.ImageService;
 import at.fischers.controlpagebackend.util.mapper.ViewMapper;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +22,18 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MappingIntegrationTest {
+    final ImageService mockImageService = new ImageService() {
+        @Override
+        public Image findById(int id) {
+            return null;
+        }
+
+        @Override
+        public Image save(Image image) {
+            return null;
+        }
+    };
+
     /**
      * Test: test combination of mapper (back references are set)
      * f.e. ViewMapper(mapDTOToEntity) has to set fieldEntity.viewEntity
@@ -29,7 +45,7 @@ public class MappingIntegrationTest {
          */
         Group group = new Group();
         RestAction action = new RestAction();
-        Field f1 = new Field(42, null, action, "F1", null, -1, -1);
+        Field f1 = new Field(42, null, action, new StyledText("F1"), "description", -1, 1, 1);
         action.setField(f1);
         List<List<Field>> fields = List.of(
                 List.of(f1)
@@ -39,7 +55,7 @@ public class MappingIntegrationTest {
         f1.setView(view);
         group.setViews(List.of(view));
         //
-        ViewEntity viewEntity = ViewMapper.mapDTOToEntity(view);
+        ViewEntity viewEntity = ViewMapper.mapDTOToEntity(mockImageService, view);
         FieldEntity fieldEntity = viewEntity.getFields().get(0);
 
         /*
@@ -63,7 +79,7 @@ public class MappingIntegrationTest {
          */
         GroupEntity group = new GroupEntity();
         RestActionEntity restActionEntity = new RestActionEntity();
-        FieldEntity f1 = new FieldEntity(42, null, restActionEntity, "F1", null, -1, -1, 0, 0);
+        FieldEntity f1 = new FieldEntity(42, null, restActionEntity, new StyledTextEntity("F1"), "description", null, 1, 1, 0, 0);
         restActionEntity.setField(f1);
         List<FieldEntity> fields = List.of(f1);
         ViewEntity viewEntity = new ViewEntity(42, "V1", group, fields);

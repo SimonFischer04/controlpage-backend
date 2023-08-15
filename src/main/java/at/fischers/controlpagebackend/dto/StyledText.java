@@ -23,6 +23,10 @@ public class StyledText implements Serializable {
     private VerticalAlignment verticalAlignment;
     private String color;
 
+    public StyledText(String text) {
+        this(0, text, HorizontalAlignment.CENTER, VerticalAlignment.CENTER, "#FFFFFF");
+    }
+
     public StyledText(StyledText styledText) {
         id = styledText.id;
         text = styledText.text;

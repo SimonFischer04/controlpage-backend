@@ -1,11 +1,10 @@
 package at.fischers.controlpagebackend.integration;
 
-import at.fischers.controlpagebackend.entity.FieldEntity;
-import at.fischers.controlpagebackend.entity.GroupEntity;
-import at.fischers.controlpagebackend.entity.ImageEntity;
-import at.fischers.controlpagebackend.entity.ViewEntity;
+import at.fischers.controlpagebackend.entity.*;
 import at.fischers.controlpagebackend.entity.action.ActionEntity;
 import at.fischers.controlpagebackend.entity.action.ViewActionEntity;
+import at.fischers.controlpagebackend.enums.HorizontalAlignment;
+import at.fischers.controlpagebackend.enums.VerticalAlignment;
 import at.fischers.controlpagebackend.enums.ViewActionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -175,7 +174,7 @@ public class ViewPersistenceIntTest {
     void testFieldCascading() {
         ViewEntity viewEntity = findView();
         FieldEntity fieldEntity = viewEntity.getFields().get(0);
-        fieldEntity.setTitle("A Title");
+        fieldEntity.setTitle(new StyledTextEntity("A Title"));
         persist(viewEntity);
 
         /*
@@ -188,7 +187,7 @@ public class ViewPersistenceIntTest {
 
         // UPDATE
         FieldEntity reFetchedEntity = entityManager.find(FieldEntity.class, fieldEntity.getId());
-        assertEquals(reFetchedEntity.getTitle(), "A Title");
+        assertEquals(reFetchedEntity.getTitle().getText(), "A Title");
 
         // DELETE
         remove(viewEntity);
@@ -202,7 +201,7 @@ public class ViewPersistenceIntTest {
     void testActionCascading() {
         ViewEntity viewEntity = findView();
         ViewActionEntity actionEntity = (ViewActionEntity) viewEntity.getFields().get(0).getAction();
-        actionEntity.setType(ViewActionType.SWITCH);
+        actionEntity.setType(ViewActionType.SWITCH_TO);
         persist(viewEntity);
 
         /*
@@ -215,7 +214,7 @@ public class ViewPersistenceIntTest {
 
         // UPDATE
         ViewActionEntity reFetchedAction = (ViewActionEntity) findAllActions().get(0);
-        assertEquals(reFetchedAction.getType(), ViewActionType.SWITCH);
+        assertEquals(reFetchedAction.getType(), ViewActionType.SWITCH_TO);
 
         // DELETE
         remove(viewEntity);
@@ -259,7 +258,7 @@ public class ViewPersistenceIntTest {
 
         ImageEntity image = new ImageEntity(0, "TestImage1", "png", new byte[]{42});
         ViewActionEntity action = new ViewActionEntity(ViewActionType.CLOSE, -1);
-        FieldEntity field = new FieldEntity(0, null, action, "TestField", image, 1, 1, 0, 0);
+        FieldEntity field = new FieldEntity(0, null, action, new StyledTextEntity("TestField"), "description", image, 1, 1, 0, 0);
 
         ViewEntity view = new ViewEntity(0, "TestView", childGroup1, new ArrayList<>(List.of(field)));
         field.setView(view);

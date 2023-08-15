@@ -16,7 +16,7 @@ public class ActionEntityTest {
         assertEquals(new RestActionEntity(42, null, RunPolicy.ASYNC, RestType.GET, "", ""), new RestActionEntity(42, null, RunPolicy.ASYNC, RestType.GET, "", ""));
         assertNotEquals(new RestActionEntity(1, null, RunPolicy.ASYNC, RestType.GET, "", ""), new RestActionEntity(2, null, RunPolicy.ASYNC, RestType.GET, "", ""));
 
-        assertEquals(new ViewActionEntity(42, null, RunPolicy.ASYNC, ViewActionType.SWITCH, 0), new ViewActionEntity(42, null, RunPolicy.ASYNC, ViewActionType.SWITCH, 0));
-        assertNotEquals(new ViewActionEntity(1, null, RunPolicy.ASYNC, ViewActionType.SWITCH, 0), new ViewActionEntity(2, null, RunPolicy.ASYNC, ViewActionType.SWITCH, 0));
+        assertEquals(new ViewActionEntity(42, null, RunPolicy.ASYNC, ViewActionType.SWITCH_TO, 0), new ViewActionEntity(42, null, RunPolicy.ASYNC, ViewActionType.SWITCH_TO, 0));
+        assertNotEquals(new ViewActionEntity(1, null, RunPolicy.ASYNC, ViewActionType.SWITCH_TO, 0), new ViewActionEntity(2, null, RunPolicy.ASYNC, ViewActionType.SWITCH_TO, 0));
     }
 }

@@ -30,7 +30,6 @@ public class ActionMapperTest {
             RestAction restAction = (RestAction) action;
 
             assertEquals(restAction.getId(), 42);
-            assertEquals(restAction.getActionType(), ActionType.REST);
             assertEquals(restAction.getRunPolicy(), RunPolicy.ASYNC);
             assertEquals(restAction.getRestType(), RestType.GET);
             assertEquals(restAction.getUrl(), "127.0.0.1:4242");
@@ -49,7 +48,6 @@ public class ActionMapperTest {
             ViewAction viewAction = (ViewAction) action2;
 
             assertEquals(viewAction.getId(), 42);
-            assertEquals(viewAction.getActionType(), ActionType.VIEW);
             assertEquals(viewAction.getRunPolicy(), RunPolicy.ASYNC);
             assertEquals(viewAction.getViewActionType(), ViewActionType.CLOSE);
             assertEquals(viewAction.getViewId(), 1337);

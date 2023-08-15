@@ -1,10 +1,12 @@
 package at.fischers.controlpagebackend.unit.util.mapper.groupmapper;
 
 import at.fischers.controlpagebackend.dto.Group;
+import at.fischers.controlpagebackend.dto.Image;
 import at.fischers.controlpagebackend.dto.view.BasicView;
 import at.fischers.controlpagebackend.dto.view.FullView;
 import at.fischers.controlpagebackend.entity.GroupEntity;
 import at.fischers.controlpagebackend.entity.ViewEntity;
+import at.fischers.controlpagebackend.service.ImageService;
 import at.fischers.controlpagebackend.util.mapper.groupmapper.GroupMapper;
 import at.fischers.controlpagebackend.util.mapper.groupmapper.GroupMapperDTOToEntity;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,6 +20,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GroupMapperDTOToEntityTest {
+    final ImageService mockImageService = new ImageService() {
+        @Override
+        public Image findById(int id) {
+            return null;
+        }
+
+        @Override
+        public Image save(Image image) {
+            return null;
+        }
+    };
+
     /*
         Note: i know this is kind of code duplication to the GroupMapperDTOToEntityTest, but building a "framework" (superclass,...)
         would create more overhead / is over-engineered
@@ -56,7 +70,7 @@ public class GroupMapperDTOToEntityTest {
             BasicView v3 = new BasicView(3, "View3", group);
             group.getViews().addAll(List.of(v1, v2, v3));
 
-            GroupEntity groupEntity = GroupMapper.mapDTOToEntity(group);
+            GroupEntity groupEntity = GroupMapper.mapDTOToEntity(mockImageService, group);
             assertNotNull(groupEntity);
             assertNotNull(groupEntity.getViews());
             assertEquals(groupEntity.getViews().size(), 3);
@@ -84,7 +98,7 @@ public class GroupMapperDTOToEntityTest {
             Test 1: mapping head group Entity
          */
         {
-            GroupEntity headGroupEntity = GroupMapperDTOToEntity.mapDTOToEntity(head);
+            GroupEntity headGroupEntity = GroupMapperDTOToEntity.mapDTOToEntity(mockImageService, head);
             assertNotNull(headGroupEntity);
             assertEquals(headGroupEntity.getName(), "HeadGroup");
 
@@ -98,8 +112,8 @@ public class GroupMapperDTOToEntityTest {
      */
     @Test
     void testMapDTOToEntityLayer2() {
-        GroupEntity headGroupEntity = GroupMapperDTOToEntity.mapDTOToEntity(head);
-        GroupEntity childGroup1Entity = GroupMapperDTOToEntity.mapDTOToEntity(child1);
+        GroupEntity headGroupEntity = GroupMapperDTOToEntity.mapDTOToEntity(mockImageService, head);
+        GroupEntity childGroup1Entity = GroupMapperDTOToEntity.mapDTOToEntity(mockImageService, child1);
 
         /*
             Test 2a: mapping a child in layer 2 (childEntity1) with children
@@ -121,7 +135,7 @@ public class GroupMapperDTOToEntityTest {
             Test 2b: mapping a child in layer 2 (childEntity2) empty children
          */
         {
-            GroupEntity childGroup2 = GroupMapperDTOToEntity.mapDTOToEntity(child2);
+            GroupEntity childGroup2 = GroupMapperDTOToEntity.mapDTOToEntity(mockImageService, child2);
             assertNotNull(childGroup2);
             assertEquals(childGroup2.getName(), "Child2");
 
@@ -141,13 +155,13 @@ public class GroupMapperDTOToEntityTest {
      */
     @Test
     void testMapToDTOLayer3() {
-        GroupEntity childGroup1Entity = GroupMapperDTOToEntity.mapDTOToEntity(child1);
+        GroupEntity childGroup1Entity = GroupMapperDTOToEntity.mapDTOToEntity(mockImageService, child1);
 
         /*
             Test 3: mapping a child in layer 3
          */
         {
-            GroupEntity childGroup11 = GroupMapperDTOToEntity.mapDTOToEntity(child11);
+            GroupEntity childGroup11 = GroupMapperDTOToEntity.mapDTOToEntity(mockImageService, child11);
             assertNotNull(childGroup11);
 
             // check children

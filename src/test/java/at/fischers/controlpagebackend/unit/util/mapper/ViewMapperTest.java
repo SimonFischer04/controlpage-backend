@@ -2,11 +2,15 @@ package at.fischers.controlpagebackend.unit.util.mapper;
 
 import at.fischers.controlpagebackend.dto.Field;
 import at.fischers.controlpagebackend.dto.Group;
+import at.fischers.controlpagebackend.dto.Image;
+import at.fischers.controlpagebackend.dto.StyledText;
 import at.fischers.controlpagebackend.dto.view.BasicView;
 import at.fischers.controlpagebackend.dto.view.FullView;
 import at.fischers.controlpagebackend.entity.FieldEntity;
 import at.fischers.controlpagebackend.entity.GroupEntity;
+import at.fischers.controlpagebackend.entity.StyledTextEntity;
 import at.fischers.controlpagebackend.entity.ViewEntity;
+import at.fischers.controlpagebackend.service.ImageService;
 import at.fischers.controlpagebackend.util.mapper.ViewMapper;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +20,18 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ViewMapperTest {
+    final ImageService mockImageService = new ImageService() {
+        @Override
+        public Image findById(int id) {
+            return null;
+        }
+
+        @Override
+        public Image save(Image image) {
+            return null;
+        }
+    };
+
     /**
      * Test: mapping a {@link FieldEntity} to a {@link BasicView}
      */
@@ -47,10 +63,10 @@ public class ViewMapperTest {
         {
             GroupEntity groupEntity = new GroupEntity(0, new ArrayList<>(), null, "TestGroup", null);
             List<FieldEntity> fieldEntities = List.of(
-                    new FieldEntity(0, null, null, "Field1", null, 1, 1, 1, 1),
-                    new FieldEntity(1, null, null, "Field2", null, 1, 1, 0, 0),
-                    new FieldEntity(2, null, null, "Field3", null, 1, 1, 1, 0),
-                    new FieldEntity(3, null, null, "Field4", null, 1, 1, 0, 1));
+                    new FieldEntity(0, null, null, new StyledTextEntity("Field1"), "", null, 1, 1, 1, 1),
+                    new FieldEntity(1, null, null, new StyledTextEntity("Field2"), "", null, 1, 1, 0, 0),
+                    new FieldEntity(2, null, null, new StyledTextEntity("Field3"), "", null, 1, 1, 1, 0),
+                    new FieldEntity(3, null, null, new StyledTextEntity("Field4"), "", null, 1, 1, 0, 1));
             ViewEntity viewEntity = new ViewEntity(42, "TestView", groupEntity, fieldEntities);
 
             FullView fullView = ViewMapper.mapEntityToFullDTO(viewEntity);
@@ -59,10 +75,10 @@ public class ViewMapperTest {
             assertEquals(fullView.getName(), "TestView");
             assertNotNull(fullView.getGroup());
             // get (y) . get (x)
-            assertEquals(fullView.getFields().get(0).get(0).getTitle(), "Field2");
-            assertEquals(fullView.getFields().get(1).get(1).getTitle(), "Field1");
-            assertEquals(fullView.getFields().get(0).get(1).getTitle(), "Field3");
-            assertEquals(fullView.getFields().get(1).get(0).getTitle(), "Field4");
+            assertEquals(fullView.getFields().get(0).get(0).getTitle().getText(), "Field2");
+            assertEquals(fullView.getFields().get(1).get(1).getTitle().getText(), "Field1");
+            assertEquals(fullView.getFields().get(0).get(1).getTitle().getText(), "Field3");
+            assertEquals(fullView.getFields().get(1).get(0).getTitle().getText(), "Field4");
         }
 
         /*
@@ -92,11 +108,11 @@ public class ViewMapperTest {
             FullView fullView = new FullView(0, "TestView", childGroup1, null);
 
             List<List<Field>> fields = new ArrayList<>();
-            fields.add(List.of(new Field(5, fullView, null, "T1", null, 1, 1), new Field(3, fullView, null, "T2", null, 1, 1)));
-            fields.add(List.of(new Field(2, fullView, null, "T3", null, 1, 1), new Field(1, fullView, null, "T4", null, 1, 1)));
+            fields.add(List.of(new Field(5, fullView, null, new StyledText("T1"), "", -1, 1, 1), new Field(3, fullView, null, new StyledText("T2"), "", -1, 1, 1)));
+            fields.add(List.of(new Field(2, fullView, null, new StyledText("T3"), "", -1, 1, 1), new Field(1, fullView, null, new StyledText("T4"), "", -1, 1, 1)));
             fullView.setFields(fields);
 
-            ViewEntity viewEntity = ViewMapper.mapDTOToEntity(fullView);
+            ViewEntity viewEntity = ViewMapper.mapDTOToEntity(mockImageService, fullView);
 
             assertNotNull(viewEntity);
             assertNotNull(viewEntity.getGroup());
@@ -108,12 +124,12 @@ public class ViewMapperTest {
             assertEquals(fieldEntities.size(), 4);
 
             FieldEntity testFieldT2 = fieldEntities.get(1);
-            assertEquals(testFieldT2.getTitle(), "T2");
+            assertEquals(testFieldT2.getTitle().getText(), "T2");
             assertEquals(testFieldT2.getXPos(), 1);
             assertEquals(testFieldT2.getYPos(), 0);
 
             FieldEntity testFieldT3 = fieldEntities.get(2);
-            assertEquals(testFieldT3.getTitle(), "T3");
+            assertEquals(testFieldT3.getTitle().getText(), "T3");
             assertEquals(testFieldT3.getXPos(), 0);
             assertEquals(testFieldT3.getYPos(), 1);
         }
@@ -123,7 +139,7 @@ public class ViewMapperTest {
          */
         {
             assertDoesNotThrow(() -> {
-                ViewMapper.mapDTOToEntity(new FullView(42, "V2", null, null));
+                ViewMapper.mapDTOToEntity(mockImageService, new FullView(42, "V2", null, null));
             });
         }
     }
