@@ -19,8 +19,8 @@ import java.util.Collections;
 //@RequiredArgsConstructor
 public class ControlpageBackendApplication {
     //    private final ViewService viewService;
-//    @Autowired
-//    ActionRepository actionRepository;
+    //    @Autowired
+    //    ActionRepository actionRepository;
 
     public static void main(String[] args) {
         int port = 42000;

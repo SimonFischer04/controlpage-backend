@@ -1,7 +1,6 @@
 package at.fischers.controlpagebackend.dto.action;
 
 import at.fischers.controlpagebackend.dto.Field;
-import at.fischers.controlpagebackend.enums.ActionType;
 import at.fischers.controlpagebackend.enums.RunPolicy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
