@@ -4,7 +4,7 @@ import at.fischers.controlpagebackend.entity.FieldEntity;
 import at.fischers.controlpagebackend.enums.RunPolicy;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity

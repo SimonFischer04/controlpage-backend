@@ -5,9 +5,9 @@ import at.fischers.controlpagebackend.enums.RunPolicy;
 import at.fischers.controlpagebackend.enums.ViewActionType;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "view_action")

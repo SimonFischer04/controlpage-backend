@@ -3,20 +3,18 @@ package at.fischers.controlpagebackend.integration;
 import at.fischers.controlpagebackend.entity.*;
 import at.fischers.controlpagebackend.entity.action.ActionEntity;
 import at.fischers.controlpagebackend.entity.action.ViewActionEntity;
-import at.fischers.controlpagebackend.enums.HorizontalAlignment;
-import at.fischers.controlpagebackend.enums.VerticalAlignment;
 import at.fischers.controlpagebackend.enums.ViewActionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 

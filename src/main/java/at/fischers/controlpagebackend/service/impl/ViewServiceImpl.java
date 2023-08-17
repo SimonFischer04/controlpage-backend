@@ -3,7 +3,6 @@ package at.fischers.controlpagebackend.service.impl;
 import at.fischers.controlpagebackend.dto.view.BasicView;
 import at.fischers.controlpagebackend.dto.view.FullView;
 import at.fischers.controlpagebackend.dto.view.FullViewDTO;
-import at.fischers.controlpagebackend.entity.GroupEntity;
 import at.fischers.controlpagebackend.entity.ViewEntity;
 import at.fischers.controlpagebackend.repository.GroupRepository;
 import at.fischers.controlpagebackend.repository.ViewRepository;
@@ -13,7 +12,7 @@ import at.fischers.controlpagebackend.service.ViewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
