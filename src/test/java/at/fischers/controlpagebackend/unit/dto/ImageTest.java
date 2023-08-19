@@ -1,6 +1,6 @@
 package at.fischers.controlpagebackend.unit.dto;
 
-import at.fischers.controlpagebackend.dto.Image;
+import at.fischers.controlpagebackend.model.domain.Image;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

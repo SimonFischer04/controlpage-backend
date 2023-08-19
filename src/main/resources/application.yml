@@ -13,6 +13,7 @@ spring:
       hibernate:
         generate_statistics: true
         format_sql: true
+
   data:
     rest:
       default-media-type: application/json

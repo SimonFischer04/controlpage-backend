@@ -1,6 +1,6 @@
 package at.fischers.controlpagebackend.service;
 
-import at.fischers.controlpagebackend.dto.Image;
+import at.fischers.controlpagebackend.model.domain.Image;
 
 public interface ImageService {
     Image findById(int id);

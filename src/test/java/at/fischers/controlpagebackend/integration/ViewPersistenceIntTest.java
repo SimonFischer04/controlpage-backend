@@ -1,9 +1,9 @@
 package at.fischers.controlpagebackend.integration;
 
-import at.fischers.controlpagebackend.entity.*;
-import at.fischers.controlpagebackend.entity.action.ActionEntity;
-import at.fischers.controlpagebackend.entity.action.ViewActionEntity;
-import at.fischers.controlpagebackend.enums.ViewActionType;
+import at.fischers.controlpagebackend.model.entity.*;
+import at.fischers.controlpagebackend.model.entity.action.ActionEntity;
+import at.fischers.controlpagebackend.model.entity.action.ViewActionEntity;
+import at.fischers.controlpagebackend.model.global.action.ViewActionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -15,6 +15,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class ViewPersistenceIntTest {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("jpa-h2-removal");
         entityManager = factory.createEntityManager();
         persist(createViewEntity());
+        assertEquals(1, findAllViews().size());
     }
 
     /**
@@ -49,10 +51,10 @@ public class ViewPersistenceIntTest {
         FieldEntity field = fields.get(0);
         ActionEntity actionEntity = field.getAction();
 
-        assertEquals(views.size(), 1);
+        assertEquals(1, views.size());
         assertNotNull(view);
 
-        assertEquals(fields.size(), 1);
+        assertEquals(1, fields.size());
         assertNotNull(field);
         assertNotNull(field.getBackground());
 
@@ -65,7 +67,7 @@ public class ViewPersistenceIntTest {
         System.out.println(view.getGroup().getParentGroup());
         assertNotNull(view.getGroup().getParentGroup().getChildGroups());
         view.getGroup().getParentGroup().getChildGroups().forEach(System.out::println);
-        assertEquals(view.getGroup().getParentGroup().getChildGroups().size(), 2);
+        assertEquals(2, view.getGroup().getParentGroup().getChildGroups().size());
     }
 
     /*
@@ -87,8 +89,8 @@ public class ViewPersistenceIntTest {
 
         List<ImageEntity> images = findAllImages();
 
-        assertEquals(images.size(), 1);
-        assertEquals(images.get(0).getName(), "TestImage2");
+        assertEquals(1, images.size());
+        assertEquals("TestImage2", images.get(0).getName());
     }
 
     /**
@@ -105,7 +107,7 @@ public class ViewPersistenceIntTest {
         viewEntity.setGroup(null);
         persist(viewEntity);
 
-        assertEquals(findAllGroups().size(), 0);
+        assertEquals(0, findAllGroups().size());
     }
 
     /**
@@ -117,7 +119,7 @@ public class ViewPersistenceIntTest {
         viewEntity.getFields().clear();
         persist(viewEntity);
 
-        assertEquals(findAllFields().size(), 0);
+        assertEquals(0, findAllFields().size());
     }
 
     /**
@@ -129,7 +131,7 @@ public class ViewPersistenceIntTest {
         viewEntity.getFields().get(0).setAction(null);
         persist(viewEntity);
 
-        assertEquals(findAllActions().size(), 0);
+        assertEquals(0, findAllActions().size());
     }
 
     /*
@@ -162,7 +164,7 @@ public class ViewPersistenceIntTest {
 
         // DELETE
         remove(viewEntity);
-        assertEquals(findAllGroups().size(), 0);
+        assertEquals(0, findAllGroups().size());
     }
 
     /**
@@ -189,7 +191,7 @@ public class ViewPersistenceIntTest {
 
         // DELETE
         remove(viewEntity);
-        assertEquals(findAllFields().size(), 0);
+        assertEquals(0, findAllFields().size());
     }
 
     /**
@@ -199,7 +201,7 @@ public class ViewPersistenceIntTest {
     void testActionCascading() {
         ViewEntity viewEntity = findView();
         ViewActionEntity actionEntity = (ViewActionEntity) viewEntity.getFields().get(0).getAction();
-        actionEntity.setType(ViewActionType.SWITCH_TO);
+        actionEntity.setViewActionType(ViewActionType.SWITCH_TO);
         persist(viewEntity);
 
         /*
@@ -212,11 +214,11 @@ public class ViewPersistenceIntTest {
 
         // UPDATE
         ViewActionEntity reFetchedAction = (ViewActionEntity) findAllActions().get(0);
-        assertEquals(reFetchedAction.getType(), ViewActionType.SWITCH_TO);
+        assertEquals(reFetchedAction.getViewActionType(), ViewActionType.SWITCH_TO);
 
         // DELETE
         remove(viewEntity);
-        assertEquals(findAllActions().size(), 0);
+        assertEquals(0, findAllActions().size());
     }
 
     /**
@@ -239,7 +241,7 @@ public class ViewPersistenceIntTest {
 
         // DELETE
         remove(viewEntity);
-        assertEquals(findAllImages().size(), 0);
+        assertEquals(0, findAllImages().size());
     }
 
     /*

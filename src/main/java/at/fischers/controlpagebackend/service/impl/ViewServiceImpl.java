@@ -1,18 +1,20 @@
 package at.fischers.controlpagebackend.service.impl;
 
-import at.fischers.controlpagebackend.dto.view.BasicView;
-import at.fischers.controlpagebackend.dto.view.FullView;
-import at.fischers.controlpagebackend.dto.view.FullViewDTO;
-import at.fischers.controlpagebackend.entity.ViewEntity;
+import at.fischers.controlpagebackend.model.domain.view.BasicView;
+import at.fischers.controlpagebackend.model.domain.view.FullView;
+import at.fischers.controlpagebackend.model.domain.view.FullViewDTO;
+import at.fischers.controlpagebackend.model.entity.ViewEntity;
 import at.fischers.controlpagebackend.repository.GroupRepository;
 import at.fischers.controlpagebackend.repository.ViewRepository;
 import at.fischers.controlpagebackend.service.GroupService;
 import at.fischers.controlpagebackend.service.ImageService;
 import at.fischers.controlpagebackend.service.ViewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class ViewServiceImpl implements ViewService {
     private final ViewRepository repository;
     private final ImageService imageService;
     private final GroupService groupService;
+    private final ConversionService conversionService;
 
     private final GroupRepository groupRepository;
 
@@ -31,30 +34,33 @@ public class ViewServiceImpl implements ViewService {
         ViewEntity v = repository.findById(id).orElse(null);
         if (v == null)
             return null;
-        return new FullView(v);
+        return conversionService.convert(v, FullView.class);
     }
 
     @Override
     @Transactional
     public List<BasicView> findAllBasic() {
         List<BasicView> viewTOS = new ArrayList<>();
-        repository.findAll().forEach(view -> viewTOS.add(new BasicView(view)));
+        repository.findAll().forEach(view -> viewTOS.add(conversionService.convert(view, BasicView.class)));
         return viewTOS;
     }
 
     @Override
     @Transactional
     public void save(ViewEntity viewEntity) {
+        if (viewEntity == null)
+            return;
+
         viewEntity.getFields().forEach(fieldEntity -> {
             fieldEntity.setView(viewEntity);
             // client may send f.e. -1 to indicate new field, but database persist requires value of 0 to create new entry
-            if(fieldEntity.getId() < 0){
+            if (fieldEntity.getId() < 0) {
                 fieldEntity.setId(0);
             }
         });
 
         /*
-         fix weird detached merge issue
+         fix weird detached merge issue (TODO: better way? :))
          */
         var actualGroup = viewEntity.getGroup();
         viewEntity.setGroup(null);
@@ -68,16 +74,16 @@ public class ViewServiceImpl implements ViewService {
         }
     }
 
-    @Override
-    @Transactional
-    public void save(BasicView view) {
-        save(new ViewEntity(imageService, view));
-    }
+//    @Override
+//    @Transactional
+//    public void save(BasicView view) {
+//        save(new ViewEntity(imageService, view));
+//    }
 
     @Override
     @Transactional
     public void save(FullView view) {
-        save(new ViewEntity(imageService, view));
+        save(conversionService.convert(view, ViewEntity.class));
     }
 
     @Override

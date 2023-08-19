@@ -1,7 +1,7 @@
 package at.fischers.controlpagebackend.unit.dto;
 
-import at.fischers.controlpagebackend.dto.view.BasicView;
-import at.fischers.controlpagebackend.dto.view.FullView;
+import at.fischers.controlpagebackend.model.domain.view.BasicView;
+import at.fischers.controlpagebackend.model.domain.view.FullView;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

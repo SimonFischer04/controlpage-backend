@@ -1,6 +1,6 @@
 package at.fischers.controlpagebackend.unit.entity;
 
-import at.fischers.controlpagebackend.entity.ImageEntity;
+import at.fischers.controlpagebackend.model.entity.ImageEntity;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

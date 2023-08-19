@@ -1,6 +1,6 @@
 package at.fischers.controlpagebackend.controller;
 
-import at.fischers.controlpagebackend.dto.Image;
+import at.fischers.controlpagebackend.model.domain.Image;
 import at.fischers.controlpagebackend.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

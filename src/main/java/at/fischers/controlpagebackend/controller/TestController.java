@@ -1,6 +1,6 @@
 package at.fischers.controlpagebackend.controller;
 
-import at.fischers.controlpagebackend.dto.TestDTO;
+import at.fischers.controlpagebackend.model.dto.TestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

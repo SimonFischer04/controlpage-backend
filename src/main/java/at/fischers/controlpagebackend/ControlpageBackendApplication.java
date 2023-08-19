@@ -1,10 +1,5 @@
 package at.fischers.controlpagebackend;
 
-import at.fischers.controlpagebackend.entity.action.DesktopAutomationActionEntity;
-import at.fischers.controlpagebackend.repository.ActionRepository;
-import at.fischers.controlpagebackend.service.ViewService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

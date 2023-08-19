@@ -1,14 +1,20 @@
 package at.fischers.controlpagebackend.unit.util.mapper;
 
-import at.fischers.controlpagebackend.dto.Image;
-import at.fischers.controlpagebackend.entity.ImageEntity;
-import at.fischers.controlpagebackend.util.mapper.ImageMapper;
+import at.fischers.controlpagebackend.model.entity.ImageEntity;
+import at.fischers.controlpagebackend.model.domain.Image;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.convert.ConversionService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@SpringBootTest
 public class ImageMapperTest {
+    @Autowired
+    private ConversionService conversionService;
+
     @Test
     void testMapEntityToDTO() {
         /*
@@ -17,12 +23,12 @@ public class ImageMapperTest {
         {
             ImageEntity imageEntity = new ImageEntity(42, "img-name", "png", new byte[]{127, 42, 0});
 
-            Image image = ImageMapper.mapEntityToDTO(imageEntity);
+            Image image = conversionService.convert(imageEntity, Image.class);
             assertNotNull(image);
-            assertEquals(image.getId(), 42);
-            assertEquals(image.getName(), "img-name");
-            assertEquals(image.getType(), "png");
-            assertEquals(image.getImageData()[1], 42);
+            assertEquals(42, image.getId());
+            assertEquals("img-name", image.getName());
+            assertEquals("png", image.getType());
+            assertEquals(42, image.getImageData()[1]);
         }
     }
 
@@ -34,12 +40,12 @@ public class ImageMapperTest {
         {
             Image image = new Image(42, "img_photo", "jpg", new byte[]{1, 2, 3});
 
-            ImageEntity imageEntity = ImageMapper.mapDTOToEntity(image);
+            ImageEntity imageEntity = conversionService.convert(image, ImageEntity.class);
             assertNotNull(imageEntity);
-            assertEquals(imageEntity.getId(), 42);
-            assertEquals(imageEntity.getName(), "img_photo");
-            assertEquals(imageEntity.getType(), "jpg");
-            assertEquals(imageEntity.getImageData()[2], 3);
+            assertEquals(42, imageEntity.getId());
+            assertEquals("img_photo", imageEntity.getName());
+            assertEquals("jpg", imageEntity.getType());
+            assertEquals(3, imageEntity.getImageData()[2]);
         }
     }
 }

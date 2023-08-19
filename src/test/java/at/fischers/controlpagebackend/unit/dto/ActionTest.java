@@ -1,10 +1,10 @@
 package at.fischers.controlpagebackend.unit.dto;
 
-import at.fischers.controlpagebackend.dto.action.RestAction;
-import at.fischers.controlpagebackend.dto.action.ViewAction;
-import at.fischers.controlpagebackend.enums.RestType;
-import at.fischers.controlpagebackend.enums.RunPolicy;
-import at.fischers.controlpagebackend.enums.ViewActionType;
+import at.fischers.controlpagebackend.model.domain.action.RestAction;
+import at.fischers.controlpagebackend.model.domain.action.ViewAction;
+import at.fischers.controlpagebackend.model.global.action.RestType;
+import at.fischers.controlpagebackend.model.global.action.RunPolicy;
+import at.fischers.controlpagebackend.model.global.action.ViewActionType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

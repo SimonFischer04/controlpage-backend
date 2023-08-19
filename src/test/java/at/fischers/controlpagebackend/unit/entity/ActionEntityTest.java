@@ -1,10 +1,10 @@
 package at.fischers.controlpagebackend.unit.entity;
 
-import at.fischers.controlpagebackend.entity.action.RestActionEntity;
-import at.fischers.controlpagebackend.entity.action.ViewActionEntity;
-import at.fischers.controlpagebackend.enums.RestType;
-import at.fischers.controlpagebackend.enums.RunPolicy;
-import at.fischers.controlpagebackend.enums.ViewActionType;
+import at.fischers.controlpagebackend.model.entity.action.RestActionEntity;
+import at.fischers.controlpagebackend.model.entity.action.ViewActionEntity;
+import at.fischers.controlpagebackend.model.global.action.RestType;
+import at.fischers.controlpagebackend.model.global.action.RunPolicy;
+import at.fischers.controlpagebackend.model.global.action.ViewActionType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

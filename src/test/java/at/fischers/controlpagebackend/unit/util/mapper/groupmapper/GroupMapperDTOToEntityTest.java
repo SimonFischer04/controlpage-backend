@@ -1,16 +1,16 @@
 package at.fischers.controlpagebackend.unit.util.mapper.groupmapper;
 
-import at.fischers.controlpagebackend.dto.Group;
-import at.fischers.controlpagebackend.dto.Image;
-import at.fischers.controlpagebackend.dto.view.BasicView;
-import at.fischers.controlpagebackend.dto.view.FullView;
-import at.fischers.controlpagebackend.entity.GroupEntity;
-import at.fischers.controlpagebackend.entity.ViewEntity;
+import at.fischers.controlpagebackend.model.domain.Group;
+import at.fischers.controlpagebackend.model.domain.Image;
+import at.fischers.controlpagebackend.model.domain.view.BasicView;
+import at.fischers.controlpagebackend.model.domain.view.FullView;
+import at.fischers.controlpagebackend.model.entity.GroupEntity;
 import at.fischers.controlpagebackend.service.ImageService;
-import at.fischers.controlpagebackend.util.mapper.groupmapper.GroupMapper;
-import at.fischers.controlpagebackend.util.mapper.groupmapper.GroupMapperDTOToEntity;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.convert.ConversionService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +19,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@SpringBootTest
 public class GroupMapperDTOToEntityTest {
+    @Autowired
+    private ConversionService conversionService;
+
     final ImageService mockImageService = new ImageService() {
         @Override
         public Image findById(int id) {
@@ -70,10 +74,10 @@ public class GroupMapperDTOToEntityTest {
             BasicView v3 = new BasicView(3, "View3", group);
             group.getViews().addAll(List.of(v1, v2, v3));
 
-            GroupEntity groupEntity = GroupMapper.mapDTOToEntity(mockImageService, group);
+            GroupEntity groupEntity = conversionService.convert(group, GroupEntity.class);
             assertNotNull(groupEntity);
             assertNotNull(groupEntity.getViews());
-            assertEquals(groupEntity.getViews().size(), 3);
+            assertEquals(3, groupEntity.getViews().size());
         }
     }
 
@@ -98,12 +102,12 @@ public class GroupMapperDTOToEntityTest {
             Test 1: mapping head group Entity
          */
         {
-            GroupEntity headGroupEntity = GroupMapperDTOToEntity.mapDTOToEntity(mockImageService, head);
+            GroupEntity headGroupEntity = conversionService.convert(head, GroupEntity.class);
             assertNotNull(headGroupEntity);
             assertEquals(headGroupEntity.getName(), "HeadGroup");
 
             assertNotNull(headGroupEntity.getChildGroups());
-            assertEquals(headGroupEntity.getChildGroups().size(), 2);
+            assertEquals(2, headGroupEntity.getChildGroups().size());
         }
     }
 
@@ -112,8 +116,8 @@ public class GroupMapperDTOToEntityTest {
      */
     @Test
     void testMapDTOToEntityLayer2() {
-        GroupEntity headGroupEntity = GroupMapperDTOToEntity.mapDTOToEntity(mockImageService, head);
-        GroupEntity childGroup1Entity = GroupMapperDTOToEntity.mapDTOToEntity(mockImageService, child1);
+        GroupEntity headGroupEntity = conversionService.convert(head, GroupEntity.class);
+        GroupEntity childGroup1Entity = conversionService.convert(child1, GroupEntity.class);
 
         /*
             Test 2a: mapping a child in layer 2 (childEntity1) with children
@@ -124,29 +128,29 @@ public class GroupMapperDTOToEntityTest {
 
             // check children.
             assertNotNull(childGroup1Entity.getChildGroups());
-            assertEquals(childGroup1Entity.getChildGroups().size(), 1);
+            assertEquals(1, childGroup1Entity.getChildGroups().size());
 
             // check parent group
             assertNotNull(childGroup1Entity.getParentGroup());
-            assertEquals(childGroup1Entity.getParentGroup(), headGroupEntity);
+            assertEquals(headGroupEntity, childGroup1Entity.getParentGroup());
         }
 
         /*
             Test 2b: mapping a child in layer 2 (childEntity2) empty children
          */
         {
-            GroupEntity childGroup2 = GroupMapperDTOToEntity.mapDTOToEntity(mockImageService, child2);
+            GroupEntity childGroup2 = conversionService.convert(child2, GroupEntity.class);
             assertNotNull(childGroup2);
             assertEquals(childGroup2.getName(), "Child2");
 
             // check children.
             // childGroups should be an empty list and not null!
             assertNotNull(childGroup2.getChildGroups());
-            assertEquals(childGroup2.getChildGroups().size(), 0);
+            assertEquals(0, childGroup2.getChildGroups().size());
 
             // check parent group
             assertNotNull(childGroup2.getParentGroup());
-            assertEquals(childGroup2.getParentGroup(), headGroupEntity);
+            assertEquals(headGroupEntity, childGroup2.getParentGroup());
         }
     }
 
@@ -155,22 +159,22 @@ public class GroupMapperDTOToEntityTest {
      */
     @Test
     void testMapToDTOLayer3() {
-        GroupEntity childGroup1Entity = GroupMapperDTOToEntity.mapDTOToEntity(mockImageService, child1);
+        GroupEntity childGroup1Entity = conversionService.convert(child1, GroupEntity.class);
 
         /*
             Test 3: mapping a child in layer 3
          */
         {
-            GroupEntity childGroup11 = GroupMapperDTOToEntity.mapDTOToEntity(mockImageService, child11);
+            GroupEntity childGroup11 = conversionService.convert(child11, GroupEntity.class);
             assertNotNull(childGroup11);
 
             // check children
             assertNotNull(childGroup11.getChildGroups());
-            assertEquals(childGroup11.getChildGroups().size(), 0);
+            assertEquals(0, childGroup11.getChildGroups().size());
 
             // check parents
             assertNotNull(childGroup11.getParentGroup());
-            assertEquals(childGroup11.getParentGroup(), childGroup1Entity);
+            assertEquals(childGroup1Entity, childGroup11.getParentGroup());
         }
     }
 }

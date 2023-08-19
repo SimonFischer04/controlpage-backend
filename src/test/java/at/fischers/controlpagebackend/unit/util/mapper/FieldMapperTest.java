@@ -1,22 +1,28 @@
 package at.fischers.controlpagebackend.unit.util.mapper;
 
-import at.fischers.controlpagebackend.dto.Field;
-import at.fischers.controlpagebackend.dto.Image;
-import at.fischers.controlpagebackend.dto.StyledText;
-import at.fischers.controlpagebackend.dto.action.RestAction;
-import at.fischers.controlpagebackend.entity.FieldEntity;
-import at.fischers.controlpagebackend.entity.ImageEntity;
-import at.fischers.controlpagebackend.entity.StyledTextEntity;
-import at.fischers.controlpagebackend.entity.action.RestActionEntity;
-import at.fischers.controlpagebackend.enums.RestType;
-import at.fischers.controlpagebackend.enums.RunPolicy;
+import at.fischers.controlpagebackend.model.domain.Field;
+import at.fischers.controlpagebackend.model.domain.Image;
+import at.fischers.controlpagebackend.model.domain.text.StyledText;
+import at.fischers.controlpagebackend.model.domain.action.RestAction;
+import at.fischers.controlpagebackend.model.entity.FieldEntity;
+import at.fischers.controlpagebackend.model.entity.ImageEntity;
+import at.fischers.controlpagebackend.model.entity.StyledTextEntity;
+import at.fischers.controlpagebackend.model.entity.action.RestActionEntity;
+import at.fischers.controlpagebackend.model.global.action.RestType;
+import at.fischers.controlpagebackend.model.global.action.RunPolicy;
 import at.fischers.controlpagebackend.service.ImageService;
-import at.fischers.controlpagebackend.util.mapper.FieldMapper;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.convert.ConversionService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 public class FieldMapperTest {
+    @Autowired
+    ConversionService conversionService;
+
     // TODO: make this better
     final ImageService mockImageService = new ImageService() {
         @Override
@@ -39,22 +45,23 @@ public class FieldMapperTest {
             RestActionEntity restActionEntity = new RestActionEntity(1337, null, RunPolicy.ASYNC, RestType.GET, "127.0.0.1:4242", "{}");
             FieldEntity fieldEntity = new FieldEntity(42, null, restActionEntity, new StyledTextEntity("A Title"), "", new ImageEntity(42, "IMG", "png", new byte[]{}), 1, 2, 3, 4);
 
-            Field field = FieldMapper.mapEntityToDTO(fieldEntity);
+            Field field = conversionService.convert(fieldEntity, Field.class);
             assertNotNull(field);
-            assertEquals(field.getId(), 42);
-            assertEquals(field.getTitle().getText(), "A Title");
+            assertEquals(42, field.getId());
+            assertEquals("A Title", field.getTitle().getText());
             assertNotNull(field.getAction());
-            assertNotEquals(field.getBackgroundId(), 0);
-            assertEquals(field.getRowspan(), 1);
-            assertEquals(field.getColspan(), 2);
+            assertNotNull(field.getBackground());
+            assertEquals(1, field.getRowspan());
+            assertEquals(2, field.getColspan());
         }
 
+        // TODO: still relevant with new mapper?
         /*
             Test 2: no exception thrown when some values are null
          */
         {
             assertDoesNotThrow(() -> {
-                FieldMapper.mapEntityToDTO(new FieldEntity(0, null, null, new StyledTextEntity("Title"), "", null, 1, 2, 3, 4));
+                conversionService.convert(new FieldEntity(0, null, null, new StyledTextEntity("Title"), "", null, 1, 2, 3, 4), Field.class);
             });
         }
     }
@@ -66,25 +73,26 @@ public class FieldMapperTest {
          */
         {
             RestAction restAction = new RestAction(1337, null, RunPolicy.SYNC, RestType.POST, "127.0.0.1:4242", "{}");
-            Field field = new Field(42, null, restAction, new StyledText("great Title"),"", -1, 1, 2);
+            Field field = new Field(42, null, restAction, new StyledText("great Title"), "", new Image(42, "name", "img/png", new byte[]{127, 42}), 1, 2);
 
-            FieldEntity fieldEntity = FieldMapper.mapDTOToEntity(mockImageService, field);
+            FieldEntity fieldEntity = conversionService.convert(field, FieldEntity.class);
 
             assertNotNull(fieldEntity);
-            assertEquals(fieldEntity.getId(), 42);
+            assertEquals(42, fieldEntity.getId(), 42);
             assertNotNull(fieldEntity.getAction());
-            assertEquals(fieldEntity.getTitle().getText(), "great Title");
+            assertEquals("great Title", fieldEntity.getTitle().getText());
             assertNotNull(fieldEntity.getBackground());
-            assertEquals(fieldEntity.getRowspan(), 1);
-            assertEquals(fieldEntity.getColspan(), 2);
+            assertEquals(1, fieldEntity.getRowspan());
+            assertEquals(2, fieldEntity.getColspan());
         }
 
+        // TODO: still relevant with new mapper?
         /*
             Test 2: no exception thrown when some values are null
         */
         {
             assertDoesNotThrow(() -> {
-                FieldMapper.mapDTOToEntity(mockImageService, new Field(42, null, null, new StyledText("great Title"), "", -1, 1, 2));
+                conversionService.convert(new Field(42, null, null, new StyledText("great Title"), "", new Image(42, "name", "img/png", new byte[]{127, 42}), 1, 2), FieldEntity.class);
             });
         }
     }

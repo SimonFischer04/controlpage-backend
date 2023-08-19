@@ -1,27 +1,31 @@
 package at.fischers.controlpagebackend.integration;
 
-import at.fischers.controlpagebackend.dto.Field;
-import at.fischers.controlpagebackend.dto.Group;
-import at.fischers.controlpagebackend.dto.Image;
-import at.fischers.controlpagebackend.dto.StyledText;
-import at.fischers.controlpagebackend.dto.action.RestAction;
-import at.fischers.controlpagebackend.dto.view.FullView;
-import at.fischers.controlpagebackend.entity.FieldEntity;
-import at.fischers.controlpagebackend.entity.GroupEntity;
-import at.fischers.controlpagebackend.entity.StyledTextEntity;
-import at.fischers.controlpagebackend.entity.ViewEntity;
-import at.fischers.controlpagebackend.entity.action.RestActionEntity;
-import at.fischers.controlpagebackend.enums.RestType;
-import at.fischers.controlpagebackend.enums.RunPolicy;
+import at.fischers.controlpagebackend.model.domain.Field;
+import at.fischers.controlpagebackend.model.domain.Group;
+import at.fischers.controlpagebackend.model.domain.Image;
+import at.fischers.controlpagebackend.model.domain.text.StyledText;
+import at.fischers.controlpagebackend.model.domain.action.RestAction;
+import at.fischers.controlpagebackend.model.domain.view.FullView;
+import at.fischers.controlpagebackend.model.entity.FieldEntity;
+import at.fischers.controlpagebackend.model.entity.GroupEntity;
+import at.fischers.controlpagebackend.model.entity.StyledTextEntity;
+import at.fischers.controlpagebackend.model.entity.ViewEntity;
+import at.fischers.controlpagebackend.model.entity.action.RestActionEntity;
 import at.fischers.controlpagebackend.service.ImageService;
-import at.fischers.controlpagebackend.util.mapper.ViewMapper;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.convert.ConversionService;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 public class MappingIntegrationTest {
+    @Autowired
+    ConversionService conversionService;
+
     final ImageService mockImageService = new ImageService() {
         @Override
         public Image findById(int id) {
@@ -45,7 +49,7 @@ public class MappingIntegrationTest {
          */
         Group group = new Group();
         RestAction action = new RestAction();
-        Field f1 = new Field(42, null, action, new StyledText("F1"), "description", -1, 1, 1);
+        Field f1 = new Field(42, null, action, new StyledText("F1"), "description", null, 1, 1);
         action.setField(f1);
         List<List<Field>> fields = List.of(
                 List.of(f1)
@@ -55,7 +59,8 @@ public class MappingIntegrationTest {
         f1.setView(view);
         group.setViews(List.of(view));
         //
-        ViewEntity viewEntity = ViewMapper.mapDTOToEntity(mockImageService, view);
+        ViewEntity viewEntity = conversionService.convert(view, ViewEntity.class);
+        assertNotNull(viewEntity);
         FieldEntity fieldEntity = viewEntity.getFields().get(0);
 
         /*
@@ -64,7 +69,7 @@ public class MappingIntegrationTest {
         assertNotNull(fieldEntity.getView());
         assertNotNull(fieldEntity.getAction().getField());
         assertNotNull(viewEntity.getGroup().getViews());
-        assertEquals(viewEntity.getGroup().getViews().size(), 1);
+        assertEquals(1, viewEntity.getGroup().getViews().size());
         assertNotNull(viewEntity.getGroup().getViews().get(0));
     }
 
@@ -87,7 +92,8 @@ public class MappingIntegrationTest {
         f1.setView(viewEntity);
         group.setViews(List.of(viewEntity));
         //
-        FullView view = ViewMapper.mapEntityToFullDTO(viewEntity);
+        FullView view = conversionService.convert(viewEntity, FullView.class);
+        assertNotNull(view);
         Field field = view.getFields().get(0).get(0);
 
         /*
@@ -96,7 +102,7 @@ public class MappingIntegrationTest {
         assertNotNull(field.getView());
         assertNotNull(field.getAction().getField());
         assertNotNull(view.getGroup().getViews());
-        assertEquals(view.getGroup().getViews().size(), 1);
+        assertEquals(1, view.getGroup().getViews().size());
         assertNotNull(view.getGroup().getViews().get(0));
     }
 }
