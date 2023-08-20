@@ -10,7 +10,7 @@ import org.springframework.core.convert.ConversionService;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest()
 public class ImageMapperTest {
     @Autowired
     private ConversionService conversionService;

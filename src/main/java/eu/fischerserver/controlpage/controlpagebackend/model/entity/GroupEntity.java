@@ -13,7 +13,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@Builder
 public class GroupEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,14 +30,6 @@ public class GroupEntity {
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<ViewEntity> views;
-
-    public GroupEntity(GroupEntity groupEntity) {
-        id = groupEntity.getId();
-        childGroups = groupEntity.getChildGroups();
-        parentGroup = groupEntity.getParentGroup();
-        name = groupEntity.getName();
-        views = groupEntity.getViews();
-    }
 
     /*
         Because they are stored in a database two Groups with the same id are considered equals

@@ -13,7 +13,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@Builder
 public class ViewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,17 +28,6 @@ public class ViewEntity {
     @OneToMany(mappedBy = "view", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<FieldEntity> fields;
-
-    public ViewEntity(ViewEntity viewEntity) {
-        id = viewEntity.getId();
-        name = viewEntity.getName();
-        group = viewEntity.getGroup();
-        fields = viewEntity.getFields();
-    }
-
-//    public ViewEntity(ImageService imageService, BasicView view) {
-//        this(ViewMapper.mapDTOToEntity(imageService, view));
-//    }
 
     /*
         Because they are stored in a database two Views with the same id are considered equals

@@ -18,11 +18,27 @@ public interface GroupEntityToGroupMapper extends Converter<GroupEntity, Group> 
      */
     @Override
     @Mappings({
-//            @Mapping(target = "parentGroup", expression = "java(groupEntity == null ? null : convert(groupEntity.getParentGroup()))"),
-            @Mapping(target = "parentGroup", source = "parentGroup", qualifiedByName = "GroupEntityToGroup"),
-            @Mapping(target = "childGroups", source = "childGroups", qualifiedByName = "GroupEntityToGroup"),
-            @Mapping(target = "views", source = "views", qualifiedByName = "ViewEntityToBasicView")
+            @Mapping(source = "parentGroup", target = "parentGroup", qualifiedByName = "ParentMapper"),
+            @Mapping(source = "childGroups", target = "childGroups", qualifiedByName = "ChildMapper"),
+            // in fact, group still gets mapped properly throughout the tree because group -> field mapping already sets field.group?
+            // TODO: investigate this further
+            @Mapping(source = "views", target = "views", qualifiedByName = "ViewEntityToBasicViewWithoutGroup")
     })
-    @Named("GroupEntityToGroup")
     Group convert(@Nullable GroupEntity groupEntity);
+
+    @Named("ParentMapper")
+    @InheritConfiguration(name = "convert")
+    @Mapping(target = "parentGroup", qualifiedByName = "ParentMapper")
+    // Set inside GroupToGroupEntityMapperDecorator. TODO: better way?
+    @Mapping(target = "childGroups", ignore = true)
+    @BeanMapping(ignoreUnmappedSourceProperties = {"childGroups", "views"})
+    Group mapParents(@Nullable GroupEntity group);
+
+    @Named("ChildMapper")
+    @InheritConfiguration(name = "convert")
+    @Mapping(target = "childGroups", qualifiedByName = "ChildMapper")
+    // TODO: parent seems to be set anyways? => analyse this
+    @Mapping(target = "parentGroup", ignore = true)
+    @BeanMapping(ignoreUnmappedSourceProperties = {"views", "parentGroup"})
+    Group mapChildren(@Nullable GroupEntity group);
 }
