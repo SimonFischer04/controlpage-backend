@@ -3,8 +3,7 @@ package eu.fischerserver.controlpage.controlpagebackend.util.mapper.field;
 import eu.fischerserver.controlpage.controlpagebackend.config.MapperSpringConfig;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.FieldEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
+import org.mapstruct.*;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 
@@ -33,6 +32,13 @@ public interface FieldEntityToFieldMapper extends Converter<FieldEntity, Field> 
     })
     Field convert(@Nullable FieldEntity fieldEntity);
 
+    @Mappings({
+            @Mapping(target = "view", ignore = true)
+    })
+    @BeanMapping(ignoreUnmappedSourceProperties = {"view", "XPos", "YPos"})
+    @Named("FieldEntityToFieldWithoutViewMapper")
+    Field mapFieldEntityToFieldWithoutView(@Nullable FieldEntity fieldEntity);
+
     default List<List<Field>> mapFieldEntityListToFieldMatrix(List<FieldEntity> fieldEntities) {
         if (fieldEntities == null)
             return null;
@@ -49,11 +55,9 @@ public interface FieldEntityToFieldMapper extends Converter<FieldEntity, Field> 
             if (!map.containsKey(fieldEntity.getYPos())) {
                 map.put(fieldEntity.getYPos(), new TreeMap<>());
             }
-            map.get(fieldEntity.getYPos()).put(fieldEntity.getXPos(), convert(fieldEntity));
+            map.get(fieldEntity.getYPos()).put(fieldEntity.getXPos(), mapFieldEntityToFieldWithoutView(fieldEntity));
         });
-        map.forEach((key, list) -> {
-            fields.add(new ArrayList<>(list.values()));
-        });
+        map.forEach((key, list) -> fields.add(new ArrayList<>(list.values())));
         return fields;
     }
 }

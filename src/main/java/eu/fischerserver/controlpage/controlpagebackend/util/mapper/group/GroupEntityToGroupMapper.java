@@ -22,7 +22,7 @@ public interface GroupEntityToGroupMapper extends Converter<GroupEntity, Group> 
             @Mapping(source = "childGroups", target = "childGroups", qualifiedByName = "ChildMapper"),
             // in fact, group still gets mapped properly throughout the tree because group -> field mapping already sets field.group?
             // TODO: investigate this further
-            @Mapping(source = "views", target = "views", qualifiedByName = "ViewEntityToBasicViewWithoutGroup")
+            @Mapping(source = "views", target = "views", qualifiedByName = "ViewEntityToBasicViewWithoutGroupMapper")
     })
     Group convert(@Nullable GroupEntity groupEntity);
 

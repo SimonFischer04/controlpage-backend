@@ -25,6 +25,6 @@ public interface ViewEntityToBasicViewMapper extends Converter<ViewEntity, Basic
             @Mapping(target = "group", ignore = true)
     })
     @BeanMapping(ignoreUnmappedSourceProperties = {"group", "fields"})
-    @Named("ViewEntityToBasicViewWithoutGroup")
+    @Named("ViewEntityToBasicViewWithoutGroupMapper")
     BasicView mapViewEntityToBasicView(@Nullable ViewEntity viewEntity);
 }

@@ -3,9 +3,7 @@ package eu.fischerserver.controlpage.controlpagebackend.util.mapper.field;
 import eu.fischerserver.controlpage.controlpagebackend.config.MapperSpringConfig;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.FieldEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
+import org.mapstruct.*;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 
@@ -29,6 +27,16 @@ public interface FieldToFieldEntityMapper extends Converter<Field, FieldEntity> 
     })
     FieldEntity convert(@Nullable Field field);
 
+    @Mappings({
+            // TODO: test rm
+            @Mapping(target = "xPos", ignore = true),
+            @Mapping(target = "yPos", ignore = true),
+            @Mapping(target = "view", ignore = true)
+    })
+    @BeanMapping(ignoreUnmappedSourceProperties = "view")
+    @Named("FieldToFieldEntityWithoutViewMapper")
+    FieldEntity mapFieldToFieldEntityWithoutView(@Nullable Field field);
+
     default List<FieldEntity> mapFieldMatrixToFieldEntityList(List<List<Field>> fieldMatrix) {
         if (fieldMatrix == null)
             return null;
@@ -38,7 +46,7 @@ public interface FieldToFieldEntityMapper extends Converter<Field, FieldEntity> 
         for (Collection<Field> row : fieldMatrix) {
             int x = 0;
             for (Field field : row) {
-                FieldEntity fieldEntity = convert(field);
+                FieldEntity fieldEntity = mapFieldToFieldEntityWithoutView(field);
                 if (fieldEntity == null)
                     continue;
 

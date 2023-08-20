@@ -4,14 +4,11 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.*;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ActionEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ViewActionEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.global.action.ViewActionType;
+import jakarta.persistence.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
