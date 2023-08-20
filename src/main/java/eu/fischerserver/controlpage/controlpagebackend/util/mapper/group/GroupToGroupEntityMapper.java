@@ -2,31 +2,21 @@ package eu.fischerserver.controlpage.controlpagebackend.util.mapper.group;
 
 import eu.fischerserver.controlpage.controlpagebackend.config.MapperSpringConfig;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Group;
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.BasicView;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.GroupEntity;
-import eu.fischerserver.controlpage.controlpagebackend.model.entity.ViewEntity;
-import eu.fischerserver.controlpage.controlpagebackend.util.mapper.field.FieldToFieldEntityMapper;
 import eu.fischerserver.controlpage.controlpagebackend.util.mapper.view.BasicViewToViewEntityMapper;
 import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 
-import java.util.List;
-
 @Mapper(config = MapperSpringConfig.class, uses = BasicViewToViewEntityMapper.class)
-@DecoratedWith(GroupToGroupEntityMapperDecorator.class)
-public interface GroupToGroupEntityMapper {
-    BasicViewToViewEntityMapper basicViewToViewEntityMapper = Mappers.getMapper(BasicViewToViewEntityMapper.class);
-
+public interface GroupToGroupEntityMapper extends Converter<Group, GroupEntity> {
     /**
      * Map a Group to a GroupEntity.
      *
      * @param group: the GroupEntity to map
      * @return the mapped GroupEntity
      */
-//    @Override
+    @Override
     // Unmapped target property: "fields". Mapping from Collection element "BasicView views" to "ViewEntity views".
     // => can't map them / not needed, but also can't ignore=true them properly because part of collection
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
