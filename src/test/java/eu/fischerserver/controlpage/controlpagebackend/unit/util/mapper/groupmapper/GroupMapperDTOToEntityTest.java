@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class GroupMapperDTOToEntityTest {
@@ -144,9 +143,7 @@ public class GroupMapperDTOToEntityTest {
             assertEquals(childGroup2.getName(), "Child2");
 
             // check children.
-            // childGroups should be an empty list and not null!
-            assertNotNull(childGroup2.getChildGroups());
-            assertEquals(0, childGroup2.getChildGroups().size());
+            assertNull(childGroup2.getChildGroups());
 
             // check parent group
             assertNotNull(childGroup2.getParentGroup());
