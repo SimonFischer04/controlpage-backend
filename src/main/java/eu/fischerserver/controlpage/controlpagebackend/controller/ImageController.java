@@ -26,7 +26,7 @@ public class ImageController {
 
         Image img = new Image(0, file.getOriginalFilename(), file.getContentType(), file.getBytes());
         Image saved = imageService.save(img);
-        return ResponseEntity.ok(saved.getId());
+        return ResponseEntity.ok(new SaveImageResponse(saved.getId()));
     }
 
     @GetMapping("{id}")
@@ -46,4 +46,9 @@ public class ImageController {
 //    public Map<String, String> handleIllegalArgumentExceptions(IllegalArgumentException ex) {
 //        return new HashMap<>();
 //    }
+
+    public record SaveImageResponse(
+            int imageId
+    ) {
+    }
 }

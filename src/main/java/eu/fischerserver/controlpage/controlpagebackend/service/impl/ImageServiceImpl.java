@@ -29,6 +29,6 @@ public class ImageServiceImpl implements ImageService {
         if (entity == null) {
             return null;
         }
-        return conversionService.convert(entity, Image.class);
+        return conversionService.convert(repository.save(entity), Image.class);
     }
 }

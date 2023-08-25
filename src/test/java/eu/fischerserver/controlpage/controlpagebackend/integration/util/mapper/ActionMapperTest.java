@@ -1,4 +1,4 @@
-package eu.fischerserver.controlpage.controlpagebackend.unit.util.mapper;
+package eu.fischerserver.controlpage.controlpagebackend.integration.util.mapper;
 
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.action.Action;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.action.RestAction;

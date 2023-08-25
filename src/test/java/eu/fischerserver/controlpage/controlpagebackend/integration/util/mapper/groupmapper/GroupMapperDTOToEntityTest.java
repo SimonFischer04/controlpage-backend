@@ -1,4 +1,4 @@
-package eu.fischerserver.controlpage.controlpagebackend.unit.util.mapper.groupmapper;
+package eu.fischerserver.controlpage.controlpagebackend.integration.util.mapper.groupmapper;
 
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Group;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Image;

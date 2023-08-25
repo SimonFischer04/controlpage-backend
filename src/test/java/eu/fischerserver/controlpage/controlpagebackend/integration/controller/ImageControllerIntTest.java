@@ -1,9 +1,10 @@
 package eu.fischerserver.controlpage.controlpagebackend.integration.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.fischerserver.controlpage.controlpagebackend.controller.ImageController;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Image;
 import eu.fischerserver.controlpage.controlpagebackend.service.ImageService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.fischerserver.controlpage.controlpagebackend.util.mapper.ControlPageConversionServiceAdapter;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.web.servlet.*;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,11 +23,11 @@ public class ImageControllerIntTest {
     @MockBean
     private ImageService mockService;
 
-    @Autowired
-    private MockMvc mvc;
+    @MockBean
+    ControlPageConversionServiceAdapter conversionServiceAdapter;
 
     @Autowired
-    private WebApplicationContext context;
+    private MockMvc mvc;
 
     /**
      * Tests an image upload with everything valid.
@@ -37,9 +37,11 @@ public class ImageControllerIntTest {
     @Test
     public void testValidUpload() throws Exception {
         // Arrange
-        Image expectedResultImage = new Image((int) (Math.random() * 100), "testImage.png", "image/png", new byte[]{127, 42, 5});
-        Mockito.when(mockService.save(new Image(0, "testImage.png", "image/png", new byte[]{127, 42, 5}))).thenReturn(expectedResultImage);
+        Image expectedSavedImage = new Image(42, "testImage.png", "image/png", new byte[]{127, 42, 5});
+        Mockito.when(mockService.save(new Image())).thenReturn(expectedSavedImage);
         MockMultipartFile file = new MockMultipartFile("imageFile", "testImage.png", "image/png", new byte[]{127, 42, 5});
+
+        final var expectedResponse = new ImageController.SaveImageResponse(expectedSavedImage.getId());
 
         // Act
         mvc.perform(MockMvcRequestBuilders.multipart("/api/image")
@@ -48,7 +50,7 @@ public class ImageControllerIntTest {
 
                 // Assert
                 .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(expectedResultImage)))
+                .andExpect(content().json(new ObjectMapper().writeValueAsString(expectedResponse)));
         ;
 
         // Assert2 - verify that the service was called exactly once

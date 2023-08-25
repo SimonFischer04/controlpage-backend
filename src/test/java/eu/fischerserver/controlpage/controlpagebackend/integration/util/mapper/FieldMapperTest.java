@@ -1,4 +1,4 @@
-package eu.fischerserver.controlpage.controlpagebackend.unit.util.mapper;
+package eu.fischerserver.controlpage.controlpagebackend.integration.util.mapper;
 
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Image;
