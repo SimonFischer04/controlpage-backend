@@ -46,14 +46,14 @@ public class GroupMapperEntityToDTOTest {
         childEntity11 = new GroupEntity(11, null, null, "Child11", null);
         childEntity1 = new GroupEntity(1, List.of(childEntity11), null, "Child1", null);
         // TODO: not required because some DB magic??? - analyse this!
-//        childEntity11.setParentGroup(childEntity1);
+        childEntity11.setParentGroup(childEntity1);
 
         childEntity2 = new GroupEntity(2, null, null, "Child2", null);
 
         headEntity = new GroupEntity(0, List.of(childEntity1, childEntity2), null, "HeadGroup", null);
         // TODO: not required because some DB magic??? - analyse this!
-//        childEntity1.setParentGroup(headEntity);
-//        childEntity2.setParentGroup(headEntity);
+        childEntity1.setParentGroup(headEntity);
+        childEntity2.setParentGroup(headEntity);
     }
 
     /**
