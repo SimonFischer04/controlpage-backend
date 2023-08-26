@@ -48,4 +48,16 @@ public interface ActionToActionEntityMapper extends Converter<Action, ActionEnti
     @SubclassMapping(source = ViewAction.class, target = ViewActionEntity.class)
     @BeanMapping(subclassExhaustiveStrategy = SubclassExhaustiveStrategy.RUNTIME_EXCEPTION)
     ActionEntity convert(@Nullable Action action);
+
+    // TODO: inherit broken for some reason
+    // @InheritConfiguration(name = "convert")
+    @SubclassMapping(source = DesktopAutomationAction.class, target = DesktopAutomationActionEntity.class)
+    @SubclassMapping(source = RestAction.class, target = RestActionEntity.class)
+    @SubclassMapping(source = ViewAction.class, target = ViewActionEntity.class)
+    @BeanMapping(subclassExhaustiveStrategy = SubclassExhaustiveStrategy.RUNTIME_EXCEPTION)
+    @Named("ActionToActionEntityWithoutBackReferencesMapper")
+    @Mappings({
+            @Mapping(target = "field", source = "field", ignore = true)
+    })
+    ActionEntity mapActionToActionEntityWithoutBackReferences(@Nullable Action action);
 }

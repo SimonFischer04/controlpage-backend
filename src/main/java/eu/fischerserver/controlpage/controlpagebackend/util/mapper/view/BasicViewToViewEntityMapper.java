@@ -20,9 +20,8 @@ public interface BasicViewToViewEntityMapper extends Converter<BasicView, ViewEn
     @Mappings({
             // TODO: implement fetch fields from DB
             @Mapping(target = "fields", ignore = true),
-            @Mapping(target = "group", ignore = true)
+            @Mapping(target = "group", source = "group", ignore = true)
     })
-    @BeanMapping(ignoreUnmappedSourceProperties = "group")
     @Named("BasicViewToViewEntityWithoutGroupMapper")
     ViewEntity mapBasicViewToViewEntityWithoutGroup(@Nullable BasicView basicView);
 }

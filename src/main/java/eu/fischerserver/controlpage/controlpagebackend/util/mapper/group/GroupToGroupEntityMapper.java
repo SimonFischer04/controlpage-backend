@@ -32,17 +32,19 @@ public interface GroupToGroupEntityMapper extends Converter<Group, GroupEntity> 
 
     @Named("ParentMapper")
     @InheritConfiguration(name = "convert")
-    @Mapping(target = "parentGroup", qualifiedByName = "ParentMapper")
-    // Set inside GroupToGroupEntityMapperDecorator. TODO: better way?
-    @Mapping(target = "childGroups", ignore = true)
-    @BeanMapping(ignoreUnmappedSourceProperties = {"childGroups", "views"})
+    @Mappings({
+            @Mapping(target = "parentGroup", qualifiedByName = "ParentMapper"),
+            // Set inside GroupToGroupEntityMapperDecorator. TODO: better way?
+            @Mapping(target = "childGroups", source = "childGroups", ignore = true)
+    })
     GroupEntity mapParents(@Nullable Group group);
 
     @Named("ChildMapper")
     @InheritConfiguration(name = "convert")
-    @Mapping(target = "childGroups", qualifiedByName = "ChildMapper")
-    // TODO: parent seems to be set anyways? => analyse this
-    @Mapping(target = "parentGroup", ignore = true)
-    @BeanMapping(ignoreUnmappedSourceProperties = {"views", "parentGroup"})
+    @Mappings({
+            @Mapping(target = "childGroups", qualifiedByName = "ChildMapper"),
+            // TODO: parent seems to be set anyways? => analyse this
+            @Mapping(target = "parentGroup", source = "parentGroup", ignore = true)
+    })
     GroupEntity mapChildren(@Nullable Group group);
 }

@@ -3,6 +3,7 @@ package eu.fischerserver.controlpage.controlpagebackend.util.mapper.field;
 import eu.fischerserver.controlpage.controlpagebackend.config.MapperSpringConfig;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.FieldEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
+import eu.fischerserver.controlpage.controlpagebackend.util.mapper.action.ActionToActionEntityMapper;
 import org.mapstruct.*;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Mapper(config = MapperSpringConfig.class)
+@Mapper(config = MapperSpringConfig.class, uses = ActionToActionEntityMapper.class)
 public interface FieldToFieldEntityMapper extends Converter<Field, FieldEntity> {
     /**
      * Map a {@link Field} to a {@link FieldEntity}
@@ -23,19 +24,19 @@ public interface FieldToFieldEntityMapper extends Converter<Field, FieldEntity> 
     @Mappings({
             // TODO: test rm
             @Mapping(target = "xPos", ignore = true),
-            @Mapping(target = "yPos", ignore = true)
+            @Mapping(target = "yPos", ignore = true),
+            // TODO: handle better?
+            @Mapping(target = "action", qualifiedByName = "ActionToActionEntityWithoutBackReferencesMapper")
     })
     FieldEntity convert(@Nullable Field field);
 
+    @InheritConfiguration(name = "convert")
     @Mappings({
             // TODO: test rm
-            @Mapping(target = "xPos", ignore = true),
-            @Mapping(target = "yPos", ignore = true),
-            @Mapping(target = "view", ignore = true)
+            @Mapping(target = "view", source = "view", ignore = true),
     })
-    @BeanMapping(ignoreUnmappedSourceProperties = "view")
-    @Named("FieldToFieldEntityWithoutViewMapper")
-    FieldEntity mapFieldToFieldEntityWithoutView(@Nullable Field field);
+    @Named("FieldToFieldEntityWithoutBackReferencesMapper")
+    FieldEntity mapFieldToFieldEntityWithoutBackReferences(@Nullable Field field);
 
     default List<FieldEntity> mapFieldMatrixToFieldEntityList(List<List<Field>> fieldMatrix) {
         if (fieldMatrix == null)
@@ -46,7 +47,7 @@ public interface FieldToFieldEntityMapper extends Converter<Field, FieldEntity> 
         for (Collection<Field> row : fieldMatrix) {
             int x = 0;
             for (Field field : row) {
-                FieldEntity fieldEntity = mapFieldToFieldEntityWithoutView(field);
+                FieldEntity fieldEntity = mapFieldToFieldEntityWithoutBackReferences(field);
                 if (fieldEntity == null)
                     continue;
 

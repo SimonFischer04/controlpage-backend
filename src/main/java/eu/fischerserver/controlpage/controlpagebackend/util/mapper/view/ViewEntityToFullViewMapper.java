@@ -7,6 +7,7 @@ import eu.fischerserver.controlpage.controlpagebackend.util.mapper.field.FieldEn
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 
@@ -19,8 +20,8 @@ public interface ViewEntityToFullViewMapper extends Converter<ViewEntity, FullVi
      * @return the mapped {@link FullView}
      */
     @Override
-//    @Mapping(target = "fields", ignore = true)
-//    @BeanMapping(ignoreUnmappedSourceProperties = {"fields"})
-    @Mapping(target = "fields", source = "fields")
+    @Mappings({
+            @Mapping(target = "fields", source = "fields")
+    })
     FullView convert(@Nullable ViewEntity viewEntity);
 }

@@ -9,10 +9,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.domain.action.Actio
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.DesktopAutomationActionEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.RestActionEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ViewActionEntity;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.SubclassExhaustiveStrategy;
-import org.mapstruct.SubclassMapping;
+import org.mapstruct.*;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 
@@ -50,9 +47,21 @@ public interface ActionEntityToActionMapper extends Converter<ActionEntity, Acti
      * @return the mapped Action of type x
      */
     @Override
-    @BeanMapping(subclassExhaustiveStrategy = SubclassExhaustiveStrategy.RUNTIME_EXCEPTION)
     @SubclassMapping(source = DesktopAutomationActionEntity.class, target = DesktopAutomationAction.class)
     @SubclassMapping(source = RestActionEntity.class, target = RestAction.class)
     @SubclassMapping(source = ViewActionEntity.class, target = ViewAction.class)
+    @BeanMapping(subclassExhaustiveStrategy = SubclassExhaustiveStrategy.RUNTIME_EXCEPTION)
     Action convert(@Nullable ActionEntity actionEntity);
+
+    // TODO: inherit broken for some reason
+    // @InheritConfiguration(name = "convert")
+    @SubclassMapping(source = DesktopAutomationActionEntity.class, target = DesktopAutomationAction.class)
+    @SubclassMapping(source = RestActionEntity.class, target = RestAction.class)
+    @SubclassMapping(source = ViewActionEntity.class, target = ViewAction.class)
+    @BeanMapping(subclassExhaustiveStrategy = SubclassExhaustiveStrategy.RUNTIME_EXCEPTION)
+    @Named("ActionEntityToActionWithoutBackReferencesMapper")
+    @Mappings({
+            @Mapping(target = "field", source = "field", ignore = true)
+    })
+    Action mapActionEntityToActionWithoutBackReferences(@Nullable ActionEntity actionEntity);
 }
