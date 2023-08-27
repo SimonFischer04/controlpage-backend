@@ -14,6 +14,7 @@
         <class>eu.fischerserver.controlpage.controlpagebackend.model.entity.action.RestActionEntity</class>
         <class>eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ViewActionEntity</class>
         <class>eu.fischerserver.controlpage.controlpagebackend.model.entity.StyledTextEntity</class>
+        <class>eu.fischerserver.controlpage.controlpagebackend.model.NewEntity</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>

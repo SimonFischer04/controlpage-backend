@@ -4,20 +4,26 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.*;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ActionEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ViewActionEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.global.action.ViewActionType;
-import jakarta.persistence.*;
+import eu.fischerserver.controlpage.controlpagebackend.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
+@ExtendWith(SpringExtension.class)
+@DataJpaTest
+@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class ViewPersistenceIntTest {
     /*
         INTO:
@@ -25,13 +31,24 @@ public class ViewPersistenceIntTest {
             - This small data overhead is negligible here(also this is only during editing...)
      */
 
-    private static EntityManager entityManager;
+    @Autowired
+    private ImageRepository imageRepository;
+
+    @Autowired
+    private GroupRepository groupRepository;
+
+    @Autowired
+    private ViewRepository viewRepository;
+
+    @Autowired
+    private FieldRepository fieldRepository;
+
+    @Autowired
+    private ActionRepository actionRepository;
 
     @BeforeEach
     void reInit() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("jpa-h2-removal");
-        entityManager = factory.createEntityManager();
-        persist(createViewEntity());
+        viewRepository.save(createViewEntity());
         assertEquals(1, findAllViews().size());
     }
 
@@ -40,7 +57,7 @@ public class ViewPersistenceIntTest {
      * Checks if one Entity (created by @BeforeEach is saved successfully)
      */
     @Test
-    void testPersist() {
+    public void testPersist() {
         List<ViewEntity> views = findAllViews();
 
         ViewEntity view = views.get(0);
@@ -77,14 +94,14 @@ public class ViewPersistenceIntTest {
      * Test: when Saving View (with changed background-image in Field) old image deleted
      */
     @Test
-    void testRemoveUnusedImages() {
+    public void testRemoveUnusedImages() {
         ImageEntity image = new ImageEntity(0, "TestImage2", "png", new byte[]{42});
 
-        ViewEntity view = findAllViews().get(0);
+        ViewEntity view = findView();
         view.getFields().get(0).setBackground(image);
-        persist(view);
+        viewRepository.save(view);
 
-        List<ImageEntity> images = findAllImages();
+        List<ImageEntity> images = imageRepository.findAll();
 
         assertEquals(1, images.size());
         assertEquals("TestImage2", images.get(0).getName());
@@ -99,36 +116,36 @@ public class ViewPersistenceIntTest {
      */
     @Test
     @Disabled
-    void testRemoveUnusedGroups() {
+    public void testRemoveUnusedGroups() {
         ViewEntity viewEntity = findView();
         viewEntity.setGroup(null);
-        persist(viewEntity);
+        viewRepository.save(viewEntity);
 
-        assertEquals(0, findAllGroups().size());
+        assertEquals(0, groupRepository.findAll().size());
     }
 
     /**
      * Test: remove unused fields
      */
     @Test
-    void testRemoveUnusedFields() {
+    public void testRemoveUnusedFields() {
         ViewEntity viewEntity = findView();
         viewEntity.getFields().clear();
-        persist(viewEntity);
+        viewRepository.save(viewEntity);
 
-        assertEquals(0, findAllFields().size());
+        assertEquals(0, fieldRepository.findAll().size());
     }
 
     /**
      * Test: remove unused actions
      */
     @Test
-    void testRemoveUnusedAction() {
+    public void testRemoveUnusedAction() {
         ViewEntity viewEntity = findView();
         viewEntity.getFields().get(0).setAction(null);
-        persist(viewEntity);
+        viewRepository.save(viewEntity);
 
-        assertEquals(0, findAllActions().size());
+        assertEquals(0, actionRepository.findAll().size());
     }
 
     /*
@@ -141,11 +158,11 @@ public class ViewPersistenceIntTest {
      * Test: cascading from ViewEntity to GroupEntity
      */
     @Test
-    void testGroupCascading() {
+    public void testGroupCascading() {
         ViewEntity viewEntity = findView();
         GroupEntity groupEntity = viewEntity.getGroup();
         groupEntity.setName("AnotherName");
-        persist(viewEntity);
+        viewRepository.save(viewEntity);
 
         /*
             CRUD...
@@ -156,23 +173,24 @@ public class ViewPersistenceIntTest {
         // READ: tested like everywhere
 
         // UPDATE
-        GroupEntity reFetchedGroup = entityManager.find(GroupEntity.class, groupEntity.getId());
+        GroupEntity reFetchedGroup = groupRepository.findById(groupEntity.getId()).orElse(null);
+        assertNotNull(reFetchedGroup);
         assertEquals(reFetchedGroup.getName(), "AnotherName");
 
         // DELETE
-        remove(viewEntity);
-        assertEquals(0, findAllGroups().size());
+        viewRepository.delete(viewEntity);
+        assertEquals(0, groupRepository.findAll().size());
     }
 
     /**
      * Test: cascading from ViewEntity to FieldEntity
      */
     @Test
-    void testFieldCascading() {
+    public void testFieldCascading() {
         ViewEntity viewEntity = findView();
         FieldEntity fieldEntity = viewEntity.getFields().get(0);
         fieldEntity.setTitle(new StyledTextEntity("A Title"));
-        persist(viewEntity);
+        viewRepository.save(viewEntity);
 
         /*
             CRUD...
@@ -183,23 +201,24 @@ public class ViewPersistenceIntTest {
         // READ: tested like everywhere
 
         // UPDATE
-        FieldEntity reFetchedEntity = entityManager.find(FieldEntity.class, fieldEntity.getId());
+        FieldEntity reFetchedEntity = fieldRepository.findById(fieldEntity.getId()).orElse(null);
+        assertNotNull(reFetchedEntity);
         assertEquals(reFetchedEntity.getTitle().getText(), "A Title");
 
         // DELETE
-        remove(viewEntity);
-        assertEquals(0, findAllFields().size());
+        viewRepository.delete(viewEntity);
+        assertEquals(0, fieldRepository.findAll().size());
     }
 
     /**
      * Test: cascading from ViewEntity over Field to Action
      */
     @Test
-    void testActionCascading() {
+    public void testActionCascading() {
         ViewEntity viewEntity = findView();
         ViewActionEntity actionEntity = (ViewActionEntity) viewEntity.getFields().get(0).getAction();
         actionEntity.setViewActionType(ViewActionType.SWITCH_TO);
-        persist(viewEntity);
+        viewRepository.save(viewEntity);
 
         /*
             CRUD...
@@ -210,12 +229,12 @@ public class ViewPersistenceIntTest {
         // READ: tested like everywhere
 
         // UPDATE
-        ViewActionEntity reFetchedAction = (ViewActionEntity) findAllActions().get(0);
+        ViewActionEntity reFetchedAction = (ViewActionEntity) actionRepository.findAll().get(0);
         assertEquals(reFetchedAction.getViewActionType(), ViewActionType.SWITCH_TO);
 
         // DELETE
-        remove(viewEntity);
-        assertEquals(0, findAllActions().size());
+        viewRepository.delete(viewEntity);
+        assertEquals(0, actionRepository.findAll().size());
     }
 
     /**
@@ -223,7 +242,7 @@ public class ViewPersistenceIntTest {
      */
 
     @Test
-    void testImageCascading() {
+    public void testImageCascading() {
         ViewEntity viewEntity = findView();
 
         /*
@@ -234,11 +253,11 @@ public class ViewPersistenceIntTest {
 
         // READ: tested like everywhere
 
-        // UPDATE: updating an image doesnt really make sense -> a new one is created each time
+        // UPDATE: updating an image doesn't really make sense -> a new one is created each time
 
         // DELETE
-        remove(viewEntity);
-        assertEquals(0, findAllImages().size());
+        viewRepository.delete(viewEntity);
+        assertEquals(0, imageRepository.findAll().size());
     }
 
     /*
@@ -251,44 +270,15 @@ public class ViewPersistenceIntTest {
         GroupEntity headGroup = new GroupEntity(0, null, null, "HeadGroup", null);
         GroupEntity childGroup1 = new GroupEntity(0, null, headGroup, "ChildGroup1", null);
         GroupEntity childGroup2 = new GroupEntity(0, null, headGroup, "ChildGroup2", null);
-        headGroup.setChildGroups(List.of(childGroup1, childGroup2));
+        headGroup.setChildGroups(new ArrayList<>(List.of(childGroup1, childGroup2)));
 
         ImageEntity image = new ImageEntity(0, "TestImage1", "png", new byte[]{42});
         ViewActionEntity action = new ViewActionEntity(ViewActionType.CLOSE, -1);
         FieldEntity field = new FieldEntity(0, null, action, new StyledTextEntity("TestField"), "description", image, 1, 1, 0, 0);
 
-        ViewEntity view = new ViewEntity(0, "TestView", childGroup1, new ArrayList<>(List.of(field)));
+        ViewEntity view = new ViewEntity(0, "CI-TestView", childGroup1, new ArrayList<>(List.of(field)));
         field.setView(view);
         return view;
-    }
-
-    // only persist method (see reason at the very top)
-    // [NOTE: the saving of the "sub-entities" here done manually is done automatically by spring when using a real DB]
-    private void persist(ViewEntity view) {
-        entityManager.getTransaction().begin();
-        entityManager.persist(view);
-        if (view.getGroup() != null) {
-            entityManager.persist(view.getGroup());
-            if (view.getGroup().getParentGroup() != null) {
-                entityManager.persist(view.getGroup().getParentGroup());
-            }
-        }
-        if (view.getFields() != null) {
-            view.getFields().forEach(v -> {
-                if (v.getAction() != null) {
-                    entityManager.persist(v.getAction());
-                }
-                entityManager.persist(v);
-            });
-        }
-        entityManager.getTransaction().commit();
-    }
-
-    // only persist method (see reason at the very top)
-    private void remove(ViewEntity viewEntity) {
-        entityManager.getTransaction().begin();
-        entityManager.remove(viewEntity);
-        entityManager.getTransaction().commit();
     }
 
     /*
@@ -300,38 +290,7 @@ public class ViewPersistenceIntTest {
         return findAllViews().get(0);
     }
 
-    private List<GroupEntity> findAllGroups() {
-        return findAll(GroupEntity.class);
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    private GroupEntity findGroupByName(String groupName) {
-        return findAllGroups().stream().filter(groupEntity -> groupEntity.getName().equals(groupName)).findFirst().orElse(null);
-    }
-
     private List<ViewEntity> findAllViews() {
-        return findAll(ViewEntity.class);
-    }
-
-    private List<ImageEntity> findAllImages() {
-        return findAll(ImageEntity.class);
-    }
-
-    private List<FieldEntity> findAllFields() {
-        return findAll(FieldEntity.class);
-    }
-
-    private List<ActionEntity> findAllActions() {
-        return findAll(ActionEntity.class);
-    }
-
-    private <T> List<T> findAll(Class<T> clazz) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<T> cq = cb.createQuery(clazz);
-        Root<T> root = cq.from(clazz);
-        CriteriaQuery<T> findAll = cq.select(root);
-        TypedQuery<T> findAllQuery = entityManager.createQuery(findAll);
-
-        return findAllQuery.getResultList();
+        return viewRepository.findAll();
     }
 }
