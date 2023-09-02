@@ -1,8 +1,9 @@
 package eu.fischerserver.controlpage.controlpagebackend.model.domain.action;
 
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
-import eu.fischerserver.controlpage.controlpagebackend.model.global.action.RunPolicy;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
@@ -10,11 +11,4 @@ import lombok.*;
 @Data
 public class DesktopAutomationAction extends Action {
     private String functionName;
-
-    @SuppressWarnings("unused")
-    @Builder
-    public DesktopAutomationAction(int id, Field field, RunPolicy runPolicy, String functionName) {
-        super(id, field, runPolicy);
-        this.functionName = functionName;
-    }
 }

@@ -25,10 +25,12 @@ public class ImageMapperTest {
 
             Image image = conversionService.convert(imageEntity, Image.class);
             assertNotNull(image);
-            assertEquals(42, image.getId());
-            assertEquals("img-name", image.getName());
-            assertEquals("png", image.getType());
-            assertEquals(42, image.getImageData()[1]);
+            assertEquals(42, image.id());
+            assertEquals("img-name", image.name());
+            assertEquals("png", image.type());
+            assertEquals(127, image.imageData()[0]);
+            assertEquals(42, image.imageData()[1]);
+            assertEquals(0, image.imageData()[2]);
         }
     }
 

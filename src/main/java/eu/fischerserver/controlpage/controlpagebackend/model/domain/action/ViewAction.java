@@ -5,16 +5,15 @@ import eu.fischerserver.controlpage.controlpagebackend.model.global.action.RunPo
 import eu.fischerserver.controlpage.controlpagebackend.model.global.action.ViewActionType;
 import lombok.*;
 
-@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class ViewAction extends Action {
     private ViewActionType viewActionType;
     private int viewId;
 
-    @SuppressWarnings("unused")
-    @Builder
+    @Builder(builderMethodName = "viewActionBuilder")
     public ViewAction(int id, Field field, RunPolicy runPolicy, ViewActionType viewActionType, int viewId) {
         super(id, field, runPolicy);
         this.viewActionType = viewActionType;

@@ -2,6 +2,7 @@ package eu.fischerserver.controlpage.controlpagebackend.unit.entity;
 
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.FieldEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.StyledTextEntity;
+import eu.fischerserver.controlpage.controlpagebackend.util.DummyEntityUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,12 +12,12 @@ public class FieldEntityTest {
     @Test
     void testEquals() {
         assertEquals(
-                new FieldEntity(42, null, null, new StyledTextEntity("F1"), "", null, 1, 1, 0, 0),
-                new FieldEntity(42, null, null, new StyledTextEntity("F2"), "", null, 1, 1, 0, 0)
+                DummyEntityUtils.getDummyFieldEntity(42),
+                DummyEntityUtils.getDummyFieldEntity(42)
         );
         assertNotEquals(
-                new FieldEntity(1, null, null, new StyledTextEntity("F1"), "", null, 1, 1, 0, 0),
-                new FieldEntity(2, null, null, new StyledTextEntity("F1"), "", null, 1, 1, 0, 0)
+                DummyEntityUtils.getDummyFieldEntity(1),
+                DummyEntityUtils.getDummyFieldEntity(2)
         );
     }
 }

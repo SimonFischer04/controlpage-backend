@@ -2,18 +2,14 @@ package eu.fischerserver.controlpage.controlpagebackend.service.impl;
 
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.BasicView;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.FullView;
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.FullViewDTO;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.ViewEntity;
 import eu.fischerserver.controlpage.controlpagebackend.repository.GroupRepository;
 import eu.fischerserver.controlpage.controlpagebackend.repository.ViewRepository;
-import eu.fischerserver.controlpage.controlpagebackend.service.GroupService;
-import eu.fischerserver.controlpage.controlpagebackend.service.ImageService;
 import eu.fischerserver.controlpage.controlpagebackend.service.ViewService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
-
-import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ViewServiceImpl implements ViewService {
     private final ViewRepository repository;
-    private final ImageService imageService;
-    private final GroupService groupService;
     private final ConversionService conversionService;
 
     private final GroupRepository groupRepository;
@@ -47,7 +41,11 @@ public class ViewServiceImpl implements ViewService {
 
     @Override
     @Transactional
-    public void save(ViewEntity viewEntity) {
+    public void save(FullView view) {
+        save(conversionService.convert(view, ViewEntity.class));
+    }
+
+    private void save(ViewEntity viewEntity) {
         if (viewEntity == null)
             return;
 
@@ -72,23 +70,5 @@ public class ViewServiceImpl implements ViewService {
             temp.setGroup(groupRepository.findById(actualGroup.getId()).orElse(null));
             repository.save(temp);
         }
-    }
-
-//    @Override
-//    @Transactional
-//    public void save(BasicView view) {
-//        save(new ViewEntity(imageService, view));
-//    }
-
-    @Override
-    @Transactional
-    public void save(FullView view) {
-        save(conversionService.convert(view, ViewEntity.class));
-    }
-
-    @Override
-    @Transactional
-    public void save(FullViewDTO fullViewDTO) {
-        save(new FullView(groupService, fullViewDTO));
     }
 }

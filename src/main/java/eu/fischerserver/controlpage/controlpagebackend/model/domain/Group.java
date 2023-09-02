@@ -1,46 +1,31 @@
 package eu.fischerserver.controlpage.controlpagebackend.model.domain;
 
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.BasicView;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.BasicView;
+import lombok.Builder;
+import lombok.ToString;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@Builder(toBuilder = true)
-public class Group {
-    private int id;
+@Builder
+public record Group(
+        int id,
 
-    @JsonManagedReference(value = "parent-group")
-    @ToString.Exclude
-    @Builder.Default
-    private List<Group> childGroups = new ArrayList<>();
+        @JsonManagedReference(value = "parent-group")
+        @ToString.Exclude
+        List<Group> childGroups,
 
-    @JsonBackReference(value = "parent-group")
-    private Group parentGroup;
+        @JsonBackReference(value = "parent-group")
+        Group parentGroup,
 
-    private String name;
+        String name,
 
-    @JsonManagedReference(value = "viewGroup")
-    @ToString.Exclude
-    private List<BasicView> views;
-
-    public Group(Group group) {
-        this.id = group.id;
-        this.childGroups = group.childGroups;
-        this.parentGroup = group.parentGroup;
-        this.name = group.name;
-    }
-
-//    public Group(GroupEntity groupEntity) {
-//        this(GroupMapper.mapEntityToDTO(groupEntity));
-//    }
-
+        @JsonManagedReference(value = "viewGroup")
+        @ToString.Exclude
+        List<BasicView> views
+) {
     /*
         Because they are stored in a database two Groups with the same id are considered equals
      */

@@ -25,13 +25,6 @@ public class ImageEntity {
     @Column(name = "image_data", columnDefinition="MEDIUMBLOB")
     private byte[] imageData;
 
-    public ImageEntity(ImageEntity imageEntity) {
-        id = imageEntity.getId();
-        name = imageEntity.getName();
-        type = imageEntity.getType();
-        imageData = imageEntity.getImageData();
-    }
-
     /*
         Because they are stored in a database two Images with the same id are considered equals
     */

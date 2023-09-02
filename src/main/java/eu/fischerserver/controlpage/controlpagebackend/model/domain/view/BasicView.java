@@ -1,7 +1,7 @@
 package eu.fischerserver.controlpage.controlpagebackend.model.domain.view;
 
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.Group;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import eu.fischerserver.controlpage.controlpagebackend.model.domain.Group;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,12 +19,6 @@ public class BasicView {
 
     @JsonBackReference(value = "viewGroup")
     private Group group;
-
-    public BasicView(BasicView basicView) {
-        id = basicView.getId();
-        name = basicView.getName();
-        group = basicView.getGroup();
-    }
 
     /*
         Because they are stored in a database two Views with the same id are considered equals

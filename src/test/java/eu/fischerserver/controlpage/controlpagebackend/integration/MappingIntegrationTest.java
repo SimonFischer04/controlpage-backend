@@ -1,17 +1,14 @@
 package eu.fischerserver.controlpage.controlpagebackend.integration;
 
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.Group;
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.Image;
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.StyledText;
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.action.RestAction;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.FullView;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.FieldEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.GroupEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.StyledTextEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.ViewEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.RestActionEntity;
-import eu.fischerserver.controlpage.controlpagebackend.service.ImageService;
+import eu.fischerserver.controlpage.controlpagebackend.util.DummyDomainUtils;
+import eu.fischerserver.controlpage.controlpagebackend.util.DummyEntityUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,17 +32,8 @@ public class MappingIntegrationTest {
         /*
             Init Test Data
          */
-        Group group = new Group();
-        RestAction action = new RestAction();
-        Field f1 = new Field(42, null, action, new StyledText("F1"), "description", null, 1, 1);
-        action.setField(f1);
-        List<List<Field>> fields = List.of(
-                List.of(f1)
-        );
-        FullView view = new FullView(42, "V1", group, fields);
+        FullView view = DummyDomainUtils.getDummyFullView();
 
-        f1.setView(view);
-        group.setViews(List.of(view));
         //
         ViewEntity viewEntity = conversionService.convert(view, ViewEntity.class);
         assertNotNull(viewEntity);
@@ -71,16 +59,8 @@ public class MappingIntegrationTest {
         /*
             Init Test Data
          */
-        GroupEntity group = new GroupEntity();
-        RestActionEntity restActionEntity = new RestActionEntity();
-        FieldEntity f1 = new FieldEntity(42, null, restActionEntity, new StyledTextEntity("F1"), "description", null, 1, 1, 0, 0);
-        restActionEntity.setField(f1);
-        List<FieldEntity> fields = List.of(f1);
-        ViewEntity viewEntity = new ViewEntity(42, "V1", group, fields);
+        ViewEntity viewEntity = DummyEntityUtils.getDummyViewEntity();
 
-        // TODO: not required for some reason
-//        f1.setView(viewEntity);
-        group.setViews(List.of(viewEntity));
         //
         FullView view = conversionService.convert(viewEntity, FullView.class);
         assertNotNull(view);
@@ -92,8 +72,8 @@ public class MappingIntegrationTest {
         // TODO: necessary?
 //        assertNotNull(field.getView());
 //        assertNotNull(field.getAction().getField());
-        assertNotNull(view.getGroup().getViews());
-        assertEquals(1, view.getGroup().getViews().size());
-        assertNotNull(view.getGroup().getViews().get(0));
+        assertNotNull(view.getGroup().views());
+        assertEquals(1, view.getGroup().views().size());
+        assertNotNull(view.getGroup().views().get(0));
     }
 }

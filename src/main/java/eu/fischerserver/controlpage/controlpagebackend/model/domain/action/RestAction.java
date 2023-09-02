@@ -3,7 +3,10 @@ package eu.fischerserver.controlpage.controlpagebackend.model.domain.action;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
 import eu.fischerserver.controlpage.controlpagebackend.model.global.action.RestType;
 import eu.fischerserver.controlpage.controlpagebackend.model.global.action.RunPolicy;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
@@ -14,8 +17,6 @@ public class RestAction extends Action {
     private String url;
     private String body;
 
-    @SuppressWarnings("unused")
-    @Builder
     public RestAction(int id, Field field, RunPolicy runPolicy, RestType restType, String url, String body) {
         super(id, field, runPolicy);
         this.restType = restType;

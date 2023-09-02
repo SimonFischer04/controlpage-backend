@@ -23,8 +23,8 @@ public interface FieldToFieldEntityMapper extends Converter<Field, FieldEntity> 
     @Override
     @Mappings({
             // TODO: test rm
-            @Mapping(target = "xPos", ignore = true),
-            @Mapping(target = "yPos", ignore = true),
+            @Mapping(target = "XPos", ignore = true),
+            @Mapping(target = "YPos", ignore = true),
             // TODO: handle better?
             @Mapping(target = "action", qualifiedByName = "ActionToActionEntityWithoutBackReferencesMapper")
     })

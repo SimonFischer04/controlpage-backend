@@ -11,6 +11,8 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.RestA
 import eu.fischerserver.controlpage.controlpagebackend.model.global.action.RestType;
 import eu.fischerserver.controlpage.controlpagebackend.model.global.action.RunPolicy;
 import eu.fischerserver.controlpage.controlpagebackend.service.ImageService;
+import eu.fischerserver.controlpage.controlpagebackend.util.DummyDomainUtils;
+import eu.fischerserver.controlpage.controlpagebackend.util.DummyEntityUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,45 +26,30 @@ public class FieldMapperTest {
     @Autowired
     ConversionService conversionService;
 
-    // TODO: make this better
-    final ImageService mockImageService = new ImageService() {
-        @Override
-        public Image findById(int id) {
-            return null;
-        }
-
-        @Override
-        public Image save(Image image) {
-            return null;
-        }
-    };
-
     @Test
     void testMapEntityToDTO() {
         /*
             Test 1: test with everything(except view - must be set by viewMapper) set
          */
         {
-            RestActionEntity restActionEntity = new RestActionEntity(1337, null, RunPolicy.ASYNC, RestType.GET, "127.0.0.1:4242", "{}");
-            FieldEntity fieldEntity = new FieldEntity(42, null, restActionEntity, new StyledTextEntity("A Title"), "", new ImageEntity(42, "IMG", "png", new byte[]{}), 1, 2, 3, 4);
+            FieldEntity fieldEntity = DummyEntityUtils.getDummyFieldEntity();
 
             Field field = conversionService.convert(fieldEntity, Field.class);
             assertNotNull(field);
-            assertEquals(42, field.getId());
-            Assertions.assertEquals("A Title", field.getTitle().getText());
-            assertNotNull(field.getAction());
-            assertNotNull(field.getBackground());
-            assertEquals(1, field.getRowspan());
-            assertEquals(2, field.getColspan());
+            assertEquals(fieldEntity.getId(), field.id());
+            assertEquals(fieldEntity.getTitle().getText(), field.title().text());
+            assertNotNull(field.action());
+            assertNotNull(field.background());
+            assertEquals(fieldEntity.getRowspan(), field.rowspan());
+            assertEquals(fieldEntity.getColspan(), field.colspan());
         }
 
-        // TODO: still relevant with new mapper?
         /*
             Test 2: no exception thrown when some values are null
          */
         {
             assertDoesNotThrow(() -> {
-                conversionService.convert(new FieldEntity(0, null, null, new StyledTextEntity("Title"), "", null, 1, 2, 3, 4), Field.class);
+                conversionService.convert(new FieldEntity(0, null, null, null, "", null, 1, 2, 3, 4), Field.class);
             });
         }
     }
@@ -73,27 +60,25 @@ public class FieldMapperTest {
             Test 1: test with everything(except view - must be set by viewMapper) set
          */
         {
-            RestAction restAction = new RestAction(1337, null, RunPolicy.SYNC, RestType.POST, "127.0.0.1:4242", "{}");
-            Field field = new Field(42, null, restAction, new StyledText("great Title"), "", new Image(42, "name", "img/png", new byte[]{127, 42}), 1, 2);
+            Field field = DummyDomainUtils.getDummyField();
 
             FieldEntity fieldEntity = conversionService.convert(field, FieldEntity.class);
 
             assertNotNull(fieldEntity);
-            assertEquals(42, fieldEntity.getId(), 42);
+            assertEquals(field.id(), fieldEntity.getId());
             assertNotNull(fieldEntity.getAction());
-            assertEquals("great Title", fieldEntity.getTitle().getText());
+            assertEquals(field.title().text(), fieldEntity.getTitle().getText());
             assertNotNull(fieldEntity.getBackground());
-            assertEquals(1, fieldEntity.getRowspan());
-            assertEquals(2, fieldEntity.getColspan());
+            assertEquals(field.rowspan(), fieldEntity.getRowspan());
+            assertEquals(field.colspan(), fieldEntity.getColspan());
         }
 
-        // TODO: still relevant with new mapper?
         /*
             Test 2: no exception thrown when some values are null
         */
         {
             assertDoesNotThrow(() -> {
-                conversionService.convert(new Field(42, null, null, new StyledText("great Title"), "", new Image(42, "name", "img/png", new byte[]{127, 42}), 1, 2), FieldEntity.class);
+                conversionService.convert(new Field(42, null, null, null, "", new Image(42, "name", "img/png", new byte[]{127, 42}), 1, 2), FieldEntity.class);
             });
         }
     }

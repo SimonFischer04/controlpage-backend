@@ -1,11 +1,10 @@
 package eu.fischerserver.controlpage.controlpagebackend.integration.util.mapper.groupmapper;
 
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Group;
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.Image;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.BasicView;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.FullView;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.GroupEntity;
-import eu.fischerserver.controlpage.controlpagebackend.service.ImageService;
+import eu.fischerserver.controlpage.controlpagebackend.util.DummyDomainUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +22,6 @@ public class GroupMapperDTOToEntityTest {
     @Autowired
     private ConversionService conversionService;
 
-    final ImageService mockImageService = new ImageService() {
-        @Override
-        public Image findById(int id) {
-            return null;
-        }
-
-        @Override
-        public Image save(Image image) {
-            return null;
-        }
-    };
-
     /*
         Note: i know this is kind of code duplication to the GroupMapperDTOToEntityTest, but building a "framework" (superclass,...)
         would create more overhead / is over-engineered
@@ -45,17 +32,12 @@ public class GroupMapperDTOToEntityTest {
     @BeforeAll
     static void init() {
         /*
-            init for GroupEntity -> Group
+            init for Group -> GroupEntity
          */
-        child11 = new Group(11, null, null, "Child11", null);
-        child1 = new Group(1, List.of(child11), null, "Child1", null);
-        child11.setParentGroup(child1);
-
-        child2 = new Group(2, null, null, "Child2", null);
-
-        head = new Group(0, List.of(child1, child2), null, "HeadGroup", null);
-        child1.setParentGroup(head);
-        child2.setParentGroup(head);
+        head = DummyDomainUtils.getDummyGroupTreeHead();
+        child1 = head.childGroups().get(0);
+        child11 = child1.childGroups().get(0);
+        child2 = head.childGroups().get(1);
     }
 
     /**
@@ -71,7 +53,7 @@ public class GroupMapperDTOToEntityTest {
             BasicView v1 = new BasicView(1, "View1", group);
             FullView v2 = new FullView(2, "View2", group, Collections.emptyList());
             BasicView v3 = new BasicView(3, "View3", group);
-            group.getViews().addAll(List.of(v1, v2, v3));
+            group.views().addAll(List.of(v1, v2, v3));
 
             GroupEntity groupEntity = conversionService.convert(group, GroupEntity.class);
             assertNotNull(groupEntity);
@@ -85,18 +67,6 @@ public class GroupMapperDTOToEntityTest {
      */
     @Test
     void testMapDTOToEntityLayer1() {
-        /*
-            Group tree:
-
-            Layer       |               Tree
-            1)          |   headEntity
-                        |       |--------------------------|
-            2)          |   childEntity1            childEntity2
-                        |       |
-            3)          |   childEntity11
-         */
-
-
         /*
             Test 1: mapping head group Entity
          */
@@ -123,7 +93,7 @@ public class GroupMapperDTOToEntityTest {
          */
         {
             assertNotNull(childGroup1Entity);
-            assertEquals(childGroup1Entity.getName(), "Child1");
+            assertEquals(child1.name(), childGroup1Entity.getName());
 
             // check children.
             assertNotNull(childGroup1Entity.getChildGroups());
@@ -140,10 +110,11 @@ public class GroupMapperDTOToEntityTest {
         {
             GroupEntity childGroup2 = conversionService.convert(child2, GroupEntity.class);
             assertNotNull(childGroup2);
-            assertEquals(childGroup2.getName(), "Child2");
+            assertEquals(child2.name(), childGroup2.getName());
 
             // check children.
-            assertNull(childGroup2.getChildGroups());
+            assertNotNull(childGroup2.getChildGroups());
+            assertEquals(0, childGroup2.getChildGroups().size());
 
             // check parent group
             assertNotNull(childGroup2.getParentGroup());
@@ -164,12 +135,6 @@ public class GroupMapperDTOToEntityTest {
         {
             GroupEntity childGroup11 = conversionService.convert(child11, GroupEntity.class);
             assertNotNull(childGroup11);
-
-            // check children
-            // ignored, because not really required that .parentGroup -> childGroups are set (not serialized anyways and enough for save also)
-            // TODO: re-evaluate when actually using groups
-//            assertNotNull(childGroup11.getChildGroups());
-//            assertEquals(0, childGroup11.getChildGroups().size());
 
             // check parents
             assertNotNull(childGroup11.getParentGroup());

@@ -26,7 +26,7 @@ public class ImageController {
 
         Image img = new Image(0, file.getOriginalFilename(), file.getContentType(), file.getBytes());
         Image saved = imageService.save(img);
-        return ResponseEntity.ok(new SaveImageResponse(saved.getId()));
+        return ResponseEntity.ok(new SaveImageResponse(saved.id()));
     }
 
     @GetMapping("{id}")
@@ -37,8 +37,8 @@ public class ImageController {
             return ResponseEntity.badRequest().body(String.format("Image with id %d not found.", id));
 
         return ResponseEntity.ok()
-                .contentType(MediaType.valueOf(image.getType()))
-                .body(image.getImageData());
+                .contentType(MediaType.valueOf(image.type()))
+                .body(image.imageData());
     }
 
 //    @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -47,8 +47,6 @@ public class ImageController {
 //        return new HashMap<>();
 //    }
 
-    public record SaveImageResponse(
-            int imageId
-    ) {
+    public record SaveImageResponse(int imageId) {
     }
 }

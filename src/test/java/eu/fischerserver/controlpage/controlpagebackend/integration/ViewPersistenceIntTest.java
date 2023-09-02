@@ -1,10 +1,14 @@
 package eu.fischerserver.controlpage.controlpagebackend.integration;
 
+import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.HorizontalAlignment;
+import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.VerticalAlignment;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.*;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ActionEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ViewActionEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.global.action.ViewActionType;
 import eu.fischerserver.controlpage.controlpagebackend.repository.*;
+import eu.fischerserver.controlpage.controlpagebackend.util.DummyEntityUtils;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -48,7 +52,11 @@ public class ViewPersistenceIntTest {
 
     @BeforeEach
     void reInit() {
-        viewRepository.save(createViewEntity());
+        // group needs to be saved before to bypass weird detached issues. No problem as in real use the groups are managed / saved extra anyway
+        var group = groupRepository.save(DummyEntityUtils.getDummyGroupEntityTreeHead(0, false));
+        var testView = DummyEntityUtils.getDummyViewEntity(0);
+        testView.setGroup(group);
+        viewRepository.save(testView);
         assertEquals(1, findAllViews().size());
     }
 
@@ -68,20 +76,16 @@ public class ViewPersistenceIntTest {
         assertEquals(1, views.size());
         assertNotNull(view);
 
-        assertEquals(1, fields.size());
+        assertEquals(8, fields.size());
         assertNotNull(field);
         assertNotNull(field.getBackground());
 
         assertNotNull(actionEntity);
         assertTrue(actionEntity instanceof ViewActionEntity);
 
+        // empty list
         assertNotNull(view.getGroup());
-        assertNull(view.getGroup().getChildGroups());
-        assertNotNull(view.getGroup().getParentGroup());
-        System.out.println(view.getGroup().getParentGroup());
-        assertNotNull(view.getGroup().getParentGroup().getChildGroups());
-        view.getGroup().getParentGroup().getChildGroups().forEach(System.out::println);
-        assertEquals(2, view.getGroup().getParentGroup().getChildGroups().size());
+        assertNotNull(view.getGroup().getChildGroups());
     }
 
     /*
@@ -95,16 +99,31 @@ public class ViewPersistenceIntTest {
      */
     @Test
     public void testRemoveUnusedImages() {
-        ImageEntity image = new ImageEntity(0, "TestImage2", "png", new byte[]{42});
+        final var image = new ImageEntity(0, "an image to test removing unused images from db", "png", new byte[]{42});
+        {
+            /*
+                check before value and then update background
+             */
+            final var view = findView();
+            final var images = imageRepository.findAll();
 
-        ViewEntity view = findView();
-        view.getFields().get(0).setBackground(image);
-        viewRepository.save(view);
+            assertEquals(8, images.size());
+            assertNotEquals(image.getName(), view.getFields().get(0).getBackground().getName());
 
-        List<ImageEntity> images = imageRepository.findAll();
+            view.getFields().get(0).setBackground(image);
+            viewRepository.save(view);
+        }
 
-        assertEquals(1, images.size());
-        assertEquals("TestImage2", images.get(0).getName());
+        {
+            /*
+                fetch again and check for change + same number of images in db / old one got removed
+             */
+            final var view = findView();
+            final var images = imageRepository.findAll();
+
+            assertEquals(8, images.size());
+            assertEquals(view.getFields().get(0).getBackground().getName(), images.get(images.size() - 1).getName());
+        }
     }
 
     /**
@@ -141,11 +160,23 @@ public class ViewPersistenceIntTest {
      */
     @Test
     public void testRemoveUnusedAction() {
-        ViewEntity viewEntity = findView();
-        viewEntity.getFields().get(0).setAction(null);
-        viewRepository.save(viewEntity);
+        {
+            /*
+                check before removing an action
+             */
+            assertEquals(8, actionRepository.findAll().size());
+        }
 
-        assertEquals(0, actionRepository.findAll().size());
+        {
+            /*
+                remove action from field and check if one less in db
+             */
+            final var viewEntity = findView();
+            viewEntity.getFields().get(0).setAction(null);
+            viewRepository.save(viewEntity);
+
+            assertEquals(7, actionRepository.findAll().size());
+        }
     }
 
     /*
@@ -189,7 +220,7 @@ public class ViewPersistenceIntTest {
     public void testFieldCascading() {
         ViewEntity viewEntity = findView();
         FieldEntity fieldEntity = viewEntity.getFields().get(0);
-        fieldEntity.setTitle(new StyledTextEntity("A Title"));
+        fieldEntity.setTitle(DummyEntityUtils.getDummyStyledTextEntity());
         viewRepository.save(viewEntity);
 
         /*
@@ -203,7 +234,7 @@ public class ViewPersistenceIntTest {
         // UPDATE
         FieldEntity reFetchedEntity = fieldRepository.findById(fieldEntity.getId()).orElse(null);
         assertNotNull(reFetchedEntity);
-        assertEquals(reFetchedEntity.getTitle().getText(), "A Title");
+        assertEquals(fieldEntity.getTitle().getText(), reFetchedEntity.getTitle().getText());
 
         // DELETE
         viewRepository.delete(viewEntity);
@@ -265,21 +296,6 @@ public class ViewPersistenceIntTest {
         Private Util-Methods
         -----------------------------------------------------------------------------------------------------------------------------------
      */
-
-    private ViewEntity createViewEntity() {
-        GroupEntity headGroup = new GroupEntity(0, null, null, "HeadGroup", null);
-        GroupEntity childGroup1 = new GroupEntity(0, null, headGroup, "ChildGroup1", null);
-        GroupEntity childGroup2 = new GroupEntity(0, null, headGroup, "ChildGroup2", null);
-        headGroup.setChildGroups(new ArrayList<>(List.of(childGroup1, childGroup2)));
-
-        ImageEntity image = new ImageEntity(0, "TestImage1", "png", new byte[]{42});
-        ViewActionEntity action = new ViewActionEntity(ViewActionType.CLOSE, -1);
-        FieldEntity field = new FieldEntity(0, null, action, new StyledTextEntity("TestField"), "description", image, 1, 1, 0, 0);
-
-        ViewEntity view = new ViewEntity(0, "CI-TestView", childGroup1, new ArrayList<>(List.of(field)));
-        field.setView(view);
-        return view;
-    }
 
     /*
         --finds

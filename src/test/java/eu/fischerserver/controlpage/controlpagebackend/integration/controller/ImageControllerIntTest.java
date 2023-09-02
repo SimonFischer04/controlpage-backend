@@ -38,10 +38,10 @@ public class ImageControllerIntTest {
     public void testValidUpload() throws Exception {
         // Arrange
         Image expectedSavedImage = new Image(42, "testImage.png", "image/png", new byte[]{127, 42, 5});
-        Mockito.when(mockService.save(new Image())).thenReturn(expectedSavedImage);
+        Mockito.when(mockService.save(Image.builder().build())).thenReturn(expectedSavedImage);
         MockMultipartFile file = new MockMultipartFile("imageFile", "testImage.png", "image/png", new byte[]{127, 42, 5});
 
-        final var expectedResponse = new ImageController.SaveImageResponse(expectedSavedImage.getId());
+        final var expectedResponse = new ImageController.SaveImageResponse(expectedSavedImage.id());
 
         // Act
         mvc.perform(MockMvcRequestBuilders.multipart("/api/image")

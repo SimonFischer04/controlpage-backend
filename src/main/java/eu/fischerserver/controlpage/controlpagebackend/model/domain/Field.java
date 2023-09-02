@@ -8,39 +8,24 @@ import lombok.*;
 
 import java.util.Objects;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
 @Builder
-public class Field {
-    private int id;
+public record Field(
+        int id,
 
-    @ToString.Exclude
-    @JsonIgnore
-    private FullView view;
+        @ToString.Exclude
+        @JsonIgnore
+        FullView view,
 
-    private Action action;
+        Action action,
 
-    private StyledText title;
+        StyledText title,
+        String description,
 
-    private String description;
+        Image background,
 
-    private Image background;
-
-    private int rowspan;
-    private int colspan;
-
-    public Field(Field field) {
-        id = field.getId();
-        view = field.getView();
-        action = field.getAction();
-        title = field.getTitle();
-        description = field.getDescription();
-        background = field.getBackground();
-        rowspan = field.getRowspan();
-        colspan = field.getColspan();
-    }
-
+        int rowspan,
+        int colspan
+) {
     /*
         Because they are stored in a database two Fields with the same id are considered equals
     */

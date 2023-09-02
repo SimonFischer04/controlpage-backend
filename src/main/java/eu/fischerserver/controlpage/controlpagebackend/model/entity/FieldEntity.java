@@ -4,6 +4,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.Actio
 import lombok.*;
 
 import jakarta.persistence.*;
+
 import java.util.Objects;
 
 @Entity
@@ -23,7 +24,7 @@ public class FieldEntity {
     @ToString.Exclude
     private ViewEntity view;
 
-    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private ActionEntity action;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -40,19 +41,6 @@ public class FieldEntity {
 
     private int xPos;
     private int yPos;
-
-    public FieldEntity(FieldEntity fieldEntity) {
-        id = fieldEntity.getId();
-        view = fieldEntity.getView();
-        action = fieldEntity.getAction();
-        title = fieldEntity.getTitle();
-        description = fieldEntity.getDescription();
-        background = fieldEntity.getBackground();
-        rowspan = fieldEntity.getRowspan();
-        colspan = fieldEntity.getColspan();
-        xPos = fieldEntity.getXPos();
-        yPos = fieldEntity.getYPos();
-    }
 
     /*
         Because they are stored in a database two Fields with the same id are considered equals

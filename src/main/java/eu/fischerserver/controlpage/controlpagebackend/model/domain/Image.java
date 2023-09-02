@@ -1,32 +1,22 @@
 package eu.fischerserver.controlpage.controlpagebackend.model.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
+
 import java.util.Objects;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
 @Builder
-public class Image {
-    private int id;
-    @NotBlank(message = "Name is mandatory")
-    private String name;
-    @NotBlank(message = "Type is mandatory")
-    private String type;
-    private byte[] imageData;
+public record Image(
+        int id,
 
-    public Image(Image image) {
-        id = image.getId();
-        name = image.getName();
-        type = image.getType();
-        imageData = image.getImageData();
-    }
+        @NotBlank(message = "Name is mandatory")
+        String name,
 
+        @NotBlank(message = "Type is mandatory")
+        String type,
+
+        byte[] imageData
+) {
     /*
         Because they are stored in a database two Images with the same id are considered equals
     */

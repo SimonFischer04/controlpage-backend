@@ -13,6 +13,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@Builder(toBuilder = true)
 public class ViewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,16 +1,12 @@
 package eu.fischerserver.controlpage.controlpagebackend.integration.util.mapper;
 
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.Group;
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.Image;
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.StyledText;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.BasicView;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.FullView;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.FieldEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.GroupEntity;
-import eu.fischerserver.controlpage.controlpagebackend.model.entity.StyledTextEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.ViewEntity;
-import eu.fischerserver.controlpage.controlpagebackend.service.ImageService;
+import eu.fischerserver.controlpage.controlpagebackend.util.DummyDomainUtils;
+import eu.fischerserver.controlpage.controlpagebackend.util.DummyEntityUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,18 +22,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ViewMapperTest {
     @Autowired
     ConversionService conversionService;
-
-    final ImageService mockImageService = new ImageService() {
-        @Override
-        public Image findById(int id) {
-            return null;
-        }
-
-        @Override
-        public Image save(Image image) {
-            return null;
-        }
-    };
 
     /**
      * Test: mapping a {@link FieldEntity} to a {@link BasicView}
@@ -68,28 +52,25 @@ public class ViewMapperTest {
             Test 1: mapping ViewEntity with Fields set
          */
         {
-            GroupEntity groupEntity = new GroupEntity(0, new ArrayList<>(), null, "TestGroup", null);
-            List<FieldEntity> fieldEntities = List.of(
-                    new FieldEntity(0, null, null, new StyledTextEntity("Field1"), "", null, 1, 1, 1, 1),
-                    new FieldEntity(1, null, null, new StyledTextEntity("Field2"), "", null, 1, 1, 0, 0),
-                    new FieldEntity(2, null, null, new StyledTextEntity("Field3"), "", null, 1, 1, 1, 0),
-                    new FieldEntity(3, null, null, new StyledTextEntity("Field4"), "", null, 1, 1, 0, 1));
-            ViewEntity viewEntity = new ViewEntity(42, "TestView", groupEntity, fieldEntities);
+            ViewEntity viewEntity = DummyEntityUtils.getDummyViewEntity();
 
             FullView fullView = conversionService.convert(viewEntity, FullView.class);
             assertNotNull(fullView);
-            assertEquals(42, fullView.getId());
-            assertEquals("TestView", fullView.getName());
+            assertEquals(viewEntity.getId(), fullView.getId());
+            assertEquals(viewEntity.getName(), fullView.getName());
             assertNotNull(fullView.getGroup());
             assertNotNull(fullView.getFields());
             // get (y) . get (x)
-            Assertions.assertEquals("Field2", fullView.getFields().get(0).get(0).getTitle().getText());
-            Assertions.assertEquals("Field1", fullView.getFields().get(1).get(1).getTitle().getText());
-            Assertions.assertEquals("Field3", fullView.getFields().get(0).get(1).getTitle().getText());
-            Assertions.assertEquals("Field4", fullView.getFields().get(1).get(0).getTitle().getText());
+            Assertions.assertEquals(viewEntity.getFields().get(0).getTitle().getText(), fullView.getFields().get(0).get(0).title().text());
+            Assertions.assertEquals(viewEntity.getFields().get(1).getTitle().getText(), fullView.getFields().get(0).get(1).title().text());
+            Assertions.assertEquals(viewEntity.getFields().get(2).getTitle().getText(), fullView.getFields().get(0).get(2).title().text());
+            Assertions.assertEquals(viewEntity.getFields().get(3).getTitle().getText(), fullView.getFields().get(0).get(3).title().text());
+            Assertions.assertEquals(viewEntity.getFields().get(4).getTitle().getText(), fullView.getFields().get(1).get(0).title().text());
+            Assertions.assertEquals(viewEntity.getFields().get(5).getTitle().getText(), fullView.getFields().get(1).get(1).title().text());
+            Assertions.assertEquals(viewEntity.getFields().get(6).getTitle().getText(), fullView.getFields().get(1).get(2).title().text());
+            Assertions.assertEquals(viewEntity.getFields().get(7).getTitle().getText(), fullView.getFields().get(1).get(3).title().text());
         }
 
-        // TODO: still relevant with new mapper?
         /*
             Test 2: mapping ViewEntity with fields null (in fact should not be null when fetched from database - should be empty list, but just in case...) creates NullPointerException?
          */
@@ -109,42 +90,53 @@ public class ViewMapperTest {
             Test 1: mapping View with fields set
          */
         {
-            Group childGroup1 = new Group(0, null, null, "TestGroup1", null);
-            Group childGroup2 = new Group(1, null, null, "TestGroup2", null);
-            Group headGroup = new Group(2, List.of(childGroup1, childGroup2), null, "HeadGroup", null);
-            childGroup1.setParentGroup(headGroup);
-            childGroup2.setParentGroup(headGroup);
-            FullView fullView = new FullView(0, "TestView", childGroup1, null);
-
-            List<List<Field>> fields = new ArrayList<>();
-            fields.add(List.of(new Field(5, fullView, null, new StyledText("T1"), "", null, 1, 1), new Field(3, fullView, null, new StyledText("T2"), "", null, 1, 1)));
-            fields.add(List.of(new Field(2, fullView, null, new StyledText("T3"), "", null, 1, 1), new Field(1, fullView, null, new StyledText("T4"), "", null, 1, 1)));
-            fullView.setFields(fields);
+            FullView fullView = DummyDomainUtils.getDummyFullView();
 
             ViewEntity viewEntity = conversionService.convert(fullView, ViewEntity.class);
 
             assertNotNull(viewEntity);
             assertNotNull(viewEntity.getGroup());
-            assertEquals("TestGroup1", viewEntity.getGroup().getName());
+            assertEquals(fullView.getGroup().name(), viewEntity.getGroup().getName());
             // TODO: why would this be necessary to be set actually?
 //            assertEquals(viewEntity, viewEntity.getGroup().getViews().get(0));
 
             List<FieldEntity> fieldEntities = viewEntity.getFields();
             assertNotNull(fieldEntities);
-            assertEquals(4, fieldEntities.size());
+            assertEquals(8, fieldEntities.size());
 
-            FieldEntity testFieldT2 = fieldEntities.get(1);
-            assertEquals("T2", testFieldT2.getTitle().getText());
-            assertEquals(1, testFieldT2.getXPos());
-            assertEquals(0, testFieldT2.getYPos());
+            assertEquals(fullView.getFields().get(0).get(0).title().text(), fieldEntities.get(0).getTitle().getText());
+            assertEquals(0, fieldEntities.get(0).getYPos());
+            assertEquals(0, fieldEntities.get(0).getXPos());
 
-            FieldEntity testFieldT3 = fieldEntities.get(2);
-            assertEquals("T3", testFieldT3.getTitle().getText());
-            assertEquals(0, testFieldT3.getXPos());
-            assertEquals(1, testFieldT3.getYPos());
+            assertEquals(fullView.getFields().get(0).get(1).title().text(), fieldEntities.get(1).getTitle().getText());
+            assertEquals(0, fieldEntities.get(1).getYPos());
+            assertEquals(1, fieldEntities.get(1).getXPos());
+
+            assertEquals(fullView.getFields().get(0).get(2).title().text(), fieldEntities.get(2).getTitle().getText());
+            assertEquals(0, fieldEntities.get(2).getYPos());
+            assertEquals(2, fieldEntities.get(2).getXPos());
+
+            assertEquals(fullView.getFields().get(0).get(3).title().text(), fieldEntities.get(3).getTitle().getText());
+            assertEquals(0, fieldEntities.get(3).getYPos());
+            assertEquals(3, fieldEntities.get(3).getXPos());
+
+            assertEquals(fullView.getFields().get(1).get(0).title().text(), fieldEntities.get(4).getTitle().getText());
+            assertEquals(1, fieldEntities.get(4).getYPos());
+            assertEquals(0, fieldEntities.get(4).getXPos());
+
+            assertEquals(fullView.getFields().get(1).get(1).title().text(), fieldEntities.get(5).getTitle().getText());
+            assertEquals(1, fieldEntities.get(5).getYPos());
+            assertEquals(1, fieldEntities.get(5).getXPos());
+
+            assertEquals(fullView.getFields().get(1).get(2).title().text(), fieldEntities.get(6).getTitle().getText());
+            assertEquals(1, fieldEntities.get(6).getYPos());
+            assertEquals(2, fieldEntities.get(6).getXPos());
+
+            assertEquals(fullView.getFields().get(1).get(3).title().text(), fieldEntities.get(7).getTitle().getText());
+            assertEquals(1, fieldEntities.get(7).getYPos());
+            assertEquals(3, fieldEntities.get(7).getXPos());
         }
 
-        // TODO: still relevant with new mapper?
         /*
             Test 2: mapping View with fields null (in fact should not be null when fetched from database - should be empty list, but just in case...) creates NullPointerException?
          */
