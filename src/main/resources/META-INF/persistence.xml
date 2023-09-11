@@ -6,20 +6,21 @@
              version="2.2">
     <persistence-unit name="jpa-h2-removal">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>at.fischers.controlpagebackend.entity.ViewEntity</class>
-        <class>at.fischers.controlpagebackend.entity.GroupEntity</class>
-        <class>at.fischers.controlpagebackend.entity.FieldEntity</class>
-        <class>at.fischers.controlpagebackend.entity.ImageEntity</class>
-        <class>at.fischers.controlpagebackend.entity.action.ActionEntity</class>
-        <class>at.fischers.controlpagebackend.entity.action.RestActionEntity</class>
-        <class>at.fischers.controlpagebackend.entity.action.ViewActionEntity</class>
-        <class>at.fischers.controlpagebackend.entity.StyledTextEntity</class>
+        <class>eu.fischerserver.controlpage.controlpagebackend.model.entity.ViewEntity</class>
+        <class>eu.fischerserver.controlpage.controlpagebackend.model.entity.GroupEntity</class>
+        <class>eu.fischerserver.controlpage.controlpagebackend.model.entity.FieldEntity</class>
+        <class>eu.fischerserver.controlpage.controlpagebackend.model.entity.ImageEntity</class>
+        <class>eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ActionEntity</class>
+        <class>eu.fischerserver.controlpage.controlpagebackend.model.entity.action.RestActionEntity</class>
+        <class>eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ViewActionEntity</class>
+        <class>eu.fischerserver.controlpage.controlpagebackend.model.entity.StyledTextEntity</class>
+        <class>eu.fischerserver.controlpage.controlpagebackend.model.NewEntity</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
-            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test"/>
-            <property name="javax.persistence.jdbc.user" value="sa"/>
-            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:mem:test"/>
+            <property name="jakarta.persistence.jdbc.user" value="sa"/>
+            <property name="jakarta.persistence.jdbc.password" value=""/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
             <property name="show_sql" value="false"/>

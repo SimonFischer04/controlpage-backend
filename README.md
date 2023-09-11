@@ -13,3 +13,8 @@ Furthermore, this project is mirrored to [GitHub](https://github.com/SimonFische
 This is the backend part of the ControlPage application. For more information see the [Docs](https://gitlab.com/controlpage/controlpage-docs).
 
 ## ---WIP---
+
+## Notes:
+- http://localhost:42000/swagger-ui.html
+- http://localhost:42000/v3/api-docs
+
