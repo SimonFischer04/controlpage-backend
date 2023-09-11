@@ -3,8 +3,8 @@ package eu.fischerserver.controlpage.controlpagebackend.model.domain;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.action.Action;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.StyledText;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.FullView;
-import com.fasterxml.jackson.annotation.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.ToString;
 
 import java.util.Objects;
 
@@ -13,7 +13,6 @@ public record Field(
         int id,
 
         @ToString.Exclude
-        @JsonIgnore
         FullView view,
 
         Action action,

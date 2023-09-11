@@ -17,7 +17,7 @@ import java.util.Objects;
 public class ImageController {
     private final ImageService imageService;
 
-    @PostMapping()
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadImage(@RequestParam("imageFile") MultipartFile file) throws IOException {
         // check if uploaded file is an image
         if (!Objects.requireNonNull(file.getContentType()).startsWith("image/")) {

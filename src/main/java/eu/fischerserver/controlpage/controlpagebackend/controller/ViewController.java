@@ -1,6 +1,7 @@
 package eu.fischerserver.controlpage.controlpagebackend.controller;
 
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
+import eu.fischerserver.controlpage.controlpagebackend.model.domain.action.Action;
+import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.StyledText;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.BasicView;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.FullView;
 import eu.fischerserver.controlpage.controlpagebackend.service.ViewService;
@@ -37,6 +38,7 @@ public class ViewController {
         final var fullView = conversionService.convert(fullViewDTO, FullView.class);
         viewService.save(fullView);
         return ResponseEntity.ok().build();
+
     }
 
     public record ViewListResponse(List<BasicView> views) {
@@ -47,7 +49,24 @@ public class ViewController {
             String name,
             int groupId,
 
-            List<List<Field>> fields
+            List<List<FieldDTO>> fields
+    ) {
+    }
+
+    public record FieldDTO(
+            int id,
+
+            int viewId,
+
+            Action action,
+
+            StyledText title,
+            String description,
+
+            int backgroundId,
+
+            int rowspan,
+            int colspan
     ) {
     }
 }
