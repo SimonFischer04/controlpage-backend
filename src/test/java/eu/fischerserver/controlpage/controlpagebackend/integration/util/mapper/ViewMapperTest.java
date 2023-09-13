@@ -60,15 +60,18 @@ public class ViewMapperTest {
             assertEquals(viewEntity.getName(), fullView.getName());
             assertNotNull(fullView.getGroup());
             assertNotNull(fullView.getFields());
-            // get (y) . get (x)
-            Assertions.assertEquals(viewEntity.getFields().get(0).getTitle().getText(), fullView.getFields().get(0).get(0).title().text());
-            Assertions.assertEquals(viewEntity.getFields().get(1).getTitle().getText(), fullView.getFields().get(0).get(1).title().text());
-            Assertions.assertEquals(viewEntity.getFields().get(2).getTitle().getText(), fullView.getFields().get(0).get(2).title().text());
-            Assertions.assertEquals(viewEntity.getFields().get(3).getTitle().getText(), fullView.getFields().get(0).get(3).title().text());
-            Assertions.assertEquals(viewEntity.getFields().get(4).getTitle().getText(), fullView.getFields().get(1).get(0).title().text());
-            Assertions.assertEquals(viewEntity.getFields().get(5).getTitle().getText(), fullView.getFields().get(1).get(1).title().text());
-            Assertions.assertEquals(viewEntity.getFields().get(6).getTitle().getText(), fullView.getFields().get(1).get(2).title().text());
-            Assertions.assertEquals(viewEntity.getFields().get(7).getTitle().getText(), fullView.getFields().get(1).get(3).title().text());
+
+            Assertions.assertAll("Fields got mapped to correct position",
+                    // get (y) . get (x)
+                    () -> Assertions.assertEquals(viewEntity.getFields().get(0).getTitle().getText(), fullView.getFields().get(0).get(0).title().text()),
+                    () -> Assertions.assertEquals(viewEntity.getFields().get(1).getTitle().getText(), fullView.getFields().get(0).get(1).title().text()),
+                    () -> Assertions.assertEquals(viewEntity.getFields().get(2).getTitle().getText(), fullView.getFields().get(0).get(2).title().text()),
+                    () -> Assertions.assertEquals(viewEntity.getFields().get(3).getTitle().getText(), fullView.getFields().get(0).get(3).title().text()),
+                    () -> Assertions.assertEquals(viewEntity.getFields().get(4).getTitle().getText(), fullView.getFields().get(1).get(0).title().text()),
+                    () -> Assertions.assertEquals(viewEntity.getFields().get(5).getTitle().getText(), fullView.getFields().get(1).get(1).title().text()),
+                    () -> Assertions.assertEquals(viewEntity.getFields().get(6).getTitle().getText(), fullView.getFields().get(1).get(2).title().text()),
+                    () -> Assertions.assertEquals(viewEntity.getFields().get(7).getTitle().getText(), fullView.getFields().get(1).get(3).title().text())
+            );
         }
 
         /*
@@ -104,37 +107,39 @@ public class ViewMapperTest {
             assertNotNull(fieldEntities);
             assertEquals(8, fieldEntities.size());
 
-            assertEquals(fullView.getFields().get(0).get(0).title().text(), fieldEntities.get(0).getTitle().getText());
-            assertEquals(0, fieldEntities.get(0).getYPos());
-            assertEquals(0, fieldEntities.get(0).getXPos());
+            Assertions.assertAll("Fields got mapped to correct position",
+                    () -> assertEquals(fullView.getFields().get(0).get(0).title().text(), fieldEntities.get(0).getTitle().getText()),
+                    () -> assertEquals(0, fieldEntities.get(0).getYPos()),
+                    () -> assertEquals(0, fieldEntities.get(0).getXPos()),
 
-            assertEquals(fullView.getFields().get(0).get(1).title().text(), fieldEntities.get(1).getTitle().getText());
-            assertEquals(0, fieldEntities.get(1).getYPos());
-            assertEquals(1, fieldEntities.get(1).getXPos());
+                    () -> assertEquals(fullView.getFields().get(0).get(1).title().text(), fieldEntities.get(1).getTitle().getText()),
+                    () -> assertEquals(0, fieldEntities.get(1).getYPos()),
+                    () -> assertEquals(1, fieldEntities.get(1).getXPos()),
 
-            assertEquals(fullView.getFields().get(0).get(2).title().text(), fieldEntities.get(2).getTitle().getText());
-            assertEquals(0, fieldEntities.get(2).getYPos());
-            assertEquals(2, fieldEntities.get(2).getXPos());
+                    () -> assertEquals(fullView.getFields().get(0).get(2).title().text(), fieldEntities.get(2).getTitle().getText()),
+                    () -> assertEquals(0, fieldEntities.get(2).getYPos()),
+                    () -> assertEquals(2, fieldEntities.get(2).getXPos()),
 
-            assertEquals(fullView.getFields().get(0).get(3).title().text(), fieldEntities.get(3).getTitle().getText());
-            assertEquals(0, fieldEntities.get(3).getYPos());
-            assertEquals(3, fieldEntities.get(3).getXPos());
+                    () -> assertEquals(fullView.getFields().get(0).get(3).title().text(), fieldEntities.get(3).getTitle().getText()),
+                    () -> assertEquals(0, fieldEntities.get(3).getYPos()),
+                    () -> assertEquals(3, fieldEntities.get(3).getXPos()),
 
-            assertEquals(fullView.getFields().get(1).get(0).title().text(), fieldEntities.get(4).getTitle().getText());
-            assertEquals(1, fieldEntities.get(4).getYPos());
-            assertEquals(0, fieldEntities.get(4).getXPos());
+                    () -> assertEquals(fullView.getFields().get(1).get(0).title().text(), fieldEntities.get(4).getTitle().getText()),
+                    () -> assertEquals(1, fieldEntities.get(4).getYPos()),
+                    () -> assertEquals(0, fieldEntities.get(4).getXPos()),
 
-            assertEquals(fullView.getFields().get(1).get(1).title().text(), fieldEntities.get(5).getTitle().getText());
-            assertEquals(1, fieldEntities.get(5).getYPos());
-            assertEquals(1, fieldEntities.get(5).getXPos());
+                    () -> assertEquals(fullView.getFields().get(1).get(1).title().text(), fieldEntities.get(5).getTitle().getText()),
+                    () -> assertEquals(1, fieldEntities.get(5).getYPos()),
+                    () -> assertEquals(1, fieldEntities.get(5).getXPos()),
 
-            assertEquals(fullView.getFields().get(1).get(2).title().text(), fieldEntities.get(6).getTitle().getText());
-            assertEquals(1, fieldEntities.get(6).getYPos());
-            assertEquals(2, fieldEntities.get(6).getXPos());
+                    () -> assertEquals(fullView.getFields().get(1).get(2).title().text(), fieldEntities.get(6).getTitle().getText()),
+                    () -> assertEquals(1, fieldEntities.get(6).getYPos()),
+                    () -> assertEquals(2, fieldEntities.get(6).getXPos()),
 
-            assertEquals(fullView.getFields().get(1).get(3).title().text(), fieldEntities.get(7).getTitle().getText());
-            assertEquals(1, fieldEntities.get(7).getYPos());
-            assertEquals(3, fieldEntities.get(7).getXPos());
+                    () -> assertEquals(fullView.getFields().get(1).get(3).title().text(), fieldEntities.get(7).getTitle().getText()),
+                    () -> assertEquals(1, fieldEntities.get(7).getYPos()),
+                    () -> assertEquals(3, fieldEntities.get(7).getXPos())
+            );
         }
 
         /*

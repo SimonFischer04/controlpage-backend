@@ -20,7 +20,7 @@ public class FieldEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @ToString.Exclude
     private ViewEntity view;
 
