@@ -19,7 +19,7 @@
         <org.mapstruct.extensions.spring.version>1.0.2</org.mapstruct.extensions.spring.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <org.projectlombok.version>1.18.28</org.projectlombok.version>
-        <mysql.version>8.1.0</mysql.version>
+        <mysql.version>8.2.0</mysql.version>
         <com.h2database.version>2.2.220</com.h2database.version>
         <org.springdoc.version>2.2.0</org.springdoc.version>
         <org.apache.maven.plugins.maven-compiler-plugin.version>3.11.0</org.apache.maven.plugins.maven-compiler-plugin.version>
