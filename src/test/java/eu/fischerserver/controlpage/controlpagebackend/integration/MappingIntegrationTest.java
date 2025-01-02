@@ -37,13 +37,13 @@ public class MappingIntegrationTest {
         //
         ViewEntity viewEntity = conversionService.convert(view, ViewEntity.class);
         assertNotNull(viewEntity);
-//        FieldEntity fieldEntity = viewEntity.getFields().get(0);
+        FieldEntity fieldEntity = viewEntity.getFields().get(0);
 
         /*
             Test
          */
         // TODO: necessary?
-//        assertNotNull(fieldEntity.getView());
+        assertNotNull(fieldEntity.getView());
 //        assertNotNull(fieldEntity.getAction().getField());
         assertNotNull(viewEntity.getGroup().getViews());
         assertEquals(1, viewEntity.getGroup().getViews().size());
@@ -70,7 +70,7 @@ public class MappingIntegrationTest {
             Test
          */
         // TODO: necessary?
-//        assertNotNull(field.getView());
+        assertNotNull(field.view());
 //        assertNotNull(field.getAction().getField());
         assertNotNull(view.getGroup().views());
         assertEquals(1, view.getGroup().views().size());

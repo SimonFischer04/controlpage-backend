@@ -50,10 +50,12 @@ public class ViewServiceImpl implements ViewService {
             return;
 
         viewEntity.getFields().forEach(fieldEntity -> {
-//            fieldEntity.setView(viewEntity);
-            // client may send f.e. -1 to indicate new field, but database persist requires value of 0 to create new entry
+            // client may send f.e. id -1 to indicate new entity(field, styleText, ...), but database persist requires value of 0 to create new entry
             if (fieldEntity.getId() < 0) {
                 fieldEntity.setId(0);
+            }
+            if (fieldEntity.getTitle() != null && fieldEntity.getTitle().getId() < 0) {
+                fieldEntity.getTitle().setId(0);
             }
         });
 
@@ -61,14 +63,15 @@ public class ViewServiceImpl implements ViewService {
          fix weird detached merge issue (TODO: better way? :))
          */
         var actualGroup = viewEntity.getGroup();
-        viewEntity.setGroup(null);
+//        viewEntity.setGroup(null);
         var saved = repository.save(viewEntity);
+        return;
 
-        if (actualGroup != null) {
-            @SuppressWarnings("OptionalGetWithoutIsPresent")
-            var temp = repository.findById(viewEntity.getId()).get();
-            temp.setGroup(groupRepository.findById(actualGroup.getId()).orElse(null));
-            repository.save(temp);
-        }
+//        if (actualGroup != null) {
+//            @SuppressWarnings("OptionalGetWithoutIsPresent")
+//            var temp = repository.findById(viewEntity.getId()).get();
+//            temp.setGroup(groupRepository.findById(actualGroup.getId()).orElse(null));
+//            repository.save(temp);
+//        }
     }
 }

@@ -8,7 +8,7 @@ import lombok.ToString;
 
 import java.util.Objects;
 
-@Builder
+@Builder(toBuilder = true)
 public record Field(
         int id,
 

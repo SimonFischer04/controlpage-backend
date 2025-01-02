@@ -38,7 +38,6 @@ public class ViewController {
         final var fullView = conversionService.convert(fullViewDTO, FullView.class);
         viewService.save(fullView);
         return ResponseEntity.ok().build();
-
     }
 
     public record ViewListResponse(List<BasicView> views) {
