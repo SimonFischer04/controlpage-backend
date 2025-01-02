@@ -1,0 +1,24 @@
+stages:
+  - build
+  - test
+  - package
+
+default:
+  image: $DEFAULT_CI_IMAGE
+  # All jobs are interruptable by default
+  interruptible: true
+
+variables:
+  JAVA_VERSION: "17"
+  DOCKER_IMAGE: "maven:3.8.5-openjdk-17"
+
+cache:
+  paths:
+    - .m2/repository
+
+before_script:
+  - echo "Using Java version $JAVA_VERSION"
+  - java -version
+
+include:
+  - '.gitlab/ci/*.gitlab-ci.yml'
