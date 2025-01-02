@@ -1,0 +1,9 @@
+build:
+  stage: build
+  image: $DOCKER_IMAGE
+  script:
+    - echo "Building the project..."
+    - mvn -B -DskipTests clean install
+  artifacts:
+    paths:
+      - target/*.jar

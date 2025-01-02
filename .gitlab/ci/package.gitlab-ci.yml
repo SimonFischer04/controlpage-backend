@@ -1,0 +1,9 @@
+package:
+  stage: package
+  image: $DOCKER_IMAGE
+  script:
+    - echo "Packaging the application..."
+    - mvn B -DskipTests package
+  artifacts:
+    paths:
+      - target/*.jar
