@@ -1,5 +1,6 @@
 package eu.fischerserver.controlpage.controlpagebackend.integration.util.mapper;
 
+import eu.fischerserver.controlpage.controlpagebackend.integration.config.ControlpageIntegrationTestBase;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.action.Action;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.action.RestAction;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.action.ViewAction;
@@ -11,13 +12,11 @@ import eu.fischerserver.controlpage.controlpagebackend.model.global.action.RunPo
 import eu.fischerserver.controlpage.controlpagebackend.model.global.action.ViewActionType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.convert.ConversionService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-public class ActionMapperTest {
+public class ActionMapperTest extends ControlpageIntegrationTestBase {
     @Autowired
     ConversionService conversionService;
 

@@ -27,7 +27,7 @@ public class MappingIntegrationTest extends ControlpageIntegrationTestBase {
             Init Test Data
          */
         FullView view = DummyDomainUtils.getDummyFullView();
-
+//        System.out.println(view.getGroup().toString());
         //
         ViewEntity viewEntity = conversionService.convert(view, ViewEntity.class);
         assertNotNull(viewEntity);
