@@ -19,6 +19,8 @@ cache:
 before_script:
   - echo "Using Java version $JAVA_VERSION"
   - java -version
+  - echo "Docker Environment"
+  - docker --version
 
 include:
   - '.gitlab/ci/*.gitlab-ci.yml'
