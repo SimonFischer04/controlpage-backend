@@ -3,10 +3,14 @@ package eu.fischerserver.controlpage.controlpagebackend.util.mapper.group;
 import eu.fischerserver.controlpage.controlpagebackend.config.MapperSpringConfig;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Group;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.GroupEntity;
+import eu.fischerserver.controlpage.controlpagebackend.model.entity.ViewEntity;
 import eu.fischerserver.controlpage.controlpagebackend.util.mapper.view.BasicViewToViewEntityMapper;
 import org.mapstruct.*;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Mapper(config = MapperSpringConfig.class, uses = BasicViewToViewEntityMapper.class)
 public interface GroupToGroupEntityMapper extends Converter<Group, GroupEntity> {
@@ -56,6 +60,12 @@ public interface GroupToGroupEntityMapper extends Converter<Group, GroupEntity> 
             return;
         }
 
-        groupEntity.getViews().forEach(view -> view.setGroup(groupEntity));
+        // Caused by: java.util.ConcurrentModificationException
+        // groupEntity.getViews().forEach(view -> view.setGroup(groupEntity));
+        List<ViewEntity> newViews = new ArrayList<>();
+        groupEntity.getViews().forEach(viewEntity -> {
+            newViews.add(viewEntity.toBuilder().group(groupEntity).build());
+        });
+        groupEntity.setViews(newViews);
     }
 }
