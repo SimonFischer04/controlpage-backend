@@ -4,7 +4,7 @@ stages:
   - package
 
 default:
-  image: $DEFAULT_CI_IMAGE
+  image: "debian"
   # All jobs are interruptable by default
   interruptible: true
 
@@ -17,6 +17,8 @@ cache:
     - .m2/repository
 
 before_script:
+  - echo "OS:"
+  - cat /etc/lsb-release
   - echo "Using Java version $JAVA_VERSION"
   - java -version
   - echo "Docker Environment"
