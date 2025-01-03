@@ -1,34 +1,22 @@
 package eu.fischerserver.controlpage.controlpagebackend.integration;
 
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.HorizontalAlignment;
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.VerticalAlignment;
+import eu.fischerserver.controlpage.controlpagebackend.integration.config.ControlpageIntegrationTestBase;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.*;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ActionEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ViewActionEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.global.action.ViewActionType;
 import eu.fischerserver.controlpage.controlpagebackend.repository.*;
 import eu.fischerserver.controlpage.controlpagebackend.util.DummyEntityUtils;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-public class ViewPersistenceIntTest {
+public class ViewPersistenceIntTest extends ControlpageIntegrationTestBase {
     /*
         INTO:
         Assumption: you can only save whole View's in this project because then managing orphan/unused Entities is way easier.

@@ -29,18 +29,20 @@ public interface ViewEntityToFullViewMapper extends Converter<ViewEntity, FullVi
      */
     @AfterMapping
     default void setFieldViewReference(@MappingTarget FullView fullView) {
-        List<List<Field>> newFields = new ArrayList<>();
-        if (fullView != null && fullView.getFields() != null) {
-            fullView.getFields().forEach(row -> {
-                List<Field> newFieldRow = new ArrayList<>();
-                row.forEach(field -> {
-                    // record is immutable
-                    // field.setView(fullView);
-                    newFieldRow.add(field.toBuilder().view(fullView).build());
-                });
-                newFields.add(newFieldRow);
-            });
-            fullView.setFields(newFields);
+        if(fullView == null || fullView.getFields() == null) {
+            return;
         }
+
+        List<List<Field>> newFields = new ArrayList<>();
+        fullView.getFields().forEach(row -> {
+            List<Field> newFieldRow = new ArrayList<>();
+            row.forEach(field -> {
+                // record is immutable
+                // field.setView(fullView);
+                newFieldRow.add(field.toBuilder().view(fullView).build());
+            });
+            newFields.add(newFieldRow);
+        });
+        fullView.setFields(newFields);
     }
 }

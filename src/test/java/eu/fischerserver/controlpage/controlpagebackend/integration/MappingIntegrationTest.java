@@ -1,25 +1,19 @@
 package eu.fischerserver.controlpage.controlpagebackend.integration;
 
+import eu.fischerserver.controlpage.controlpagebackend.integration.config.ControlpageIntegrationTestBase;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.FullView;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.FieldEntity;
-import eu.fischerserver.controlpage.controlpagebackend.model.entity.GroupEntity;
-import eu.fischerserver.controlpage.controlpagebackend.model.entity.StyledTextEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.ViewEntity;
-import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.RestActionEntity;
 import eu.fischerserver.controlpage.controlpagebackend.util.DummyDomainUtils;
 import eu.fischerserver.controlpage.controlpagebackend.util.DummyEntityUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.convert.ConversionService;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-public class MappingIntegrationTest {
+public class MappingIntegrationTest extends ControlpageIntegrationTestBase {
     @Autowired
     ConversionService conversionService;
 

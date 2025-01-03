@@ -63,15 +63,14 @@ public class ViewServiceImpl implements ViewService {
          fix weird detached merge issue (TODO: better way? :))
          */
         var actualGroup = viewEntity.getGroup();
-//        viewEntity.setGroup(null);
+        viewEntity.setGroup(null);
         var saved = repository.save(viewEntity);
-        return;
 
-//        if (actualGroup != null) {
-//            @SuppressWarnings("OptionalGetWithoutIsPresent")
-//            var temp = repository.findById(viewEntity.getId()).get();
-//            temp.setGroup(groupRepository.findById(actualGroup.getId()).orElse(null));
-//            repository.save(temp);
-//        }
+        if (actualGroup != null) {
+            @SuppressWarnings("OptionalGetWithoutIsPresent")
+            var temp = repository.findById(viewEntity.getId()).get();
+            temp.setGroup(groupRepository.findById(actualGroup.getId()).orElse(null));
+            repository.save(temp);
+        }
     }
 }
