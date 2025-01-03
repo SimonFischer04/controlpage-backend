@@ -18,7 +18,7 @@ cache:
 
 before_script:
   - echo "OS:"
-  - cat /etc/lsb-release
+  - cat /etc/os-release
   - echo "Using Java version $JAVA_VERSION"
   - java -version
   - echo "Docker Environment"
