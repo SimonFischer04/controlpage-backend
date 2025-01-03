@@ -4,6 +4,10 @@ spring:
     url: jdbc:postgresql://${DB_HOST:localhost}:5432/controlpage
     username: controlpageuser
     password: 6xovUH2QmUZooPTyYrpD9Js8fZRrMBrkqHzs4soRdP
+#  datasource:
+#    url: jdbc:tc:postgresql:14:///testdb
+#    username: test
+#    password: test
   jpa:
     hibernate:
       ddl-auto: update
