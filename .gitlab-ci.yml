@@ -22,7 +22,7 @@ before_script:
   - echo "Using Java version $JAVA_VERSION"
   - java -version
   - echo "Docker Environment"
-  - apk add --no-cache docker-cli  # For Alpine-based runners
+#  - apk add --no-cache docker-cli  # For Alpine-based runners
   - docker --version
 
 include:
