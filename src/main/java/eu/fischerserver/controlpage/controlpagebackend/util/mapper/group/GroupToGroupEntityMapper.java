@@ -32,10 +32,10 @@ public interface GroupToGroupEntityMapper extends Converter<Group, GroupEntity> 
     GroupEntity convert(@Nullable Group group);
 
     @Named("GroupWithoutViewsMapper")
+    @InheritConfiguration(name = "convert")
     @Mappings({
             @Mapping(source = "views", target = "views", ignore = true)
     })
-    @InheritConfiguration(name = "convert")
     GroupEntity convertWithoutViews(@Nullable Group group);
 
     @Named("ParentMapper")
@@ -64,7 +64,9 @@ public interface GroupToGroupEntityMapper extends Converter<Group, GroupEntity> 
         // groupEntity.getViews().forEach(view -> view.setGroup(groupEntity));
         List<ViewEntity> newViews = new ArrayList<>();
         groupEntity.getViews().forEach(viewEntity -> {
-            newViews.add(viewEntity.toBuilder().group(groupEntity).build());
+            newViews.add(viewEntity.toBuilder()
+                    .group(groupEntity)
+                    .build());
         });
         groupEntity.setViews(newViews);
     }

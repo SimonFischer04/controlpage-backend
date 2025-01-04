@@ -5,6 +5,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.FullView;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.ViewEntity;
 import eu.fischerserver.controlpage.controlpagebackend.util.mapper.field.FieldEntityToFieldMapper;
+import eu.fischerserver.controlpage.controlpagebackend.util.mapper.group.GroupEntityToGroupMapper;
 import org.mapstruct.*;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
@@ -12,7 +13,10 @@ import org.springframework.lang.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mapper(config = MapperSpringConfig.class, uses = FieldEntityToFieldMapper.class)
+@Mapper(
+        config = MapperSpringConfig.class,
+        uses = {ViewEntityToBasicViewMapper.class, FieldEntityToFieldMapper.class, GroupEntityToGroupMapper.class}
+)
 public interface ViewEntityToFullViewMapper extends Converter<ViewEntity, FullView> {
     /**
      * Map a {@link ViewEntity} to a {@link FullView}
@@ -21,6 +25,10 @@ public interface ViewEntityToFullViewMapper extends Converter<ViewEntity, FullVi
      * @return the mapped {@link FullView}
      */
     @Override
+    @Mappings({
+            // avoid recursive view -> group -> view -> ... mapping
+            @Mapping(target = "group", source = "group", qualifiedByName = "GroupWithoutViewsMapper")
+    })
     FullView convert(@Nullable ViewEntity viewEntity);
 
     /**
