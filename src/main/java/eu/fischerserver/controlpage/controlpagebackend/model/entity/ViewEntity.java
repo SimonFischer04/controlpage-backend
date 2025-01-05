@@ -28,7 +28,7 @@ public class ViewEntity {
 
     @OneToMany(mappedBy = "view", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<FieldEntity> fields;
+    protected List<FieldEntity> fields;
 
     /*
         Because they are stored in a database two Views with the same id are considered equals
