@@ -3,7 +3,7 @@ package:
   image: $DEFAULT_CI_IMAGE
   script:
     - echo "Packaging the application..."
-    - mvn B -DskipTests package
+    - mvn -B -DskipTests package
   artifacts:
     paths:
       - target/*.jar
