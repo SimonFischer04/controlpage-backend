@@ -57,6 +57,9 @@ public class ViewServiceImpl implements ViewService {
             if (fieldEntity.getTitle() != null && fieldEntity.getTitle().getId() < 0) {
                 fieldEntity.getTitle().setId(0);
             }
+            if (fieldEntity.getAction() != null && fieldEntity.getAction().getId() < 0) {
+                fieldEntity.getAction().setId(0);
+            }
         });
 
         /*
