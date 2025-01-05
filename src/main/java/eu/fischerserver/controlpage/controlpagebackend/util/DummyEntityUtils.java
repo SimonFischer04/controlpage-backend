@@ -34,18 +34,16 @@ public class DummyEntityUtils {
     public static GroupEntity getDummyGroupEntityTreeHead(Integer idEverywhere, boolean includingViews) {
         final var childEntity11 = new GroupEntity(idEverywhere != null ? idEverywhere : 11, null, null, "Child 11", null);
         final var childEntity1 = new GroupEntity(idEverywhere != null ? idEverywhere : 1, new ArrayList<>(List.of(childEntity11)), null, "Child 1", null);
-        // TODO: not required because some DB magic??? - analyse this!
         childEntity11.setParentGroup(childEntity1);
 
         final var childEntity2 = new GroupEntity(idEverywhere != null ? idEverywhere : 2, null, null, "Child 2", null);
 
         final var headEntity = new GroupEntity(idEverywhere != null ? idEverywhere : 0, new ArrayList<>(List.of(childEntity1, childEntity2)), null, "HeadGroup", new ArrayList<>());
-        // TODO: not required because some DB magic??? - analyse this!
         childEntity1.setParentGroup(headEntity);
         childEntity2.setParentGroup(headEntity);
 
         if (includingViews)
-            headEntity.getViews().add(getDummyViewEntity(headEntity, null));
+            headEntity.getViews().add(getDummyViewEntity(headEntity, idEverywhere));
 
         return headEntity;
     }
@@ -73,7 +71,7 @@ public class DummyEntityUtils {
     */
     private static ViewEntity getDummyViewEntity(GroupEntity groupEntity, Integer idEverywhere) {
         if (groupEntity == null) {
-            groupEntity = getDummyGroupEntityTreeHead(idEverywhere, true);
+            groupEntity = getDummyGroupEntityTreeHead(idEverywhere, false);
         }
         final var id = idEverywhere != null ? idEverywhere : getRandomId();
         var viewEntity = ViewEntity.builder()
@@ -83,6 +81,8 @@ public class DummyEntityUtils {
                 .fields(new ArrayList<>())
                 .build();
 
+        // TODO: workaround weird FieldEntity.builder().view(viewEntity) behavior bug
+        viewEntity.getFields().clear();
         viewEntity.getFields().addAll(List.of(
                 getDummyFieldEntity(0, 0, null, viewEntity, idEverywhere),
                 getDummyFieldEntity(1, 0, null, viewEntity, idEverywhere),
@@ -116,8 +116,8 @@ public class DummyEntityUtils {
 
         return FieldEntity.builder()
                 .id(id)
-                .view(viewEntity)
-                .action(getDummyViewActionEntity(idEverywhere))
+                .view(viewEntity) // TODO: wtf! why does this add field to viewEntity.fields?
+                .action(getDummyViewActionEntity(viewEntity, idEverywhere))
                 .title(getDummyStyledTextEntity(idEverywhere))
                 .description("A Very Nice FieldEntity description of Field %d".formatted(id))
                 .background(getDummyImageEntity(idEverywhere))
@@ -129,16 +129,16 @@ public class DummyEntityUtils {
     }
 
 
-    public static ViewActionEntity getDummyViewActionEntity() {
-        return getDummyViewActionEntity(null);
+    public static ViewActionEntity getDummyViewActionEntity(ViewEntity viewEntity) {
+        return getDummyViewActionEntity(viewEntity, null);
     }
 
-    private static ViewActionEntity getDummyViewActionEntity(Integer idEverywhere) {
+    private static ViewActionEntity getDummyViewActionEntity(ViewEntity viewEntity, Integer idEverywhere) {
         return ViewActionEntity.viewActionEntityBuilder()
                 .id(idEverywhere != null ? idEverywhere : getRandomId())
                 .runPolicy(RunPolicy.ASYNC)
                 .viewActionType(ViewActionType.SWITCH_TO)
-                .viewId(getRandomId())
+                .viewId(viewEntity.getId())
                 .build();
     }
 

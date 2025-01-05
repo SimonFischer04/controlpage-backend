@@ -44,8 +44,11 @@ public class ViewPersistenceIntTest extends ControlpageIntegrationTestBase {
         var group = groupRepository.save(DummyEntityUtils.getDummyGroupEntityTreeHead(0, false));
         var testView = DummyEntityUtils.getDummyViewEntity(0);
         testView.setGroup(group);
-        viewRepository.save(testView);
+
+        var saved = viewRepository.save(testView);
+
         assertEquals(1, findAllViews().size());
+        assertEquals(8, fieldRepository.findAll().size());
     }
 
     /**
@@ -208,7 +211,6 @@ public class ViewPersistenceIntTest extends ControlpageIntegrationTestBase {
     public void testFieldCascading() {
         ViewEntity viewEntity = findView();
         FieldEntity fieldEntity = viewEntity.getFields().get(0);
-        fieldEntity.setTitle(DummyEntityUtils.getDummyStyledTextEntity());
         viewRepository.save(viewEntity);
 
         /*
