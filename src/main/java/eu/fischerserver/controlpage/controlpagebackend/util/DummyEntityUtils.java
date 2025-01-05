@@ -138,7 +138,7 @@ public class DummyEntityUtils {
                 .id(idEverywhere != null ? idEverywhere : getRandomId())
                 .runPolicy(RunPolicy.ASYNC)
                 .viewActionType(ViewActionType.SWITCH_TO)
-                .viewId(viewEntity.getId())
+                .viewId(viewEntity == null ? -1 : viewEntity.getId())
                 .build();
     }
 
