@@ -22,7 +22,7 @@ public class ImageEntity {
     private String name, type;
 
     @Lob
-    @Column(name = "image_data")
+    @Column(name = "image_data", columnDefinition = "bytea")
     private byte[] imageData;
 
     /*
