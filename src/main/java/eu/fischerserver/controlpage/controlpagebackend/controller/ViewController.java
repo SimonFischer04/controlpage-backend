@@ -4,11 +4,13 @@ import eu.fischerserver.controlpage.controlpagebackend.controller.impl.ViewContr
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.action.Action;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.StyledText;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.BasicView;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "view-controller", description = "Everything related to views")
 @RequestMapping("/api/view")
 public interface ViewController {
 
