@@ -12,7 +12,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Builder(builderMethodName = "basicBuilder")
+@Builder(builderMethodName = "basicBuilder", toBuilder = true)
 public class BasicView {
     private int id;
     private String name;

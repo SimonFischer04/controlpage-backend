@@ -1,28 +1,18 @@
 package eu.fischerserver.controlpage.controlpagebackend.integration.util.mapper;
 
+import eu.fischerserver.controlpage.controlpagebackend.integration.config.ControlpageIntegrationTestBase;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Image;
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.StyledText;
-import eu.fischerserver.controlpage.controlpagebackend.model.domain.action.RestAction;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.FieldEntity;
-import eu.fischerserver.controlpage.controlpagebackend.model.entity.ImageEntity;
-import eu.fischerserver.controlpage.controlpagebackend.model.entity.StyledTextEntity;
-import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.RestActionEntity;
-import eu.fischerserver.controlpage.controlpagebackend.model.global.action.RestType;
-import eu.fischerserver.controlpage.controlpagebackend.model.global.action.RunPolicy;
-import eu.fischerserver.controlpage.controlpagebackend.service.ImageService;
 import eu.fischerserver.controlpage.controlpagebackend.util.DummyDomainUtils;
 import eu.fischerserver.controlpage.controlpagebackend.util.DummyEntityUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.convert.ConversionService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-public class FieldMapperTest {
+public class FieldMapperTest extends ControlpageIntegrationTestBase {
     @Autowired
     ConversionService conversionService;
 

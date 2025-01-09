@@ -10,15 +10,21 @@ default:
 
 variables:
   JAVA_VERSION: "17"
-  DOCKER_IMAGE: "maven:3.8.5-openjdk-17"
+  DEFAULT_CI_IMAGE: "maven:3-openjdk-17-slim"
+  TESTCONTAINERS_HOST_OVERRIDE: "10.10.40.198"
 
 cache:
   paths:
     - .m2/repository
 
 before_script:
+  - echo "OS:"
+  - cat /etc/os-release
   - echo "Using Java version $JAVA_VERSION"
   - java -version
+  - echo "Docker Environment"
+#  - apk add --no-cache docker-cli  # For Alpine-based runners
+#  - docker --version
 
 include:
   - '.gitlab/ci/*.gitlab-ci.yml'

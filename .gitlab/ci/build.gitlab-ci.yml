@@ -1,6 +1,6 @@
 build:
   stage: build
-  image: $DOCKER_IMAGE
+  image: $DEFAULT_CI_IMAGE
   script:
     - echo "Building the project..."
     - mvn -B -DskipTests clean install
