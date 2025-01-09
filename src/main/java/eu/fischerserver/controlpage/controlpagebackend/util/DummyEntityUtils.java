@@ -7,7 +7,6 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ViewA
 import eu.fischerserver.controlpage.controlpagebackend.model.global.action.RunPolicy;
 import eu.fischerserver.controlpage.controlpagebackend.model.global.action.ViewActionType;
 
-import javax.swing.text.View;
 import java.util.ArrayList;
 import java.util.List;
 
