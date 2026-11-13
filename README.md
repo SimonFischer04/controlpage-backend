@@ -14,6 +14,27 @@ This is the backend part of the ControlPage application. For more information se
 
 ## ---WIP---
 
+## Database
+
+The backend stores its data in a [PostgreSQL](https://www.postgresql.org/) database called `controlpage`.
+
+| Setting  | Environment variable         | Default           |
+|----------|------------------------------|-------------------|
+| Host     | `DB_HOST`                    | `localhost`       |
+| User     | `SPRING_DATASOURCE_USERNAME` | `ControlPageUser` |
+| Password | `SPRING_DATASOURCE_PASSWORD` | see `application.yml` |
+
+For development `docker compose -f dev-env-compose.yml up -d` starts a database that matches these defaults (and [Adminer](http://localhost:8080)).
+The tables are created on startup.
+
+## Docker image
+
+`docker build -t controlpage-backend .` builds the backend from source into an image, it only needs Docker.
+
+The pipeline (`.gitlab-ci.yml`) runs the tests and pushes the image to this project's container registry:
+`<registry>/<this project>:<branch>` on every branch and additionally `:latest` on the default branch.
+Other projects use that image instead of building the backend themselves, e.g. the frontend for its end-to-end tests.
+
 ## Notes:
 - http://localhost:42000/swagger-ui.html
 - http://localhost:42000/v3/api-docs
