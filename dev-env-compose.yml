@@ -1,21 +1,25 @@
 version: '3'
 
+# Database for local development. User, password and database match the defaults in application.yml,
+# so the backend can connect to it without any configuration.
 services:
   db:
-    image: mariadb:10
-    hostname: mariadb-controlpage
-    container_name: controlpage_mariadb
+    image: postgres:17
+    hostname: postgres-controlpage
+    container_name: controlpage_postgres
     restart: unless-stopped
     environment:
-      - MARIADB_ROOT_PASSWORD=DYxH2NgFh7A55BEqUYAMGPxPxLv6fD3DeCa487LWMD
+      - POSTGRES_DB=controlpage
+      - POSTGRES_USER=ControlPageUser
+      - POSTGRES_PASSWORD=6xovUH2QmUZooPTyYrpD9Js8fZRrMBrkqHzs4soRdP
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     ports:
-      - "3306:3306"
+      - "5432:5432"
 
   adminer:
     image: adminer
-    hostname: mariadb-controlpage-adminer
+    hostname: postgres-controlpage-adminer
     container_name: controlpage_adminer
     restart: unless-stopped
     depends_on:
@@ -24,4 +28,4 @@ services:
       - "8080:8080"
 
 volumes:
-  mariadb_data:
+  postgres_data:

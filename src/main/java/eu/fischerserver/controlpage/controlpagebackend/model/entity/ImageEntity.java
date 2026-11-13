@@ -21,8 +21,8 @@ public class ImageEntity {
 
     private String name, type;
 
-    @Lob
-    @Column(name = "image_data", columnDefinition="MEDIUMBLOB")
+    // up to 16 MiB; without a database specific column type (bytea in PostgreSQL)
+    @Column(name = "image_data", length = 16 * 1024 * 1024)
     private byte[] imageData;
 
     /*
