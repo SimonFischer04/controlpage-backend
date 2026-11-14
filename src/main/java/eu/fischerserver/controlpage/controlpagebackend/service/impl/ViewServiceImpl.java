@@ -50,7 +50,8 @@ public class ViewServiceImpl implements ViewService {
             return;
 
         viewEntity.getFields().forEach(fieldEntity -> {
-//            fieldEntity.setView(viewEntity);
+            // the mapper maps the fields without back references: a field has to know the view it belongs to
+            fieldEntity.setView(viewEntity);
             // client may send f.e. -1 to indicate new field, but database persist requires value of 0 to create new entry
             if (fieldEntity.getId() < 0) {
                 fieldEntity.setId(0);

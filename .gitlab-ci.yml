@@ -39,9 +39,7 @@ test:
 image:
   stage: build
   image: docker:27
-  # Does not wait for the test job: the image is also published when tests fail.
-  # Remove this line to only publish images of commits whose tests pass.
-  needs: []
+  # runs after the test stage: an image is only published if the tests pass
   services:
     - docker:27-dind
   variables:

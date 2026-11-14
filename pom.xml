@@ -162,7 +162,14 @@
                         <configuration>
                             <enableLazyInitialization>true</enableLazyInitialization>
                             <enableDirtyTracking>true</enableDirtyTracking>
-                            <enableAssociationManagement>true</enableAssociationManagement>
+                            <!--
+                                Off: the code sets both sides of every bidirectional association itself (mappers,
+                                DummyEntityUtils). With this on, Hibernate additionally adds an entity to the collection
+                                of the other side, which results in duplicate entries (f.e. 9 instead of 8 fields).
+                                It also is a build time enhancement only, so the behaviour would differ between a
+                                maven build and running from an IDE.
+                            -->
+                            <enableAssociationManagement>false</enableAssociationManagement>
                         </configuration>
                     </execution>
                 </executions>
