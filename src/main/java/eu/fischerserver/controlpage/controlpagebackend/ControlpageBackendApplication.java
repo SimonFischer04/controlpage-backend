@@ -17,15 +17,26 @@ public class ControlpageBackendApplication {
     //    @Autowired
     //    ActionRepository actionRepository;
 
-    public static void main(String[] args) {
-        int port = 42000;
-        if (args.length > 0 && args[0].matches("\\d*]")) {
-            port = Integer.parseInt(args[0]);
-        }
+    public static final int DEFAULT_PORT = 42000;
 
+    public static void main(String[] args) {
         SpringApplication app = new SpringApplication(ControlpageBackendApplication.class);
-        app.setDefaultProperties(Collections.singletonMap("server.port", port));
+        // only a default: an explicit --server.port=... (or env / config file) still takes precedence
+        app.setDefaultProperties(Collections.singletonMap("server.port", parsePort(args)));
         app.run(args);
+    }
+
+    /**
+     * Reads the optional port from the first command-line argument.
+     *
+     * @return the first argument if it is purely numeric (at most 5 digits, so it always fits an int),
+     * otherwise {@link #DEFAULT_PORT}
+     */
+    public static int parsePort(String[] args) {
+        if (args != null && args.length > 0 && args[0] != null && args[0].matches("\\d{1,5}")) {
+            return Integer.parseInt(args[0]);
+        }
+        return DEFAULT_PORT;
     }
 
     @Bean
