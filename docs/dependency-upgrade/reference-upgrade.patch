@@ -1,0 +1,454 @@
+diff --git a/pom.xml b/pom.xml
+index ca97820..4e54e7f 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -5,7 +5,7 @@
+     <parent>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-parent</artifactId>
+-        <version>3.4.1</version>
++        <version>4.1.2</version>
+         <relativePath/> <!-- lookup parent from repository -->
+     </parent>
+     <groupId>eu.fischerserver.controlpage</groupId>
+@@ -16,12 +16,9 @@
+ 
+     <properties>
+         <java.version>17</java.version>
+-        <org.mapstruct.extensions.spring.version>1.1.2</org.mapstruct.extensions.spring.version>
++        <org.mapstruct.extensions.spring.version>2.0.0</org.mapstruct.extensions.spring.version>
+         <org.mapstruct.version>1.6.3</org.mapstruct.version>
+-        <org.projectlombok.version>1.18.36</org.projectlombok.version>
+-        <postgresql.version>42.7.3</postgresql.version>
+-        <org.springdoc.version>2.7.0</org.springdoc.version>
+-        <org.apache.maven.plugins.maven-compiler-plugin.version>3.11.0</org.apache.maven.plugins.maven-compiler-plugin.version>
++        <org.springdoc.version>3.2.0</org.springdoc.version>
+         <org.projectlombok.lombok-mapstruct-binding.version>0.2.0</org.projectlombok.lombok-mapstruct-binding.version>
+     </properties>
+ 
+@@ -29,14 +26,12 @@
+         <dependency>
+             <groupId>org.postgresql</groupId>
+             <artifactId>postgresql</artifactId>
+-            <version>${postgresql.version}</version>
+         </dependency>
+ 
+         <!-- lombok dependency should not end up on classpath -->
+         <dependency>
+             <groupId>org.projectlombok</groupId>
+             <artifactId>lombok</artifactId>
+-            <version>${org.projectlombok.version}</version>
+             <scope>provided</scope>
+         </dependency>
+ 
+@@ -66,7 +61,7 @@
+ 
+         <dependency>
+             <groupId>org.springframework.boot</groupId>
+-            <artifactId>spring-boot-starter-web</artifactId>
++            <artifactId>spring-boot-starter-webmvc</artifactId>
+         </dependency>
+ 
+         <dependency>
+@@ -100,14 +95,14 @@
+         <!--   Test     -->
+ 
+         <dependency>
+-            <groupId>junit</groupId>
+-            <artifactId>junit</artifactId>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+             <scope>test</scope>
+         </dependency>
+ 
+         <dependency>
+             <groupId>org.testcontainers</groupId>
+-            <artifactId>junit-jupiter</artifactId>
++            <artifactId>testcontainers-junit-jupiter</artifactId>
+             <scope>test</scope>
+         </dependency>
+         <dependency>
+@@ -117,7 +112,7 @@
+         </dependency>
+         <dependency>
+             <groupId>org.testcontainers</groupId>
+-            <artifactId>postgresql</artifactId>
++            <artifactId>testcontainers-postgresql</artifactId>
+             <scope>test</scope>
+         </dependency>
+     </dependencies>
+@@ -127,7 +122,6 @@
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-compiler-plugin</artifactId>
+-                <version>${org.apache.maven.plugins.maven-compiler-plugin.version}</version>
+                 <configuration>
+                     <source>${java.version}</source>
+                     <target>${java.version}</target>
+@@ -159,8 +153,8 @@
+                 </configuration>
+             </plugin>
+             <plugin>
+-                <groupId>org.hibernate.orm.tooling</groupId>
+-                <artifactId>hibernate-enhance-maven-plugin</artifactId>
++                <groupId>org.hibernate.orm</groupId>
++                <artifactId>hibernate-maven-plugin</artifactId>
+                 <version>${hibernate.version}</version>
+                 <executions>
+                     <execution>
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/model/domain/Group.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/model/domain/Group.java
+index e93573e..5299ee9 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/model/domain/Group.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/model/domain/Group.java
+@@ -1,7 +1,6 @@
+ package eu.fischerserver.controlpage.controlpagebackend.model.domain;
+ 
+-import com.fasterxml.jackson.annotation.JsonBackReference;
+-import com.fasterxml.jackson.annotation.JsonManagedReference;
++import com.fasterxml.jackson.annotation.JsonIgnore;
+ import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.BasicView;
+ import lombok.Builder;
+ import lombok.ToString;
+@@ -13,16 +12,14 @@ import java.util.Objects;
+ public record Group(
+         int id,
+ 
+-        @JsonManagedReference(value = "parent-group")
+         @ToString.Exclude
+         List<Group> childGroups,
+ 
+-        @JsonBackReference(value = "parent-group")
++        @JsonIgnore
+         Group parentGroup,
+ 
+         String name,
+ 
+-        @JsonManagedReference(value = "viewGroup")
+         @ToString.Exclude
+         List<BasicView> views
+ ) {
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/model/domain/view/BasicView.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/model/domain/view/BasicView.java
+index 7450c3e..63526ce 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/model/domain/view/BasicView.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/model/domain/view/BasicView.java
+@@ -1,6 +1,6 @@
+ package eu.fischerserver.controlpage.controlpagebackend.model.domain.view;
+ 
+-import com.fasterxml.jackson.annotation.JsonBackReference;
++import com.fasterxml.jackson.annotation.JsonIgnore;
+ import eu.fischerserver.controlpage.controlpagebackend.model.domain.Group;
+ import lombok.AllArgsConstructor;
+ import lombok.Builder;
+@@ -17,7 +17,7 @@ public class BasicView {
+     private int id;
+     private String name;
+ 
+-    @JsonBackReference(value = "viewGroup")
++    @JsonIgnore
+     private Group group;
+ 
+     /*
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/action/ActionEntityToActionMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/action/ActionEntityToActionMapper.java
+index f1f7d5a..f42946e 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/action/ActionEntityToActionMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/action/ActionEntityToActionMapper.java
+@@ -11,7 +11,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.RestA
+ import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ViewActionEntity;
+ import org.mapstruct.*;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ @Mapper(config = MapperSpringConfig.class)
+ public interface ActionEntityToActionMapper extends Converter<ActionEntity, Action> {
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/action/ActionToActionEntityMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/action/ActionToActionEntityMapper.java
+index 44d77eb..db6e674 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/action/ActionToActionEntityMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/action/ActionToActionEntityMapper.java
+@@ -11,7 +11,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.RestA
+ import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ViewActionEntity;
+ import org.mapstruct.*;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ @Mapper(config = MapperSpringConfig.class)
+ public interface ActionToActionEntityMapper extends Converter<Action, ActionEntity> {
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldDTOToFieldMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldDTOToFieldMapper.java
+index 81629f6..9d149bb 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldDTOToFieldMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldDTOToFieldMapper.java
+@@ -11,7 +11,7 @@ import org.mapstruct.*;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.context.annotation.Lazy;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+@@ -23,7 +23,7 @@ public abstract class FieldDTOToFieldMapper implements Converter<ViewController.
+             @Mapping(target = "background", source = "backgroundId", qualifiedByName = "backgroundMapper"),
+             @Mapping(target = "view", source = "viewId", qualifiedByName = "viewMapper")
+     })
+-    public abstract Field convert(@Nullable ViewController.FieldDTO fieldDTO);
++    public abstract Field convert(ViewController.@Nullable FieldDTO fieldDTO);
+ 
+     @SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
+     @Autowired
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldEntityToFieldMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldEntityToFieldMapper.java
+index ab97ab3..8674060 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldEntityToFieldMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldEntityToFieldMapper.java
+@@ -6,7 +6,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
+ import eu.fischerserver.controlpage.controlpagebackend.util.mapper.action.ActionEntityToActionMapper;
+ import org.mapstruct.*;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldToFieldDTOMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldToFieldDTOMapper.java
+index c455d2a..25c65b7 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldToFieldDTOMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldToFieldDTOMapper.java
+@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
+ import org.mapstruct.Mapping;
+ import org.mapstruct.Mappings;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldToFieldEntityMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldToFieldEntityMapper.java
+index ec09f2b..4b93bc5 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldToFieldEntityMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/field/FieldToFieldEntityMapper.java
+@@ -6,7 +6,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
+ import eu.fischerserver.controlpage.controlpagebackend.util.mapper.action.ActionToActionEntityMapper;
+ import org.mapstruct.*;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ import java.util.ArrayList;
+ import java.util.Collection;
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/group/GroupEntityToGroupMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/group/GroupEntityToGroupMapper.java
+index fd6ade7..d097aa6 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/group/GroupEntityToGroupMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/group/GroupEntityToGroupMapper.java
+@@ -7,7 +7,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.GroupEntity;
+ import eu.fischerserver.controlpage.controlpagebackend.util.mapper.view.ViewEntityToBasicViewMapper;
+ import org.mapstruct.*;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/group/GroupToGroupEntityMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/group/GroupToGroupEntityMapper.java
+index d81d0ff..5355272 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/group/GroupToGroupEntityMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/group/GroupToGroupEntityMapper.java
+@@ -7,7 +7,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.ViewEntity;
+ import eu.fischerserver.controlpage.controlpagebackend.util.mapper.view.BasicViewToViewEntityMapper;
+ import org.mapstruct.*;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/image/ImageEntityToImageMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/image/ImageEntityToImageMapper.java
+index 6b89baf..cf23e2e 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/image/ImageEntityToImageMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/image/ImageEntityToImageMapper.java
+@@ -5,7 +5,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.ImageEntity;
+ import eu.fischerserver.controlpage.controlpagebackend.model.domain.Image;
+ import org.mapstruct.Mapper;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ @Mapper(config = MapperSpringConfig.class)
+ public interface ImageEntityToImageMapper extends Converter<ImageEntity, Image> {
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/image/ImageToImageEntityMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/image/ImageToImageEntityMapper.java
+index b2f4957..cbac5bc 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/image/ImageToImageEntityMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/image/ImageToImageEntityMapper.java
+@@ -5,7 +5,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.ImageEntity;
+ import eu.fischerserver.controlpage.controlpagebackend.model.domain.Image;
+ import org.mapstruct.Mapper;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ @Mapper(config = MapperSpringConfig.class)
+ public interface ImageToImageEntityMapper extends Converter<Image, ImageEntity> {
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/BasicViewToViewEntityMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/BasicViewToViewEntityMapper.java
+index a41acfd..ed1405a 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/BasicViewToViewEntityMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/BasicViewToViewEntityMapper.java
+@@ -6,7 +6,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.ViewEntity;
+ import eu.fischerserver.controlpage.controlpagebackend.util.mapper.group.GroupToGroupEntityMapper;
+ import org.mapstruct.*;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ import java.util.Collections;
+ 
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/FullViewDTOToFullViewMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/FullViewDTOToFullViewMapper.java
+index 86e6c58..26428cf 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/FullViewDTOToFullViewMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/FullViewDTOToFullViewMapper.java
+@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
+ import org.mapstruct.Mapping;
+ import org.mapstruct.Mappings;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ @Mapper(config = MapperSpringConfig.class, uses = FieldDTOToFieldMapper.class)
+ public interface FullViewDTOToFullViewMapper extends Converter<ViewController.FullViewDTO, FullView> {
+@@ -17,5 +17,5 @@ public interface FullViewDTOToFullViewMapper extends Converter<ViewController.Fu
+             // TODO: implement db fetching
+             @Mapping(target = "group", source = "groupId", ignore = true)
+     })
+-    FullView convert(@Nullable ViewController.FullViewDTO fullViewDTO);
++    FullView convert(ViewController.@Nullable FullViewDTO fullViewDTO);
+ }
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/FullViewToFullViewDTOMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/FullViewToFullViewDTOMapper.java
+index e0a040f..2d3c87d 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/FullViewToFullViewDTOMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/FullViewToFullViewDTOMapper.java
+@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
+ import org.mapstruct.Mapping;
+ import org.mapstruct.Mappings;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ @Mapper(config = MapperSpringConfig.class, uses = FieldToFieldDTOMapper.class)
+ public interface FullViewToFullViewDTOMapper extends Converter<FullView, ViewController.FullViewDTO> {
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/FullViewToViewEntityMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/FullViewToViewEntityMapper.java
+index 487a19d..7768354 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/FullViewToViewEntityMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/FullViewToViewEntityMapper.java
+@@ -8,7 +8,7 @@ import eu.fischerserver.controlpage.controlpagebackend.util.mapper.field.FieldTo
+ import eu.fischerserver.controlpage.controlpagebackend.util.mapper.group.GroupToGroupEntityMapper;
+ import org.mapstruct.*;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/ViewEntityToBasicViewMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/ViewEntityToBasicViewMapper.java
+index a1d3ddf..b23d9ff 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/ViewEntityToBasicViewMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/ViewEntityToBasicViewMapper.java
+@@ -6,7 +6,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.BasicVi
+ import eu.fischerserver.controlpage.controlpagebackend.util.mapper.group.GroupEntityToGroupMapper;
+ import org.mapstruct.*;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ import java.util.Collections;
+ 
+diff --git a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/ViewEntityToFullViewMapper.java b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/ViewEntityToFullViewMapper.java
+index 247763d..8c3a27c 100644
+--- a/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/ViewEntityToFullViewMapper.java
++++ b/src/main/java/eu/fischerserver/controlpage/controlpagebackend/util/mapper/view/ViewEntityToFullViewMapper.java
+@@ -8,7 +8,7 @@ import eu.fischerserver.controlpage.controlpagebackend.util.mapper.field.FieldEn
+ import eu.fischerserver.controlpage.controlpagebackend.util.mapper.group.GroupEntityToGroupMapper;
+ import org.mapstruct.*;
+ import org.springframework.core.convert.converter.Converter;
+-import org.springframework.lang.Nullable;
++import org.jspecify.annotations.Nullable;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+diff --git a/src/test/java/eu/fischerserver/controlpage/controlpagebackend/integration/config/ControlpageIntegrationTestBase.java b/src/test/java/eu/fischerserver/controlpage/controlpagebackend/integration/config/ControlpageIntegrationTestBase.java
+index 96f507b..5768f9c 100644
+--- a/src/test/java/eu/fischerserver/controlpage/controlpagebackend/integration/config/ControlpageIntegrationTestBase.java
++++ b/src/test/java/eu/fischerserver/controlpage/controlpagebackend/integration/config/ControlpageIntegrationTestBase.java
+@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional;
+ import org.springframework.boot.test.context.SpringBootTest;
+ import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+ import org.springframework.test.annotation.DirtiesContext;
+-import org.testcontainers.containers.PostgreSQLContainer;
++import org.testcontainers.postgresql.PostgreSQLContainer;
+ import org.testcontainers.junit.jupiter.Container;
+ import org.testcontainers.junit.jupiter.Testcontainers;
+ 
+@@ -18,5 +18,5 @@ import org.testcontainers.junit.jupiter.Testcontainers;
+ public abstract class ControlpageIntegrationTestBase {
+     @Container
+     @ServiceConnection
+-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest");
++    static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:latest");
+ }
+diff --git a/src/test/java/eu/fischerserver/controlpage/controlpagebackend/integration/controller/ImageControllerIntTest.java b/src/test/java/eu/fischerserver/controlpage/controlpagebackend/integration/controller/ImageControllerIntTest.java
+index 1ee9ebe..934bddd 100644
+--- a/src/test/java/eu/fischerserver/controlpage/controlpagebackend/integration/controller/ImageControllerIntTest.java
++++ b/src/test/java/eu/fischerserver/controlpage/controlpagebackend/integration/controller/ImageControllerIntTest.java
+@@ -1,6 +1,6 @@
+ package eu.fischerserver.controlpage.controlpagebackend.integration.controller;
+ 
+-import com.fasterxml.jackson.databind.ObjectMapper;
++import tools.jackson.databind.ObjectMapper;
+ import eu.fischerserver.controlpage.controlpagebackend.controller.ImageController;
+ import eu.fischerserver.controlpage.controlpagebackend.model.domain.Image;
+ import eu.fischerserver.controlpage.controlpagebackend.service.ImageService;
+@@ -8,8 +8,8 @@ import eu.fischerserver.controlpage.controlpagebackend.util.mapper.ControlPageCo
+ import org.junit.jupiter.api.Test;
+ import org.mockito.Mockito;
+ import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+-import org.springframework.boot.test.mock.mockito.MockBean;
++import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
++import org.springframework.test.context.bean.override.mockito.MockitoBean;
+ import org.springframework.http.MediaType;
+ import org.springframework.mock.web.MockMultipartFile;
+ import org.springframework.test.web.servlet.MockMvc;
+@@ -20,10 +20,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
+ 
+ @WebMvcTest(ImageController.class)
+ public class ImageControllerIntTest {
+-    @MockBean
++    @MockitoBean
+     private ImageService mockService;
+ 
+-    @MockBean
++    @MockitoBean
+     ControlPageConversionServiceAdapter conversionServiceAdapter;
+ 
+     @Autowired
+diff --git a/src/test/java/eu/fischerserver/controlpage/controlpagebackend/integration/controller/ViewControllerIntTest.java b/src/test/java/eu/fischerserver/controlpage/controlpagebackend/integration/controller/ViewControllerIntTest.java
+index 3ac569b..0ae071c 100644
+--- a/src/test/java/eu/fischerserver/controlpage/controlpagebackend/integration/controller/ViewControllerIntTest.java
++++ b/src/test/java/eu/fischerserver/controlpage/controlpagebackend/integration/controller/ViewControllerIntTest.java
+@@ -4,8 +4,8 @@ import eu.fischerserver.controlpage.controlpagebackend.controller.ViewController
+ import eu.fischerserver.controlpage.controlpagebackend.service.ViewService;
+ import org.junit.jupiter.api.extension.ExtendWith;
+ import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+-import org.springframework.boot.test.mock.mockito.MockBean;
++import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
++import org.springframework.test.context.bean.override.mockito.MockitoBean;
+ import org.springframework.test.context.junit.jupiter.SpringExtension;
+ import org.springframework.test.web.servlet.MockMvc;
+ 
+@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
+ @WebMvcTest(ViewController.class)
+ //@AutoConfigureMockMvc
+ public class ViewControllerIntTest {
+-    @MockBean
++    @MockitoBean
+     private ViewService mockService;
+ 
+     @Autowired
