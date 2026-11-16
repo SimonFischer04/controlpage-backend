@@ -4,7 +4,7 @@ version: '3'
 # so the backend can connect to it without any configuration.
 services:
   db:
-    image: postgres:17
+    image: postgres:18
     hostname: postgres-controlpage
     container_name: controlpage_postgres
     restart: unless-stopped
@@ -13,7 +13,8 @@ services:
       - POSTGRES_USER=ControlPageUser
       - POSTGRES_PASSWORD=6xovUH2QmUZooPTyYrpD9Js8fZRrMBrkqHzs4soRdP
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      # since PostgreSQL 18 the image keeps its data below /var/lib/postgresql (in 18/docker)
+      - postgres_data:/var/lib/postgresql
     ports:
       - "5432:5432"
 
