@@ -18,8 +18,8 @@ This is the backend part of the ControlPage application. For more information se
 
 `docker build -t controlpage-backend .` builds the backend from source into an image, it only needs Docker.
 
-The pipeline (`.gitlab-ci.yml`) runs the tests and, if they pass, pushes the image to this project's container registry:
-`<registry>/<this project>:<branch>` on every branch and additionally `:latest` on the default branch.
+On the default branch the pipeline (`.gitlab-ci.yml`) runs the tests and, if they pass, pushes the image to this
+project's container registry as `<registry>/<this project>:latest`. On other branches the image is only built, not pushed.
 Other projects use that image instead of building the backend themselves, e.g. the frontend for its end-to-end tests.
 
 ## Notes:
