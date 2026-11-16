@@ -21,8 +21,7 @@ public class ImageEntity {
 
     private String name, type;
 
-    // up to 16 MiB; without a database specific column type (bytea in PostgreSQL)
-    @Column(name = "image_data", length = 16 * 1024 * 1024)
+    @Column(name = "image_data", columnDefinition = "bytea")
     private byte[] imageData;
 
     /*

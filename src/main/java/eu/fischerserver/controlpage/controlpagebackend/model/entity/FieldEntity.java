@@ -14,7 +14,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@Builder
+@Builder(toBuilder = true)
 public class FieldEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

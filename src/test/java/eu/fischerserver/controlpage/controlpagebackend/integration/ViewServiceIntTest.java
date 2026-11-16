@@ -1,17 +1,16 @@
 package eu.fischerserver.controlpage.controlpagebackend.integration;
 
+import eu.fischerserver.controlpage.controlpagebackend.integration.config.ControlpageIntegrationTestBase;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.HorizontalAlignment;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.StyledText;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.VerticalAlignment;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.BasicView;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.FullView;
-import eu.fischerserver.controlpage.controlpagebackend.repository.ViewRepository;
 import eu.fischerserver.controlpage.controlpagebackend.service.ViewService;
-import org.junit.jupiter.api.AfterEach;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,29 +20,25 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Tests saving and reading views the way the application does it:
- * through the service, the mappers and the configured database.
+ * Tests saving and reading views the way the application does it: through the service, the mappers and the database.
+ * <p>
+ * Every save is followed by {@link #saveAndClear}: the whole test runs in one transaction (see base class), so without
+ * clearing the persistence context the reads would return the cached entities instead of what is stored.
  */
-@SpringBootTest
-public class ViewServiceIntTest {
+public class ViewServiceIntTest extends ControlpageIntegrationTestBase {
     @Autowired
     private ViewService viewService;
     @Autowired
-    private ViewRepository viewRepository;
+    private EntityManager entityManager;
 
     private final String viewName = "ViewServiceIntTest " + UUID.randomUUID();
-
-    @AfterEach
-    void removeTestView() {
-        findTestViewId().ifPresent(viewRepository::deleteById);
-    }
 
     /**
      * Test: a new view (as a client sends it: new fields have the id -1) is saved with all its fields
      */
     @Test
     void testSaveNewView() {
-        viewService.save(newView(2, 2));
+        saveAndClear(newView(2, 2));
 
         final var saved = findTestView();
 
@@ -60,12 +55,12 @@ public class ViewServiceIntTest {
      */
     @Test
     void testSaveExistingViewWithNewRow() {
-        viewService.save(newView(1, 2));
+        saveAndClear(newView(1, 2));
         final var saved = findTestView();
         final var idsBefore = fieldIds(saved);
 
         saved.getFields().add(new ArrayList<>(List.of(newField("1/0"), newField("1/1"))));
-        viewService.save(saved);
+        saveAndClear(saved);
 
         final var savedAgain = findTestView();
         assertEquals(saved.getId(), savedAgain.getId());
@@ -80,12 +75,12 @@ public class ViewServiceIntTest {
      */
     @Test
     void testSaveExistingViewWithoutRow() {
-        viewService.save(newView(2, 2));
+        saveAndClear(newView(2, 2));
         final var saved = findTestView();
         final var idsBefore = fieldIds(saved);
 
         saved.getFields().remove(1);
-        viewService.save(saved);
+        saveAndClear(saved);
 
         final var savedAgain = findTestView();
         assertEquals(List.of(List.of("0/0", "0/1")), titles(savedAgain));
@@ -95,6 +90,12 @@ public class ViewServiceIntTest {
     /*
         Utils
      */
+
+    private void saveAndClear(FullView view) {
+        viewService.save(view);
+        entityManager.flush();
+        entityManager.clear();
+    }
 
     private FullView newView(int rows, int columns) {
         final List<List<Field>> fields = new ArrayList<>();

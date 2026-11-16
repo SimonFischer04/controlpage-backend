@@ -1,25 +1,19 @@
 package eu.fischerserver.controlpage.controlpagebackend.integration;
 
+import eu.fischerserver.controlpage.controlpagebackend.integration.config.ControlpageIntegrationTestBase;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.FullView;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.FieldEntity;
-import eu.fischerserver.controlpage.controlpagebackend.model.entity.GroupEntity;
-import eu.fischerserver.controlpage.controlpagebackend.model.entity.StyledTextEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.ViewEntity;
-import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.RestActionEntity;
 import eu.fischerserver.controlpage.controlpagebackend.util.DummyDomainUtils;
 import eu.fischerserver.controlpage.controlpagebackend.util.DummyEntityUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.convert.ConversionService;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-public class MappingIntegrationTest {
+public class MappingIntegrationTest extends ControlpageIntegrationTestBase {
     @Autowired
     ConversionService conversionService;
 
@@ -33,17 +27,17 @@ public class MappingIntegrationTest {
             Init Test Data
          */
         FullView view = DummyDomainUtils.getDummyFullView();
-
+//        System.out.println(view.getGroup().toString());
         //
         ViewEntity viewEntity = conversionService.convert(view, ViewEntity.class);
         assertNotNull(viewEntity);
-//        FieldEntity fieldEntity = viewEntity.getFields().get(0);
+        FieldEntity fieldEntity = viewEntity.getFields().get(0);
 
         /*
             Test
          */
         // TODO: necessary?
-//        assertNotNull(fieldEntity.getView());
+        assertNotNull(fieldEntity.getView());
 //        assertNotNull(fieldEntity.getAction().getField());
         assertNotNull(viewEntity.getGroup().getViews());
         assertEquals(1, viewEntity.getGroup().getViews().size());
@@ -70,7 +64,7 @@ public class MappingIntegrationTest {
             Test
          */
         // TODO: necessary?
-//        assertNotNull(field.getView());
+        assertNotNull(field.view());
 //        assertNotNull(field.getAction().getField());
         assertNotNull(view.getGroup().views());
         assertEquals(1, view.getGroup().views().size());

@@ -21,13 +21,13 @@ The backend stores its data in a [PostgreSQL](https://www.postgresql.org/) datab
 | Setting  | Environment variable         | Default           |
 |----------|------------------------------|-------------------|
 | Host     | `DB_HOST`                    | `localhost`       |
-| User     | `SPRING_DATASOURCE_USERNAME` | `ControlPageUser` |
+| User     | `SPRING_DATASOURCE_USERNAME` | `controlpageuser` |
 | Password | `SPRING_DATASOURCE_PASSWORD` | see `application.yml` |
 
 For development `docker compose -f dev-env-compose.yml up -d` starts a database that matches these defaults (and [Adminer](http://localhost:8080)).
 The tables are created on startup.
 
-Most tests start the whole application and therefore need this database to be running (`mvn verify`).
+The tests start their own PostgreSQL with [Testcontainers](https://testcontainers.com/), so they only need Docker (`mvn test`).
 
 ## Docker image
 

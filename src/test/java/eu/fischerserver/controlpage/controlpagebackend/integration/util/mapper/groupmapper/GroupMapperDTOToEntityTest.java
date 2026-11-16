@@ -1,5 +1,6 @@
 package eu.fischerserver.controlpage.controlpagebackend.integration.util.mapper.groupmapper;
 
+import eu.fischerserver.controlpage.controlpagebackend.integration.config.ControlpageIntegrationTestBase;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Group;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.BasicView;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.FullView;
@@ -8,7 +9,6 @@ import eu.fischerserver.controlpage.controlpagebackend.util.DummyDomainUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.convert.ConversionService;
 
 import java.util.ArrayList;
@@ -17,8 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-public class GroupMapperDTOToEntityTest {
+public class GroupMapperDTOToEntityTest extends ControlpageIntegrationTestBase {
     @Autowired
     private ConversionService conversionService;
 

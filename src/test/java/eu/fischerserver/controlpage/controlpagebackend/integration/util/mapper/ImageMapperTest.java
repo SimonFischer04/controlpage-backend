@@ -1,17 +1,16 @@
 package eu.fischerserver.controlpage.controlpagebackend.integration.util.mapper;
 
+import eu.fischerserver.controlpage.controlpagebackend.integration.config.ControlpageIntegrationTestBase;
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.ImageEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Image;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.convert.ConversionService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest()
-public class ImageMapperTest {
+public class ImageMapperTest extends ControlpageIntegrationTestBase {
     @Autowired
     private ConversionService conversionService;
 

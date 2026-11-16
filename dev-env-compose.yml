@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_DB=controlpage
-      - POSTGRES_USER=ControlPageUser
+      - POSTGRES_USER=controlpageuser
       - POSTGRES_PASSWORD=6xovUH2QmUZooPTyYrpD9Js8fZRrMBrkqHzs4soRdP
     volumes:
       # since PostgreSQL 18 the image keeps its data below /var/lib/postgresql (in 18/docker)

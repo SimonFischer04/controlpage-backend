@@ -4,7 +4,9 @@ import eu.fischerserver.controlpage.controlpagebackend.config.MapperSpringConfig
 import eu.fischerserver.controlpage.controlpagebackend.controller.ViewController;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Image;
+import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.FullView;
 import eu.fischerserver.controlpage.controlpagebackend.service.ImageService;
+import eu.fischerserver.controlpage.controlpagebackend.service.ViewService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -19,7 +21,7 @@ public abstract class FieldDTOToFieldMapper implements Converter<ViewController.
     @Override
     @Mappings({
             @Mapping(target = "background", source = "backgroundId", qualifiedByName = "backgroundMapper"),
-            @Mapping(target = "view", source = "viewId", ignore = true)
+            @Mapping(target = "view", source = "viewId", qualifiedByName = "viewMapper")
     })
     public abstract Field convert(@Nullable ViewController.FieldDTO fieldDTO);
 
@@ -28,12 +30,23 @@ public abstract class FieldDTOToFieldMapper implements Converter<ViewController.
     @Lazy // See: https://github.com/mapstruct/mapstruct-spring-extensions/issues/93
     private ImageService imageService;
 
+    @SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
+    @Autowired
+    @Lazy
+    private ViewService viewService;
+
     @Named("backgroundMapper")
     public Image mapBackground(Integer backgroundId) {
         return imageService.findById(backgroundId);
     }
 
+    @Named("viewMapper")
+    public FullView mapView(Integer viewId) {
+        return viewService.findById(viewId);
+    }
+
     // TODO: why can't this be done automagically?
+    @SuppressWarnings("unused")
     public List<List<Field>> mapFieldMatrixToFieldDTOMatrix(List<List<ViewController.FieldDTO>> fieldDtoMatrix) {
         List<List<Field>> matrix = new ArrayList<>();
         fieldDtoMatrix.forEach(dtoRow -> {

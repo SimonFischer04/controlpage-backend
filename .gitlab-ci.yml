@@ -1,58 +1,31 @@
 stages:
-  - test
   - build
+  - test
+  - package
+  - publish
 
 default:
+  image: $DEFAULT_CI_IMAGE
   # All jobs are interruptable by default
   interruptible: true
 
-test:
-  stage: test
-  image: maven:3.9-eclipse-temurin-17
-  # most tests start the whole application, which needs its database
-  services:
-    - name: postgres:18
-      alias: postgres
-  variables:
-    MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
-    DB_HOST: "postgres"
-    # same as the defaults in application.yml
-    POSTGRES_DB: "controlpage"
-    POSTGRES_USER: "ControlPageUser"
-    POSTGRES_PASSWORD: "6xovUH2QmUZooPTyYrpD9Js8fZRrMBrkqHzs4soRdP"
-  cache:
-    key: backend-maven
-    paths:
-      - .m2/repository
-  script:
-    - mvn -B verify
-  artifacts:
-    when: always
-    expire_in: 1 week
-    reports:
-      junit: target/surefire-reports/TEST-*.xml
+variables:
+  JAVA_VERSION: "17"
+  DEFAULT_CI_IMAGE: "maven:3-openjdk-17-slim"
+  TESTCONTAINERS_HOST_OVERRIDE: "10.10.40.198"
 
-# Builds the backend image (see Dockerfile) and pushes it to this project's container registry:
-#   <registry>/<this project>:<branch>   on every branch
-#   <registry>/<this project>:latest     additionally on the default branch
-# Other projects (e.g. the frontend's e2e tests) use this image instead of building the backend themselves.
-#
-# The runner mounts the host's Docker socket into the job, so the image is built by the host's Docker daemon
-# (no Docker-in-Docker service). Its layer cache and the Maven cache of the Dockerfile persist between builds.
-image:
-  stage: build
-  image: docker:27
-  # runs after the test stage: an image is only published if the tests pass
-  variables:
-    IMAGE: "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
-  script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-    - docker build --pull -t "$IMAGE" .
-    - docker push "$IMAGE"
-    - |
-      if [ "$CI_COMMIT_BRANCH" = "$CI_DEFAULT_BRANCH" ]; then
-        docker tag "$IMAGE" "$CI_REGISTRY_IMAGE:latest"
-        docker push "$CI_REGISTRY_IMAGE:latest"
-      fi
-  rules:
-    - if: '$CI_COMMIT_BRANCH'
+cache:
+  paths:
+    - .m2/repository
+
+before_script:
+  - echo "OS:"
+  - cat /etc/os-release
+  - echo "Using Java version $JAVA_VERSION"
+  - java -version
+  - echo "Docker Environment"
+#  - apk add --no-cache docker-cli  # For Alpine-based runners
+#  - docker --version
+
+include:
+  - '.gitlab/ci/*.gitlab-ci.yml'

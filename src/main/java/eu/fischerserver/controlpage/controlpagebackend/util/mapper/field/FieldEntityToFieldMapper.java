@@ -44,6 +44,7 @@ public interface FieldEntityToFieldMapper extends Converter<FieldEntity, Field> 
     @Named("FieldEntityToFieldWithoutBackReferencesMapper")
     Field mapFieldEntityToFieldWithoutBackReferences(@Nullable FieldEntity fieldEntity);
 
+    @SuppressWarnings("unused")
     default List<List<Field>> mapFieldEntityListToFieldMatrix(List<FieldEntity> fieldEntities) {
         if (fieldEntities == null)
             return null;
