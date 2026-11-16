@@ -2,11 +2,17 @@ package eu.fischerserver.controlpage.controlpagebackend.integration;
 
 import eu.fischerserver.controlpage.controlpagebackend.integration.config.ControlpageIntegrationTestBase;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
+import eu.fischerserver.controlpage.controlpagebackend.model.domain.action.RestAction;
+import eu.fischerserver.controlpage.controlpagebackend.model.domain.action.ViewAction;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.HorizontalAlignment;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.StyledText;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.text.VerticalAlignment;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.BasicView;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.FullView;
+import eu.fischerserver.controlpage.controlpagebackend.model.global.action.RestType;
+import eu.fischerserver.controlpage.controlpagebackend.model.global.action.RunPolicy;
+import eu.fischerserver.controlpage.controlpagebackend.model.global.action.ViewActionType;
+import eu.fischerserver.controlpage.controlpagebackend.repository.ActionRepository;
 import eu.fischerserver.controlpage.controlpagebackend.service.ViewService;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
@@ -30,6 +36,8 @@ public class ViewServiceIntTest extends ControlpageIntegrationTestBase {
     private ViewService viewService;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private ActionRepository actionRepository;
 
     private final String viewName = "ViewServiceIntTest " + UUID.randomUUID();
 
@@ -85,6 +93,42 @@ public class ViewServiceIntTest extends ControlpageIntegrationTestBase {
         final var savedAgain = findTestView();
         assertEquals(List.of(List.of("0/0", "0/1")), titles(savedAgain));
         assertEquals(idsBefore.subList(0, 2), fieldIds(savedAgain));
+    }
+
+    /**
+     * Test: changing the type of an action (the editor keeps the id of the old action) stores an action of the new type
+     * and removes the old one
+     */
+    @Test
+    void testChangeActionType() {
+        final var view = newView(1, 1);
+        final var field = view.getFields().get(0).get(0);
+        view.getFields().get(0).set(0, field.toBuilder()
+                .action(new RestAction(-1, null, RunPolicy.ASYNC, RestType.POST, "http://rest-target.test/lights", "on"))
+                .build());
+        saveAndClear(view);
+
+        final var saved = findTestView();
+        final var restAction = saved.getFields().get(0).get(0).action();
+        assertInstanceOf(RestAction.class, restAction);
+
+        // like the editor: same action id, other type
+        saved.getFields().get(0).set(0, saved.getFields().get(0).get(0).toBuilder()
+                .action(ViewAction.viewActionBuilder()
+                        .id(restAction.getId())
+                        .runPolicy(RunPolicy.ASYNC)
+                        .viewActionType(ViewActionType.SWITCH_TO)
+                        .viewId(saved.getId())
+                        .build())
+                .build());
+        saveAndClear(saved);
+
+        final var action = findTestView().getFields().get(0).get(0).action();
+        final var viewAction = assertInstanceOf(ViewAction.class, action);
+        assertEquals(ViewActionType.SWITCH_TO, viewAction.getViewActionType());
+        assertEquals(saved.getId(), viewAction.getViewId());
+        // the old action is gone
+        assertTrue(actionRepository.findById(restAction.getId()).isEmpty());
     }
 
     /*
