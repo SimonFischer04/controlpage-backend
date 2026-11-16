@@ -6,7 +6,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.ViewEntity;
 import eu.fischerserver.controlpage.controlpagebackend.util.mapper.group.GroupToGroupEntityMapper;
 import org.mapstruct.*;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 

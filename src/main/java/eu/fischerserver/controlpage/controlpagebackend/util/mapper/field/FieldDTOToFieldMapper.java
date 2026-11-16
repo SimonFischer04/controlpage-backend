@@ -11,7 +11,7 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public abstract class FieldDTOToFieldMapper implements Converter<ViewController.
             @Mapping(target = "background", source = "backgroundId", qualifiedByName = "backgroundMapper"),
             @Mapping(target = "view", source = "viewId", qualifiedByName = "viewMapper")
     })
-    public abstract Field convert(@Nullable ViewController.FieldDTO fieldDTO);
+    public abstract Field convert(ViewController.@Nullable FieldDTO fieldDTO);
 
     @SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
     @Autowired

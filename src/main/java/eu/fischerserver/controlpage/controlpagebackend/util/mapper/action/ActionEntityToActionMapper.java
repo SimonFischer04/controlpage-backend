@@ -11,7 +11,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.RestA
 import eu.fischerserver.controlpage.controlpagebackend.model.entity.action.ViewActionEntity;
 import org.mapstruct.*;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Mapper(config = MapperSpringConfig.class)
 public interface ActionEntityToActionMapper extends Converter<ActionEntity, Action> {

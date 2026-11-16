@@ -5,7 +5,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.ImageEntity;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Image;
 import org.mapstruct.Mapper;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Mapper(config = MapperSpringConfig.class)
 public interface ImageToImageEntityMapper extends Converter<Image, ImageEntity> {

@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Mapper(config = MapperSpringConfig.class, uses = FieldToFieldDTOMapper.class)
 public interface FullViewToFullViewDTOMapper extends Converter<FullView, ViewController.FullViewDTO> {

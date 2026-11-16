@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Mapper(config = MapperSpringConfig.class, uses = FieldDTOToFieldMapper.class)
 public interface FullViewDTOToFullViewMapper extends Converter<ViewController.FullViewDTO, FullView> {
@@ -17,5 +17,5 @@ public interface FullViewDTOToFullViewMapper extends Converter<ViewController.Fu
             // TODO: implement db fetching
             @Mapping(target = "group", source = "groupId", ignore = true)
     })
-    FullView convert(@Nullable ViewController.FullViewDTO fullViewDTO);
+    FullView convert(ViewController.@Nullable FullViewDTO fullViewDTO);
 }

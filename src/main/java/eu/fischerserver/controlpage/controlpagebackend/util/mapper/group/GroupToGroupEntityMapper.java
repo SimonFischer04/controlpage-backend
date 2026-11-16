@@ -7,7 +7,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.entity.ViewEntity;
 import eu.fischerserver.controlpage.controlpagebackend.util.mapper.view.BasicViewToViewEntityMapper;
 import org.mapstruct.*;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

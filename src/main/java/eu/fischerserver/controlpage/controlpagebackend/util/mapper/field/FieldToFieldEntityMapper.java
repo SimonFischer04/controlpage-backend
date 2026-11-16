@@ -6,7 +6,7 @@ import eu.fischerserver.controlpage.controlpagebackend.model.domain.Field;
 import eu.fischerserver.controlpage.controlpagebackend.util.mapper.action.ActionToActionEntityMapper;
 import org.mapstruct.*;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
