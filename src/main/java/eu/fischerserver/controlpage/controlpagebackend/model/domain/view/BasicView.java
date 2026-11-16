@@ -1,6 +1,6 @@
 package eu.fischerserver.controlpage.controlpagebackend.model.domain.view;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.Group;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,8 @@ public class BasicView {
     private int id;
     private String name;
 
-    @JsonBackReference(value = "viewGroup")
+    // back reference to the owning group: not serialized
+    @JsonIgnore
     private Group group;
 
     /*

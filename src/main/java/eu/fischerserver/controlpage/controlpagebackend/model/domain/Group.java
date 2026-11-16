@@ -1,7 +1,6 @@
 package eu.fischerserver.controlpage.controlpagebackend.model.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import eu.fischerserver.controlpage.controlpagebackend.model.domain.view.BasicView;
 import lombok.Builder;
 import lombok.ToString;
@@ -13,16 +12,15 @@ import java.util.Objects;
 public record Group(
         int id,
 
-        @JsonManagedReference(value = "parent-group")
         @ToString.Exclude
         List<Group> childGroups,
 
-        @JsonBackReference(value = "parent-group")
+        // back reference: not serialized (Jackson 3 does not support managed/back references on records)
+        @JsonIgnore
         Group parentGroup,
 
         String name,
 
-        @JsonManagedReference(value = "viewGroup")
         @ToString.Exclude
         List<BasicView> views
 ) {

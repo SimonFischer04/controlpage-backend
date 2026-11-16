@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
+        <version>4.1.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>eu.fischerserver.controlpage</groupId>
@@ -16,12 +16,9 @@
 
     <properties>
         <java.version>17</java.version>
-        <org.mapstruct.extensions.spring.version>1.1.2</org.mapstruct.extensions.spring.version>
+        <org.mapstruct.extensions.spring.version>2.0.0</org.mapstruct.extensions.spring.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
-        <org.projectlombok.version>1.18.36</org.projectlombok.version>
-        <postgresql.version>42.7.3</postgresql.version>
-        <org.springdoc.version>2.7.0</org.springdoc.version>
-        <org.apache.maven.plugins.maven-compiler-plugin.version>3.11.0</org.apache.maven.plugins.maven-compiler-plugin.version>
+        <org.springdoc.version>3.2.0</org.springdoc.version>
         <org.projectlombok.lombok-mapstruct-binding.version>0.2.0</org.projectlombok.lombok-mapstruct-binding.version>
     </properties>
 
@@ -29,14 +26,12 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
         </dependency>
 
         <!-- lombok dependency should not end up on classpath -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${org.projectlombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -66,7 +61,7 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
 
         <dependency>
@@ -100,8 +95,14 @@
         <!--   Test     -->
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -111,7 +112,7 @@
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
+            <artifactId>testcontainers-postgresql</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -121,7 +122,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${org.apache.maven.plugins.maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -153,8 +153,8 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.hibernate.orm.tooling</groupId>
-                <artifactId>hibernate-enhance-maven-plugin</artifactId>
+                <groupId>org.hibernate.orm</groupId>
+                <artifactId>hibernate-maven-plugin</artifactId>
                 <version>${hibernate.version}</version>
                 <executions>
                     <execution>
@@ -163,8 +163,6 @@
                             <goal>enhance</goal>
                         </goals>
                         <configuration>
-                            <enableLazyInitialization>true</enableLazyInitialization>
-                            <enableDirtyTracking>true</enableDirtyTracking>
                             <enableAssociationManagement>true</enableAssociationManagement>
                         </configuration>
                     </execution>
