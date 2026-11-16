@@ -36,14 +36,14 @@ test:
 #   <registry>/<this project>:<branch>   on every branch
 #   <registry>/<this project>:latest     additionally on the default branch
 # Other projects (e.g. the frontend's e2e tests) use this image instead of building the backend themselves.
+#
+# The runner mounts the host's Docker socket into the job, so the image is built by the host's Docker daemon
+# (no Docker-in-Docker service). Its layer cache and the Maven cache of the Dockerfile persist between builds.
 image:
   stage: build
   image: docker:27
   # runs after the test stage: an image is only published if the tests pass
-  services:
-    - docker:27-dind
   variables:
-    DOCKER_TLS_CERTDIR: "/certs"
     IMAGE: "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
