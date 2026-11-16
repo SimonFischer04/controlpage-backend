@@ -10,7 +10,7 @@ default:
 
 variables:
   JAVA_VERSION: "17"
-  DEFAULT_CI_IMAGE: "maven:3-openjdk-17-slim"
+  DEFAULT_CI_IMAGE: "maven:3-eclipse-temurin-17"
   TESTCONTAINERS_HOST_OVERRIDE: "10.10.40.198"
 
 cache:
