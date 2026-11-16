@@ -1,0 +1,7 @@
+.git
+.github
+.gitlab-ci.yml
+.idea
+target
+*.md
+dev-env-compose.yml

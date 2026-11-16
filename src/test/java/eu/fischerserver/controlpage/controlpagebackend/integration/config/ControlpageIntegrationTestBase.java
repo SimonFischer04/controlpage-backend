@@ -18,5 +18,5 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public abstract class ControlpageIntegrationTestBase {
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest");
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:18");
 }
