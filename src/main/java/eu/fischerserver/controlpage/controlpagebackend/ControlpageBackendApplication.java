@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Collections;
-
 @SpringBootApplication
 //@RequiredArgsConstructor
 public class ControlpageBackendApplication {
@@ -18,14 +16,8 @@ public class ControlpageBackendApplication {
     //    ActionRepository actionRepository;
 
     public static void main(String[] args) {
-        int port = 42000;
-        if (args.length > 0 && args[0].matches("\\d*]")) {
-            port = Integer.parseInt(args[0]);
-        }
-
-        SpringApplication app = new SpringApplication(ControlpageBackendApplication.class);
-        app.setDefaultProperties(Collections.singletonMap("server.port", port));
-        app.run(args);
+        // the port defaults to 42000 (application.yml), override it with --server.port=... or SERVER_PORT
+        SpringApplication.run(ControlpageBackendApplication.class, args);
     }
 
     @Bean

@@ -31,6 +31,9 @@ spring:
     problemdetails:
       enabled: true
 
+server:
+  port: 42000
+
 logging:
   level:
     org:
