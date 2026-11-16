@@ -20,6 +20,8 @@
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <org.projectlombok.version>1.18.36</org.projectlombok.version>
         <postgresql.version>42.7.14</postgresql.version>
+        <!-- 1.20.4 (Spring Boot 3.4.1) does not work with Docker Engine 29+, which rejects its default API version -->
+        <testcontainers.version>1.21.4</testcontainers.version>
         <org.springdoc.version>2.7.0</org.springdoc.version>
         <org.apache.maven.plugins.maven-compiler-plugin.version>3.11.0</org.apache.maven.plugins.maven-compiler-plugin.version>
         <org.projectlombok.lombok-mapstruct-binding.version>0.2.0</org.projectlombok.lombok-mapstruct-binding.version>
